@@ -58,7 +58,7 @@ class Settings: NSObject {
         return endTime;
     }
     public func getRtid()-> String? {
-        if(rtid == nil) return nil
+        if(rtid == nil) {return nil}
         return rtid;
     }
     public func isLoggedIn()-> Bool {
@@ -247,25 +247,25 @@ class Settings: NSObject {
     }
     
     public func skippedPrevious(  now : Date) ->Bool{
-//        var previous = getPreviousSurvey(now: now);
-//    //  If no previous surveys, obviously no surveys have been skipped
-//        if(previous == nil){
-////            Log.e("TT", "Settings => A");
-//            return false;
-//    //  Last survey is last, don't show NO_REACTION screen
-//        } else if (previous!.getRequestCode() == surveys[surveys.size() - 1)].getRequestCode()) {
-////            Log.e("TT", "Settings => B");
-//            return false;
-//    //  Don't show NO_REACTION if setAtTime is between previous survey time and now
-//        } else if (previous!.getDate().getTimeInMillis() < setAtTime.getTimeInMillis() && setAtTime.getTimeInMillis() < now.getTimeInMillis()){
-////            Log.e("TT", "Settings => C");
-//            return false;
-//    //  Show NO_REACTION if previous survey skipped
-//        } else {
-////            Log.e("TT", "Settings => D");
-//            return !previous.isTaken();
-//        }
-        return false
+        let previous = getPreviousSurvey(now: now);
+    //  If no previous surveys, obviously no surveys have been skipped
+        if(previous == nil){
+            print("TT", "Settings => A");
+            return false;
+    //  Last survey is last, don't show NO_REACTION screen
+        } else if (previous!.getRequestCode() == surveys[surveys.count - 1].getRequestCode()) {
+            print("TT", "Settings => B");
+            return false;
+    //  Don't show NO_REACTION if setAtTime is between previous survey time and now
+        } else if (previous!.getDate() < setAtTime && setAtTime < now){
+            print("TT", "Settings => C");
+            return false;
+    //  Show NO_REACTION if previous survey skipped
+        } else {
+            print("TT", "Settings => D");
+            return !previous!.isTaken();
+        }
+        
     }
     private func  getPreviousSurvey( now : Date) ->Survey?{
         for sur in surveys.reversed() {
@@ -274,5 +274,11 @@ class Settings: NSObject {
             }
         }
         return nil;
+    }
+    public static func getSettingFromDefault()->Settings{
+        return Settings()
+    }
+    public static func getSurveysFromSetting(settings: Settings)->[Survey]{
+        return [Survey]()
     }
 }
