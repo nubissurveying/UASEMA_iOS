@@ -10,9 +10,20 @@ import UIKit
 
 class recordViewController: UIViewController {
 
+    @IBOutlet weak var mcImage: UIButton!
+    @IBOutlet weak var SaveButton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        mcImage.backgroundColor = .clear
+        mcImage.layer.cornerRadius = 5
+        mcImage.layer.borderWidth = 1
+        mcImage.layer.borderColor = UIColor.black.cgColor
+        
+        SaveButton.backgroundColor = .clear
+        SaveButton.layer.cornerRadius = 5
+        SaveButton.layer.borderWidth = 1
+        SaveButton.layer.borderColor = UIColor.black.cgColor
+        
         // Do any additional setup after loading the view.
     }
 
@@ -20,8 +31,12 @@ class recordViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    @IBAction func MicActon(_ sender: Any) {
+    }
     
-
+    @IBAction func SaveUpload(_ sender: Any) {
+    }
+    
     /*
     // MARK: - Navigation
 

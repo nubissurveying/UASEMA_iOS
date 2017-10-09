@@ -22,6 +22,7 @@
 		2EA558621F8B740B00D2E9EE /* UrlBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558611F8B740B00D2E9EE /* UrlBuilder.swift */; };
 		2EA558641F8B75E100D2E9EE /* Uri.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558631F8B75E100D2E9EE /* Uri.swift */; };
 		2EA558661F8B8EBA00D2E9EE /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558651F8B8EBA00D2E9EE /* Notification.swift */; };
+		2EA558681F8C00C900D2E9EE /* alarmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558671F8C00C900D2E9EE /* alarmTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		2EA558611F8B740B00D2E9EE /* UrlBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlBuilder.swift; sourceTree = "<group>"; };
 		2EA558631F8B75E100D2E9EE /* Uri.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uri.swift; sourceTree = "<group>"; };
 		2EA558651F8B8EBA00D2E9EE /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		2EA558671F8C00C900D2E9EE /* alarmTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = alarmTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				2EA5585F1F8B73FF00D2E9EE /* Survey.swift */,
 				2EA5584F1F8B722200D2E9EE /* Info.plist */,
 				2EA558631F8B75E100D2E9EE /* Uri.swift */,
+				2EA558671F8C00C900D2E9EE /* alarmTableViewCell.swift */,
 				2EA558611F8B740B00D2E9EE /* UrlBuilder.swift */,
 				2EA558651F8B8EBA00D2E9EE /* Notification.swift */,
 				2EA558591F8B73BD00D2E9EE /* DateUtil.swift */,
@@ -169,6 +172,7 @@
 				2EA558601F8B73FF00D2E9EE /* Survey.swift in Sources */,
 				2EA558431F8B722200D2E9EE /* ViewController.swift in Sources */,
 				2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */,
+				2EA558681F8C00C900D2E9EE /* alarmTableViewCell.swift in Sources */,
 				2EA558641F8B75E100D2E9EE /* Uri.swift in Sources */,
 				2EA5585E1F8B73F100D2E9EE /* Settings.swift in Sources */,
 				2EA558561F8B735C00D2E9EE /* admainViewController.swift in Sources */,

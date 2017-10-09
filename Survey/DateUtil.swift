@@ -25,4 +25,21 @@ class DateUtil: NSObject {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.string(from: calendar)
     }
+    
+    public static func dateAll(calendar : String) -> Date?{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        return dateFormatter.date(from: calendar)
+    }
+    public static func dateTime(calendar : String) -> Date?{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "kk:mm"
+        return dateFormatter.date(from: calendar)
+    }
+    public static func dateDate( calendar : String) -> Date?{
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.date(from: calendar)
+    }
 }

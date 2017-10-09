@@ -276,9 +276,32 @@ class Settings: NSObject {
         return nil;
     }
     public static func getSettingFromDefault()->Settings{
+        let defaults = UserDefaults.standard
+        let settingStringFromDefaults = defaults.string(forKey: Constants.SETTINGSDEFAULT)
+        print(settingStringFromDefaults!)
         return Settings()
     }
     public static func getSurveysFromSetting(settings: Settings)->[Survey]{
         return [Survey]()
+    }
+    public func saveSettingToDefault(){
+        let defaults = UserDefaults.standard
+        defaults.set(self.loggedIn, forKey: Constants.loggedInKey)
+        defaults.set(self.rtid , forKey: Constants.rtidKey)
+        defaults.set(self.stringifyAlarms(surveys: self.surveys), forKey: Constants.surveysKey)
+        defaults.set(DateUtil.stringifyAll(calendar: beginTime), forKey: Constants.beginTimeKey)
+        defaults.set(DateUtil.stringifyAll(calendar: endTime), forKey: Constants.endTimeKey)
+        defaults.set(DateUtil.stringifyAll(calendar: setAtTime), forKey: Constants.setAtTimeKey)
+
+    }
+    static  func clearSettingToDefault(){
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: Constants.loggedInKey)
+        defaults.removeObject(forKey: Constants.rtidKey)
+        defaults.removeObject(forKey: Constants.surveysKey)
+        defaults.removeObject(forKey: Constants.beginTimeKey)
+        defaults.removeObject(forKey: Constants.endTimeKey)
+        defaults.removeObject(forKey: Constants.setAtTimeKey)
+        
     }
 }
