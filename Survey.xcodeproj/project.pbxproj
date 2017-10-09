@@ -13,6 +13,14 @@
 		2EA558491F8B722200D2E9EE /* Survey.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558471F8B722200D2E9EE /* Survey.xcdatamodeld */; };
 		2EA5584B1F8B722200D2E9EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EA5584A1F8B722200D2E9EE /* Assets.xcassets */; };
 		2EA5584E1F8B722200D2E9EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA5584C1F8B722200D2E9EE /* LaunchScreen.storyboard */; };
+		2EA558561F8B735C00D2E9EE /* admainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558551F8B735C00D2E9EE /* admainViewController.swift */; };
+		2EA558581F8B736700D2E9EE /* recordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558571F8B736700D2E9EE /* recordViewController.swift */; };
+		2EA5585A1F8B73BD00D2E9EE /* DateUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558591F8B73BD00D2E9EE /* DateUtil.swift */; };
+		2EA5585C1F8B73D700D2E9EE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA5585B1F8B73D700D2E9EE /* Constants.swift */; };
+		2EA5585E1F8B73F100D2E9EE /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA5585D1F8B73F100D2E9EE /* Settings.swift */; };
+		2EA558601F8B73FF00D2E9EE /* Survey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA5585F1F8B73FF00D2E9EE /* Survey.swift */; };
+		2EA558621F8B740B00D2E9EE /* UrlBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558611F8B740B00D2E9EE /* UrlBuilder.swift */; };
+		2EA558641F8B75E100D2E9EE /* Uri.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558631F8B75E100D2E9EE /* Uri.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +32,14 @@
 		2EA5584A1F8B722200D2E9EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2EA5584D1F8B722200D2E9EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2EA5584F1F8B722200D2E9EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2EA558551F8B735C00D2E9EE /* admainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = admainViewController.swift; sourceTree = "<group>"; };
+		2EA558571F8B736700D2E9EE /* recordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = recordViewController.swift; sourceTree = "<group>"; };
+		2EA558591F8B73BD00D2E9EE /* DateUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtil.swift; sourceTree = "<group>"; };
+		2EA5585B1F8B73D700D2E9EE /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2EA5585D1F8B73F100D2E9EE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		2EA5585F1F8B73FF00D2E9EE /* Survey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Survey.swift; sourceTree = "<group>"; };
+		2EA558611F8B740B00D2E9EE /* UrlBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlBuilder.swift; sourceTree = "<group>"; };
+		2EA558631F8B75E100D2E9EE /* Uri.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uri.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,8 +76,16 @@
 				2EA558421F8B722200D2E9EE /* ViewController.swift */,
 				2EA558441F8B722200D2E9EE /* Main.storyboard */,
 				2EA5584A1F8B722200D2E9EE /* Assets.xcassets */,
+				2EA5585B1F8B73D700D2E9EE /* Constants.swift */,
 				2EA5584C1F8B722200D2E9EE /* LaunchScreen.storyboard */,
+				2EA558551F8B735C00D2E9EE /* admainViewController.swift */,
+				2EA5585D1F8B73F100D2E9EE /* Settings.swift */,
+				2EA558571F8B736700D2E9EE /* recordViewController.swift */,
+				2EA5585F1F8B73FF00D2E9EE /* Survey.swift */,
 				2EA5584F1F8B722200D2E9EE /* Info.plist */,
+				2EA558631F8B75E100D2E9EE /* Uri.swift */,
+				2EA558611F8B740B00D2E9EE /* UrlBuilder.swift */,
+				2EA558591F8B73BD00D2E9EE /* DateUtil.swift */,
 				2EA558471F8B722200D2E9EE /* Survey.xcdatamodeld */,
 			);
 			path = Survey;
@@ -139,8 +163,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EA558601F8B73FF00D2E9EE /* Survey.swift in Sources */,
 				2EA558431F8B722200D2E9EE /* ViewController.swift in Sources */,
 				2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */,
+				2EA558641F8B75E100D2E9EE /* Uri.swift in Sources */,
+				2EA5585E1F8B73F100D2E9EE /* Settings.swift in Sources */,
+				2EA558561F8B735C00D2E9EE /* admainViewController.swift in Sources */,
+				2EA558621F8B740B00D2E9EE /* UrlBuilder.swift in Sources */,
+				2EA5585A1F8B73BD00D2E9EE /* DateUtil.swift in Sources */,
+				2EA5585C1F8B73D700D2E9EE /* Constants.swift in Sources */,
+				2EA558581F8B736700D2E9EE /* recordViewController.swift in Sources */,
 				2EA558491F8B722200D2E9EE /* Survey.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
