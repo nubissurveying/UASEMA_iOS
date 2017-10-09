@@ -9,16 +9,7 @@
 import UIKit
 
 class admainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return surveys.count
-    }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "alarm", for: indexPath) as! alarmTableViewCell
-        cell.alarmDetail.text = surveys[indexPath.row]
-        
-        return cell
-    }
     
     let settings = Settings()
     let defaults = UserDefaults.standard
@@ -40,6 +31,16 @@ class admainViewController: UIViewController, UITableViewDelegate, UITableViewDa
             surveys = (defaults.string(forKey: Constants.surveysKey)?.components(separatedBy: "\n"))!
         }
         // Do any additional setup after loading the view.
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return surveys.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "alarm", for: indexPath) as! alarmTableViewCell
+        cell.alarmDetail.text = surveys[indexPath.row]
+        
+        return cell
     }
 
     override func didReceiveMemoryWarning() {
