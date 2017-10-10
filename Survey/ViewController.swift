@@ -95,6 +95,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
         
         self.settings.updateAndSave(rtid: String(infos[1]), beginTime: start!, endTime: end!, setAtTime: Date())
         self.settings.saveSettingToDefault()
+        print("notification is set during login", Notification.setNotification())
 //        defaults.set(settings.toString(), forKey: Constants.SETTINGSDEFAULT)
 //        print("saved", defaults.string(forKey: Constants.SETTINGSDEFAULT))
     }
@@ -112,6 +113,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
         let refreshAction = UIAlertAction(title: "Refresh", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
             print("refresh")
+            Notification.showNotificaiton()
 
         })
         
@@ -125,6 +127,14 @@ class ViewController: UIViewController , UIWebViewDelegate{
             (alert: UIAlertAction!) -> Void in
             print("logout")
             Settings.clearSettingToDefault()
+            var ids = [String]()
+            for sur in self.settings.getSurveys(){
+                let Date1 = sur.getDate()
+                let Date2 = Calendar.current.date(byAdding: .minute, value: 1, to: Date1)
+                ids.append(DateUtil.stringifyAll(calendar: Date1))
+                ids.append(DateUtil.stringifyAll(calendar: Date2!))
+            }
+            Notification.removeNotification(ids: ids)
             
         })
         let issueAction = UIAlertAction(title: "Technical issue", style: .default, handler: {

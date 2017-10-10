@@ -56,4 +56,13 @@ class Survey: NSObject {
     public static func getSurveyCode(requestCode : Int) -> Int{
     return requestCode - (requestCode % 3);
     }
+    public static func getSuveryFromString(input: String) -> Survey{
+        
+        let argus = input.split(separator: " ")
+//        print(argus)
+        let res = Survey(requestCode: Int(argus[1])!, date: DateUtil.dateAll(calendar: String(argus[7]) + " " + String(argus[8]))!)
+        if(argus[3] == "true") {res.setAsTaken()}
+        if(argus[5] == "true") {res.setClosed()}
+        return res;
+    }
 }

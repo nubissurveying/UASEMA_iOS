@@ -19,6 +19,7 @@ class Constants: NSObject {
     public static let surveysKey = "UASEmasurveysKey"
     public static let setAtTimeKey = "UASEmasetAtTimeKey"
     
+    public static let notificationLimit = 10;
     //    public static int TIME_BETWEEN_SURVEYS_PRO = 45;
     public static var TIME_BETWEEN_SURVEYS_PRO = 90;
     private static var TIME_TO_TAKE_SURVEY_PRO = 15;     //was 8

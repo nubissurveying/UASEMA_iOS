@@ -275,12 +275,7 @@ class Settings: NSObject {
         }
         return nil;
     }
-    public static func getSettingFromDefault()->Settings{
-        let defaults = UserDefaults.standard
-        let settingStringFromDefaults = defaults.string(forKey: Constants.SETTINGSDEFAULT)
-        print(settingStringFromDefaults!)
-        return Settings()
-    }
+    
     public static func getSurveysFromSetting(settings: Settings)->[Survey]{
         return [Survey]()
     }
@@ -303,5 +298,28 @@ class Settings: NSObject {
         defaults.removeObject(forKey: Constants.endTimeKey)
         defaults.removeObject(forKey: Constants.setAtTimeKey)
         
+    }
+    public static func getSettingFromDefault() -> Settings{
+        let defaults = UserDefaults.standard
+        if(defaults.object(forKey: Constants.rtidKey) == nil) {
+            return Settings()
+        }else {
+            let res = Settings();
+            res.rtid = defaults.string(forKey: Constants.rtidKey)
+            res.loggedIn = defaults.bool(forKey: Constants.loggedInKey)
+            res.beginTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.beginTimeKey)!)
+            res.endTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.endTimeKey)!)
+            res.setAtTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.setAtTimeKey)!)
+            
+            let surveysString = defaults.string(forKey: Constants.surveysKey)
+            let surveyArray = surveysString?.split(separator: "\n")
+            var ss = [Survey]()
+            for str in surveyArray! {
+                ss.append(Survey.getSuveryFromString(input:String(str)))
+            }
+            res.surveys = ss
+            return res
+            
+        }
     }
 }
