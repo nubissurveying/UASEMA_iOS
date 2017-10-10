@@ -28,7 +28,8 @@ class ViewController: UIViewController , UIWebViewDelegate{
         let options = UIBarButtonItem.init(image: UIImage.init(named: "options"), style: .plain, target: self, action: #selector(self.showOptions))
         self.navigationItem.setRightBarButton(options, animated: true)
         // Do any additional setup after loading the view, typically from a nib.
-        settings = Settings()
+        settings = Settings.getSettingFromDefault()
+//        print(settings.toString())
         route(settings: settings)
     }
 
@@ -41,6 +42,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
         
         //  User is logged in and during survey
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
+            print("route comes to User is logged in and during survey")
 //            var survey = settings.getSurveyByTime(Calendar.getInstance());
 //            Intent i = new Intent(this, AlarmActivity.class);
 //            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -54,23 +56,28 @@ class ViewController: UIViewController , UIWebViewDelegate{
 //            
             //  User is logged in, is not during survey, and has not skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
+            print("route comes to User is logged in, is not during survey, and has not skipped previous")
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_START, settings: settings, now: now, includeParams: true));
             
             //  User is logged in, but has skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && settings.skippedPrevious(now: now)){
+            print("route comes to User is logged in, but has skipped previous")
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_NOREACTION, settings: settings, now: now, includeParams: true));
             
             //  UserId set from APK; is logged in, but has no start and end times;
         } else if (settings.isLoggedIn() && !settings.allFieldsSet()){
+            print("route comes to UserId set from APK; is logged in, but has no start and end times;")
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_INIT_NODATE, settings: settings, now: now,  includeParams: true));
             
             //  No user; either opted out, or started with APK with no RTID
         } else if (!settings.isLoggedIn()) {
+            print("route comes to No user; either opted out, or started with APK with no RTID")
             showWebView(url: UrlBuilder.build(page: "testandroid", settings: settings, now: now,  includeParams: false));
             //showWebView(UrlBuilder.build(UrlBuilder.PHONE_START, settings, now,  false));
         }
     }
     func showWebView(url: String) {
+        print(url)
         let urlrequest = URL(string: url)
         myWebView.loadRequest(URLRequest(url: urlrequest!))
     }
