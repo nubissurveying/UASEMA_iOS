@@ -98,6 +98,14 @@ class Notification: NSObject {
         let center = UNUserNotificationCenter.current()
 //        print(ids)
         center.removePendingNotificationRequests(withIdentifiers: ids)
+        UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
+            var message = ""
+            message += "\(requests.count) requests ------- \n"
+            for request in requests{
+                message += request.identifier + "\n"
+            }
+            UserDefaults.standard.set(message, forKey: Constants.NotificationsTimeKey)
+        })
     }
     static func showNotificaiton(){
         

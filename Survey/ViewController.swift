@@ -176,6 +176,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
                 ids.append(DateUtil.stringifyAll(calendar: Date2!))
             }
             Notification.removeNotification(ids: ids)
+            self.view.showToast("Logout", position: .bottom, popTime: 3, dismissOnTap: true)
             
         })
         let issueAction = UIAlertAction(title: "Technical issue", style: .default, handler: {
