@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JCc-vS-Udp">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="OZw-6i-473"/>
@@ -30,9 +30,13 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="JCc-vS-Udp" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Hfl-OV-7WZ"/>
-                            <constraint firstItem="JCc-vS-Udp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="MP1-ON-clh"/>
+                            <constraint firstItem="JCc-vS-Udp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="-64" id="L6O-Q8-Quy"/>
+                            <constraint firstItem="JCc-vS-Udp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="-64" id="MP1-ON-clh"/>
+                            <constraint firstItem="JCc-vS-Udp" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="TdK-dK-TPi"/>
                             <constraint firstItem="JCc-vS-Udp" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aQ9-7A-D24"/>
                             <constraint firstItem="JCc-vS-Udp" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="bXZ-1i-i7A"/>
+                            <constraint firstItem="JCc-vS-Udp" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="hZs-WM-ZTh"/>
+                            <constraint firstItem="JCc-vS-Udp" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="ly6-Pb-B85"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -55,33 +59,45 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Press the microphone button to start recording. Press the button again to stop" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4zI-N4-oFz">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Press the microphone button to start recording. Press the button again to stop" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4zI-N4-oFz">
                                 <rect key="frame" x="16" y="64" width="348" height="76"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="76" id="eXq-4o-ii9"/>
+                                    <constraint firstAttribute="width" constant="348" id="tpp-E8-Gbj"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Vd-Fg-AQx">
-                                <rect key="frame" x="10" y="282" width="354" height="106"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Vd-Fg-AQx">
+                                <rect key="frame" x="16" y="282" width="348" height="82"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="348" id="ANI-Hn-YlT"/>
+                                    <constraint firstAttribute="height" constant="82" id="aq4-WA-L8g"/>
+                                </constraints>
                                 <string key="text">After recording is done, you can Save the recording. You can also start over with a new recording by pressing the microphone button again.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j72-Er-PnY">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j72-Er-PnY">
                                 <rect key="frame" x="16" y="163" width="179" height="72"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="179" id="oy5-V6-TIW"/>
+                                    <constraint firstAttribute="height" constant="72" id="qDh-pm-mw4"/>
+                                </constraints>
                                 <state key="normal" image="microphone"/>
                                 <connections>
                                     <action selector="MicActon:" destination="Uqd-aP-DNE" eventType="touchUpInside" id="UtO-mX-DSx"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EA2-Y1-X4R">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EA2-Y1-X4R">
                                 <rect key="frame" x="203" y="163" width="156" height="39"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Save recording">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="156" id="5wM-5F-HpD"/>
+                                    <constraint firstAttribute="height" constant="39" id="FhQ-a5-prv"/>
+                                </constraints>
+                                <state key="normal" title="Save">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -90,6 +106,49 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="4zI-N4-oFz" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leadingMargin" id="1IK-7M-DMn"/>
+                            <constraint firstItem="4zI-N4-oFz" firstAttribute="top" secondItem="wPL-v4-zif" secondAttribute="top" id="1bw-Yh-E1N"/>
+                            <constraint firstItem="4zI-N4-oFz" firstAttribute="top" secondItem="wPL-v4-zif" secondAttribute="top" id="5EA-02-uD7"/>
+                            <constraint firstItem="j72-Er-PnY" firstAttribute="leading" secondItem="wPL-v4-zif" secondAttribute="leading" constant="16" id="9uc-X9-rLg"/>
+                            <constraint firstItem="EA2-Y1-X4R" firstAttribute="leading" secondItem="j72-Er-PnY" secondAttribute="trailing" constant="8" symbolic="YES" id="AVk-c9-dbt"/>
+                            <constraint firstItem="EA2-Y1-X4R" firstAttribute="top" secondItem="Rcq-Vf-xft" secondAttribute="top" constant="163" id="BOQ-tI-Smt"/>
+                            <constraint firstItem="EA2-Y1-X4R" firstAttribute="top" secondItem="j72-Er-PnY" secondAttribute="top" id="EpL-DG-6Y0"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leadingMargin" id="IJJ-jX-SZs"/>
+                            <constraint firstItem="wPL-v4-zif" firstAttribute="bottom" secondItem="5Vd-Fg-AQx" secondAttribute="bottom" constant="303" id="MJ0-Aw-QvG"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="top" secondItem="j72-Er-PnY" secondAttribute="bottom" constant="47" id="NJi-jf-D2f"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="top" secondItem="Rcq-Vf-xft" secondAttribute="top" constant="282" id="Nca-1c-xae"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="centerX" secondItem="4zI-N4-oFz" secondAttribute="centerX" id="P6C-JF-uhx"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="leading" secondItem="4zI-N4-oFz" secondAttribute="leading" id="P8M-rZ-j9U"/>
+                            <constraint firstItem="4zI-N4-oFz" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leading" constant="16" id="THf-2W-qk9"/>
+                            <constraint firstItem="4zI-N4-oFz" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leading" constant="16" id="TSA-mq-Xyh"/>
+                            <constraint firstItem="j72-Er-PnY" firstAttribute="leading" secondItem="4zI-N4-oFz" secondAttribute="leading" id="Uum-3z-Tmy"/>
+                            <constraint firstItem="j72-Er-PnY" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leading" constant="16" id="Vxd-bu-HXp"/>
+                            <constraint firstItem="EA2-Y1-X4R" firstAttribute="top" secondItem="4zI-N4-oFz" secondAttribute="bottom" constant="23" id="Whq-mC-KgQ"/>
+                            <constraint firstAttribute="trailing" secondItem="EA2-Y1-X4R" secondAttribute="trailing" constant="16" id="ZA6-mo-Qjy"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="top" secondItem="Rcq-Vf-xft" secondAttribute="top" constant="282" id="aPS-wo-4NT"/>
+                            <constraint firstItem="EA2-Y1-X4R" firstAttribute="leading" secondItem="j72-Er-PnY" secondAttribute="trailing" constant="8" id="asu-Cq-LvN"/>
+                            <constraint firstItem="4zI-N4-oFz" firstAttribute="top" secondItem="Rcq-Vf-xft" secondAttribute="top" constant="64" id="byX-ek-7iW"/>
+                            <constraint firstItem="j72-Er-PnY" firstAttribute="top" secondItem="4zI-N4-oFz" secondAttribute="bottom" constant="23" id="c4E-R8-obm"/>
+                            <constraint firstItem="4zI-N4-oFz" firstAttribute="top" secondItem="Rcq-Vf-xft" secondAttribute="top" constant="64" id="csq-2R-qQm"/>
+                            <constraint firstItem="EA2-Y1-X4R" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leading" constant="203" id="eoz-ae-2u0"/>
+                            <constraint firstItem="wPL-v4-zif" firstAttribute="trailing" secondItem="4zI-N4-oFz" secondAttribute="trailing" constant="11" id="hvi-xC-a7c"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="leading" secondItem="wPL-v4-zif" secondAttribute="leading" constant="16" id="irt-hL-5hM"/>
+                            <constraint firstItem="EA2-Y1-X4R" firstAttribute="trailing" secondItem="Rcq-Vf-xft" secondAttribute="trailingMargin" id="jIH-iD-4Yh"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="leading" secondItem="j72-Er-PnY" secondAttribute="leading" id="jL1-uj-zky"/>
+                            <constraint firstItem="j72-Er-PnY" firstAttribute="top" secondItem="Rcq-Vf-xft" secondAttribute="top" constant="163" id="kBW-sS-xSS"/>
+                            <constraint firstItem="4zI-N4-oFz" firstAttribute="top" secondItem="Rcq-Vf-xft" secondAttribute="topMargin" id="ks3-hR-MAV"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leading" constant="16" id="nwg-qt-xJl"/>
+                            <constraint firstItem="j72-Er-PnY" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leading" constant="16" id="q6x-RD-vIK"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leading" constant="16" id="qDm-Kd-rua"/>
+                            <constraint firstItem="5Vd-Fg-AQx" firstAttribute="trailing" secondItem="4zI-N4-oFz" secondAttribute="trailing" id="sAX-Js-v5u"/>
+                            <constraint firstItem="j72-Er-PnY" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leadingMargin" id="sCY-Qa-ESy"/>
+                            <constraint firstItem="EA2-Y1-X4R" firstAttribute="top" secondItem="Rcq-Vf-xft" secondAttribute="top" constant="163" id="uBE-8L-Nzv"/>
+                            <constraint firstItem="4zI-N4-oFz" firstAttribute="leading" secondItem="wPL-v4-zif" secondAttribute="leading" constant="16" id="uis-gi-QNg"/>
+                            <constraint firstItem="wPL-v4-zif" firstAttribute="trailing" secondItem="5Vd-Fg-AQx" secondAttribute="trailing" constant="11" id="wmC-0V-t0u"/>
+                            <constraint firstItem="wPL-v4-zif" firstAttribute="trailing" secondItem="EA2-Y1-X4R" secondAttribute="trailing" constant="16" id="xfA-ad-tSp"/>
+                            <constraint firstItem="j72-Er-PnY" firstAttribute="top" secondItem="Rcq-Vf-xft" secondAttribute="top" constant="163" id="ywV-Yo-4UG"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="wPL-v4-zif"/>
                     </view>
                     <connections>
