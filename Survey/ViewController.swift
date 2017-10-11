@@ -177,6 +177,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
             }
             Notification.removeNotification(ids: ids)
             self.view.showToast("Logout", position: .bottom, popTime: 3, dismissOnTap: true)
+            self.showWebView(url: UrlBuilder.build(page: "testandroid", settings: self.settings, now: Date(),  includeParams: false));
             
         })
         let issueAction = UIAlertAction(title: "Technical issue", style: .default, handler: {
