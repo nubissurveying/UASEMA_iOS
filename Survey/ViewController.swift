@@ -106,6 +106,14 @@ class ViewController: UIViewController , UIWebViewDelegate{
 //        defaults.set(settings.toString(), forKey: Constants.SETTINGSDEFAULT)
 //        print("saved", defaults.string(forKey: Constants.SETTINGSDEFAULT))
     }
+    var tField: UITextField!
+    func configurationTextField(textField: UITextField!)
+    {
+        
+        textField.placeholder = "Enter an item"
+        tField = textField
+        tField.isSecureTextEntry = true
+    }
     @objc func showOptions() {
         let optionMenu = UIAlertController(title: nil, message: "Menu", preferredStyle: .actionSheet)
         
@@ -113,14 +121,31 @@ class ViewController: UIViewController , UIWebViewDelegate{
         let adminAction = UIAlertAction(title: "Admin", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
             print("admin")
-            self.performSegue(withIdentifier: "admin", sender: nil)
+            
+            let alert = UIAlertController(title: "admin", message: "Please Enter the admin password", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addTextField(configurationHandler: self.configurationTextField)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(UIAlertAction) in
+//                print("Item : \(self.tField.text)")
+                if(self.tField.text == "bas"){
+                    self.performSegue(withIdentifier: "admin", sender: nil)
+                }
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
+            
+            
         })
         
         
-        let refreshAction = UIAlertAction(title: "Refresh", style: .default, handler: {
+        let refreshAction = UIAlertAction(title: "Show Notifications", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
-            print("refresh")
-            Notification.showNotificaiton()
+            
+            let notifications = self.defaults.string(forKey: Constants.NotificationsTimeKey)
+            
+            let alert = UIAlertController(title: "All notification in center", message: notifications, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
 
         })
         
@@ -146,7 +171,11 @@ class ViewController: UIViewController , UIWebViewDelegate{
         })
         let issueAction = UIAlertAction(title: "Technical issue", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
-            print("Share")
+            
+            let message = Strings.main_technicalissues_body + self.settings.getRtid()!
+            let alert = UIAlertController(title: Strings.main_technicalissues_title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
             
         })
         

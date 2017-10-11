@@ -42,7 +42,7 @@ class UrlBuilder: NSObject {
     private static func buildParams(page : String, settings : Settings, now : Date) -> String{
         return "&rtid=" + (settings.getRtid() == nil ? "" : Uri.encode(content: settings.getRtid()!)) +
     "&language=" + "en" +
-    "&device=" + "android" +
+    "&device=" + "iOS" +
     "&email=" +
             "&selecteddate=" + DateUtil.stringifyDate(calendar: settings.getbeginTime()) +    //  Not encoded?
             "&date=" + Uri.encode(content: DateUtil.stringifyAll(calendar: now)) +

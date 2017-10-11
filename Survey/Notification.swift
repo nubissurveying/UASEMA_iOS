@@ -77,11 +77,21 @@ class Notification: NSObject {
             let request2 = UNNotificationRequest.init(identifier: DateUtil.stringifyAll(calendar: second!), content: content2, trigger: trigger2)
             // Schedule the notification.
             center.add(request2, withCompletionHandler: nil)
-
             
+            
+            UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
+                var message = ""
+                message += "\(requests.count) requests ------- \n"
+                for request in requests{
+                    message += request.identifier + "\n"
+                }
+                UserDefaults.standard.set(message, forKey: Constants.NotificationsTimeKey)
+            })
             
         }
         print( count * 2 , "notificaitons should have been added")
+        
+        
         return count;
     }
     static func removeNotification(ids: [String]){
@@ -98,6 +108,7 @@ class Notification: NSObject {
                 print(request.identifier)
             }
         })
+        
     }
 
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E3B29131F8DEEF100C48A99 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3B29121F8DEEF100C48A99 /* Strings.swift */; };
 		2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558401F8B722200D2E9EE /* AppDelegate.swift */; };
 		2EA558431F8B722200D2E9EE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558421F8B722200D2E9EE /* ViewController.swift */; };
 		2EA558461F8B722200D2E9EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA558441F8B722200D2E9EE /* Main.storyboard */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E3B29121F8DEEF100C48A99 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		2EA5583D1F8B722200D2E9EE /* Survey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA558401F8B722200D2E9EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EA558421F8B722200D2E9EE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				2EA558671F8C00C900D2E9EE /* alarmTableViewCell.swift */,
 				2EA558611F8B740B00D2E9EE /* UrlBuilder.swift */,
 				2EA558651F8B8EBA00D2E9EE /* Notification.swift */,
+				2E3B29121F8DEEF100C48A99 /* Strings.swift */,
 				2EA558591F8B73BD00D2E9EE /* DateUtil.swift */,
 				2EA558471F8B722200D2E9EE /* Survey.xcdatamodeld */,
 			);
@@ -175,6 +178,7 @@
 				2EA558681F8C00C900D2E9EE /* alarmTableViewCell.swift in Sources */,
 				2EA558641F8B75E100D2E9EE /* Uri.swift in Sources */,
 				2EA5585E1F8B73F100D2E9EE /* Settings.swift in Sources */,
+				2E3B29131F8DEEF100C48A99 /* Strings.swift in Sources */,
 				2EA558561F8B735C00D2E9EE /* admainViewController.swift in Sources */,
 				2EA558621F8B740B00D2E9EE /* UrlBuilder.swift in Sources */,
 				2EA5585A1F8B73BD00D2E9EE /* DateUtil.swift in Sources */,
