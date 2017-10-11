@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import SwiftSpinner
+import EasyToast
 
 class ViewController: UIViewController , UIWebViewDelegate{
 //    public static let URL = "URL";
@@ -21,6 +23,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        SwiftSpinner.show("Loading...")
         myWebView.delegate = self
         
         self.title = "UASEma"
@@ -82,6 +85,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
         myWebView.loadRequest(URLRequest(url: urlrequest!))
     }
     func webViewDidFinishLoad(_ webView: UIWebView) {
+        SwiftSpinner.hide()
         let doc = webView.stringByEvaluatingJavaScript(from: "document.documentElement.outerHTML")
 //        print(doc)
         let regex = "rtid\\~.*\\~\\d{4}-\\d{2}-\\d{2}"
@@ -90,6 +94,9 @@ class ViewController: UIViewController , UIWebViewDelegate{
             print("regex result ",result!)
             saveInfo(alert: result!)
         }
+    }
+    func webViewDidStartLoad(_ webView: UIWebView) {
+        SwiftSpinner.show("Loading...")
     }
     func saveInfo(alert: String){
         let dateFomatter = DateFormatter()
@@ -128,6 +135,8 @@ class ViewController: UIViewController , UIWebViewDelegate{
 //                print("Item : \(self.tField.text)")
                 if(self.tField.text == "bas"){
                     self.performSegue(withIdentifier: "admin", sender: nil)
+                } else {
+                    self.view.showToast("Wrong password", position: .bottom, popTime: 3, dismissOnTap: true)
                 }
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))

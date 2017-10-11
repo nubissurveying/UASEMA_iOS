@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import EasyToast
 
 class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPlayerDelegate {
 
@@ -68,6 +69,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     }
     func startRecording() {
         print("start recording")
+        self.view.showToast("start recording", position: .bottom, popTime: 2, dismissOnTap: false)
         let audioFilename = getDocumentsDirectory().appendingPathComponent(recordName)
         
         let settings = [
@@ -95,8 +97,10 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         if success {
             mcImage.setImage(UIImage(named: "microphone_check"), for: UIControlState.normal)
             print("record succeed")
+            self.view.showToast("record succeed", position: .bottom, popTime: 2, dismissOnTap: false)
         } else {
             mcImage.setImage(UIImage(named: "microphone"),for: UIControlState.normal)
+            self.view.showToast("record fail", position: .bottom, popTime: 2, dismissOnTap: false)
             print("record fail")
             // recording failed :(
         }
@@ -130,12 +134,14 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         
         do {
             print("audio play")
+            self.view.showToast("audio play", position: .bottom, popTime: 3, dismissOnTap: true)
             try audioPlayer = AVAudioPlayer(contentsOf: audioFilename)
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
             audioPlayer?.play()
         } catch let error as NSError {
             print("audioPlayer error \(error.localizedDescription)")
+            self.view.showToast("audioPlayer error \(error.localizedDescription)", position: .bottom, popTime: 3, dismissOnTap: true)
         }
     }
     

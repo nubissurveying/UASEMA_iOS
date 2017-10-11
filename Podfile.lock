@@ -1,0 +1,15 @@
+PODS:
+  - EasyToast (2.0.2)
+  - SwiftSpinner (1.2.1)
+
+DEPENDENCIES:
+  - EasyToast
+  - SwiftSpinner
+
+SPEC CHECKSUMS:
+  EasyToast: 2844de2158fe8d2313c6de81b5a858a909d82532
+  SwiftSpinner: 62a28bbb4035f252a1e91b0e17fc40bdbbfa0aab
+
+PODFILE CHECKSUM: 635c9468f422687ca1c56b8aa7143d198c3dfb67
+
+COCOAPODS: 1.2.1
