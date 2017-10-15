@@ -31,6 +31,7 @@ class Notification: NSObject {
         
         let current = Date()
         var count = 0
+        var toBeAdd = [Survey]()
         for sur in surveys{
             if(sur.getDate() < current) {
                 continue
@@ -39,6 +40,14 @@ class Notification: NSObject {
             if(count > Constants.notificationLimit) {
                 break;
             }
+            
+            toBeAdd.append(sur)
+            
+            
+        }
+        
+        for sur in toBeAdd.reversed(){
+//            print("wait to be add",DateUtil.stringifyAll(calendar: sur.getDate()))
             let content = UNMutableNotificationContent()
             let content2 = UNMutableNotificationContent()
             let first = sur.getDate()
@@ -51,44 +60,41 @@ class Notification: NSObject {
             
             var date = DateComponents()
             date.hour = Calendar.current.component(.hour, from: first)
-            date.minute = Calendar.current.component(.hour, from: first)
+            date.minute = Calendar.current.component(.minute, from: first)
             date.day = Calendar.current.component(.day, from: first)
             date.month = Calendar.current.component(.month, from: first)
             date.year = Calendar.current.component(.year, from: first)
             let trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: false)
-//            let trigger = UNCalendarNotificationTrigger(dateMatching: firstComp, repeats: false)
+            //            let trigger = UNCalendarNotificationTrigger(dateMatching: firstComp, repeats: false)
             let request = UNNotificationRequest.init(identifier: DateUtil.stringifyAll(calendar: first), content: content, trigger: trigger)
-            // Schedule the notification.
-            
-            center.add(request,withCompletionHandler: nil)
-            
-            
+ 
             content2.title = "Survey is Ready"
             content2.body = "Survey is for" + DateUtil.stringifyTime(calendar: second!)
             content2.sound = UNNotificationSound.default()
             // Deliver the notification in five seconds.
             date = DateComponents()
             date.hour = Calendar.current.component(.hour, from: second!)
-            date.minute = Calendar.current.component(.hour, from: second!)
+            date.minute = Calendar.current.component(.minute, from: second!)
             date.day = Calendar.current.component(.day, from: second!)
             date.month = Calendar.current.component(.month, from: second!)
             date.year = Calendar.current.component(.year, from: second!)
             let trigger2 = UNCalendarNotificationTrigger(dateMatching: date, repeats: false)
             let request2 = UNNotificationRequest.init(identifier: DateUtil.stringifyAll(calendar: second!), content: content2, trigger: trigger2)
             // Schedule the notification.
+            
+            
+            
             center.add(request2, withCompletionHandler: nil)
-            
-            
-            UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
-                var message = ""
-                message += "\(requests.count) requests ------- \n"
-                for request in requests{
-                    message += request.identifier + "\n"
-                }
-                UserDefaults.standard.set(message, forKey: Constants.NotificationsTimeKey)
-            })
-            
+            center.add(request,withCompletionHandler: nil)
         }
+        UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
+            var message = ""
+            message += "\(requests.count) requests ------- \n"
+            for request in requests.reversed(){
+                message += request.identifier + "\n"
+            }
+            UserDefaults.standard.set(message, forKey: Constants.NotificationsTimeKey)
+        })
         print( count * 2 , "notificaitons should have been added")
         
         
@@ -96,8 +102,35 @@ class Notification: NSObject {
     }
     static func removeNotification(ids: [String]){
         let center = UNUserNotificationCenter.current()
-//        print(ids)
-        center.removePendingNotificationRequests(withIdentifiers: ids)
+        center.removeAllPendingNotificationRequests()
+//        center.removePendingNotificationRequests(withIdentifiers: ids)
+        UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
+            var message = ""
+            message += "\(requests.count) requests ------- \n"
+            for request in requests.reversed(){
+                message += request.identifier + "\n"
+            }
+            UserDefaults.standard.set(message, forKey: Constants.NotificationsTimeKey)
+            
+        })
+        
+    }
+    static func showNotificaiton(){
+        
+        print("here to print notificiaotn")
+        UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
+            print("\(requests.count) requests -------")
+            for request in requests.reversed(){
+                print(request.trigger!)
+            }
+        })
+        
+    }
+    static func removeDeliveredNotification(ids: [String]){
+        let center = UNUserNotificationCenter.current()
+        
+        center.removeDeliveredNotifications(withIdentifiers: ids)
+        center.removeAllDeliveredNotifications()
         UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
             var message = ""
             message += "\(requests.count) requests ------- \n"
@@ -105,16 +138,7 @@ class Notification: NSObject {
                 message += request.identifier + "\n"
             }
             UserDefaults.standard.set(message, forKey: Constants.NotificationsTimeKey)
-        })
-    }
-    static func showNotificaiton(){
-        
-        print("here to print notificiaotn")
-        UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
-            print("\(requests.count) requests -------")
-            for request in requests{
-                print(request.identifier)
-            }
+            
         })
         
     }

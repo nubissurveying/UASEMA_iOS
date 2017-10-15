@@ -19,11 +19,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge,]) {
             (granted, error) in
             print("Permission granted: \(granted)")
+            
         }
     }
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         registerForPushNotifications()
+        
+        
+        
         return true
     }
 
@@ -45,6 +49,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         UIApplication.shared.applicationIconBadgeNumber = 0;
+//        let settings = Settings.getSettingFromDefault()
+        let ids = [String]()
+//        for sur in settings.getSurveys(){
+//            let Date1 = sur.getDate()
+//            let Date2 = Calendar.current.date(byAdding: .minute, value: 1, to: Date1)
+//            ids.append(DateUtil.stringifyAll(calendar: Date1))
+//            ids.append(DateUtil.stringifyAll(calendar: Date2!))
+//        }
+        Notification.removeDeliveredNotification(ids: ids)
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

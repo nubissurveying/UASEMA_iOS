@@ -155,6 +155,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
             let alert = UIAlertController(title: "All notification in center", message: notifications, preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+            Notification.showNotificaiton()
 
         })
         
@@ -167,15 +168,17 @@ class ViewController: UIViewController , UIWebViewDelegate{
         let logoutAction = UIAlertAction(title: "Logout", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
             print("logout")
-            Settings.clearSettingToDefault()
-            var ids = [String]()
-            for sur in self.settings.getSurveys(){
-                let Date1 = sur.getDate()
-                let Date2 = Calendar.current.date(byAdding: .minute, value: 1, to: Date1)
-                ids.append(DateUtil.stringifyAll(calendar: Date1))
-                ids.append(DateUtil.stringifyAll(calendar: Date2!))
-            }
+            
+            let ids = [String]()
+//            for sur in self.settings.getSurveys(){
+//                let Date1 = sur.getDate()
+//                let Date2 = Calendar.current.date(byAdding: .minute, value: 1, to: Date1)
+//                ids.append(DateUtil.stringifyAll(calendar: Date1))
+//                ids.append(DateUtil.stringifyAll(calendar: Date2!))
+//            }
             Notification.removeNotification(ids: ids)
+            
+            Settings.clearSettingToDefault()
             self.view.showToast("Logout", position: .bottom, popTime: 3, dismissOnTap: true)
             self.showWebView(url: UrlBuilder.build(page: "testandroid", settings: self.settings, now: Date(),  includeParams: false));
             

@@ -26,7 +26,7 @@ class Constants: NSObject {
     private static var TIME_TO_TAKE_SURVEY_PRO = 15;     //was 8
     private static var TIME_TO_REMINDER_PRO = 6;
     
-    public static let TIME_BETWEEN_SURVEYS_DEV = 10;
+    public static let TIME_BETWEEN_SURVEYS_DEV = 3;
     private static let TIME_TO_TAKE_SURVEY_DEV = 2;
     private static let TIME_TO_REMINDER_DEV = 1;
     
