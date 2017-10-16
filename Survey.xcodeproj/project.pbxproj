@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0900C9E4F006748AD4B98047 /* Pods_Survey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D31E2412DD3EA82F3A02754 /* Pods_Survey.framework */; };
+		2E7436281F944A4A005B5CE2 /* SurveyActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7436271F944A4A005B5CE2 /* SurveyActionViewController.swift */; };
 		2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558401F8B722200D2E9EE /* AppDelegate.swift */; };
 		2EA558461F8B722200D2E9EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA558441F8B722200D2E9EE /* Main.storyboard */; };
 		2EA558491F8B722200D2E9EE /* Survey.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558471F8B722200D2E9EE /* Survey.xcdatamodeld */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E7436271F944A4A005B5CE2 /* SurveyActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyActionViewController.swift; sourceTree = "<group>"; };
 		2EA5583D1F8B722200D2E9EE /* Survey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA558401F8B722200D2E9EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EA558451F8B722200D2E9EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				2EE5C9041F934D050097F328 /* admainViewController.swift */,
+				2E7436271F944A4A005B5CE2 /* SurveyActionViewController.swift */,
 				2EE5C9051F934D050097F328 /* alarmTableViewCell.swift */,
 				2EE5C9061F934D050097F328 /* recordViewController.swift */,
 				2EE5C9071F934D050097F328 /* ViewController.swift */,
@@ -292,6 +295,7 @@
 				2EE5C90E1F934D050097F328 /* NubisAsyncResponse.swift in Sources */,
 				2EE5C9151F934D050097F328 /* alarmTableViewCell.swift in Sources */,
 				2EE5C91A1F934D050097F328 /* UrlBuilder.swift in Sources */,
+				2E7436281F944A4A005B5CE2 /* SurveyActionViewController.swift in Sources */,
 				2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */,
 				2EE5C9131F934D050097F328 /* Strings.swift in Sources */,
 				2EE5C9141F934D050097F328 /* admainViewController.swift in Sources */,

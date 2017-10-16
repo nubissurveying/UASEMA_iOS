@@ -58,6 +58,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            ids.append(DateUtil.stringifyAll(calendar: Date2!))
 //        }
         Notification.removeDeliveredNotification(ids: ids)
+//        let settings = Settings.getSettingFromDefault()
+//        route(settings: settings)
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -110,6 +112,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
+   
 }
 

@@ -32,7 +32,9 @@ class Strings: NSObject {
     public static let  main_loading = "Loading…"
     public static let  main_technicalissues_title = "Technical issues"
     
-    public static let  main_technicalissues_body = "If you have technical questions or concerns, please contact the helpdesk at 1-855-872-8673 (9am - 5pm PST) or by email: uashelp@usc.edu.\nPlease mention the app version (%1$s) and your UAS login number.\n\nUAS login number: "
+    public static let  main_technicalissues_body = "If you have technical questions or concerns, please contact the helpdesk at 1-855-872-8673 (9am - 5pm PST) or by email: uashelp@usc.edu.\nPlease mention the app version : "
+    
+    public static let  main_technicalissues_body2 = "\n and your UAS login number: "
     
     public static let  menu_admin_please_enter_password = "Please enter your password."
     public static let  menu_admin_invalid_password = "Invalid password."

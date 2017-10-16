@@ -13,7 +13,7 @@ class Settings: NSObject {
     private static var PTUS_SETTINGS = "PTUS_SETTINGS";
     
     private var loggedIn = false;
-    private var rtid : String!;
+    private var rtid = ""
     private var beginTime : Date!;
     private var endTime : Date!;
     private var surveys : [Survey] = [];
@@ -305,7 +305,7 @@ class Settings: NSObject {
             return Settings()
         }else {
             let res = Settings();
-            res.rtid = defaults.string(forKey: Constants.rtidKey)
+            res.rtid = defaults.string(forKey: Constants.rtidKey)!
             res.loggedIn = defaults.bool(forKey: Constants.loggedInKey)
             res.beginTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.beginTimeKey)!)
             res.endTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.endTimeKey)!)
