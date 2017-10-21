@@ -28,7 +28,13 @@ class ViewController: UIViewController , UIWebViewDelegate{
         SwiftSpinner.show("Loading...")
         myWebView.delegate = self
         
-        self.title = "UASEma"
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
+        imageView.contentMode = .scaleToFill
+        let image = UIImage(named: "uas_logo.png")
+        imageView.image = image
+        self.navigationItem.titleView = imageView
+ 
+//        self.navigationController?.navigationBar.barTintColor = UIColor.white
         
         let options = UIBarButtonItem.init(image: UIImage.init(named: "options"), style: .plain, target: self, action: #selector(self.showOptions))
         self.navigationItem.setRightBarButton(options, animated: true)
@@ -227,18 +233,19 @@ class ViewController: UIViewController , UIWebViewDelegate{
         optionMenu.addAction(logoutAction)
         optionMenu.addAction(cancelAction)
         // 5
+        optionMenu.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
         self.present(optionMenu, animated: true, completion: nil)
         
         
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "alarmAct") {
+        if (segue.identifier == "alarmAct" && settings.getSurveys().count > 0) {
             let now = Date()
             let survey = settings.getSurveyByTime(now: now);
-            
+            print("this is the survey found by time",survey)
             //            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //            let requestCode = (Int(now.timeIntervalSince((survey?.getDate())!)) < Constants.TIME_TO_REMINDER * 60) ?  survey?.getRequestCode() : (survey?.getRequestCode())! + 1;
-            let requestCode = 1
+            let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
             let alarm: SurveyActionViewController = segue.destination as! SurveyActionViewController
             alarm.requestCode = requestCode
         }

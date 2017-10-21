@@ -31,6 +31,11 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         SaveButton.layer.borderWidth = 1
         SaveButton.layer.borderColor = UIColor.black.cgColor
         
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
+        imageView.contentMode = .scaleToFill
+        let image = UIImage(named: "uas_logo.png")
+        imageView.image = image
+        self.navigationItem.titleView = imageView
         
         recordingSession = AVAudioSession.sharedInstance()
         do {

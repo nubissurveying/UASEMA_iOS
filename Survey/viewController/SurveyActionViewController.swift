@@ -17,9 +17,17 @@ class SurveyActionViewController: UIViewController {
     public var surveyCode : Int!;
     private var timeTag : String!;
 
+
+    @IBOutlet weak var requestCodeLable: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
+        imageView.contentMode = .scaleToFill
+        let image = UIImage(named: "uas_logo.png")
+        imageView.image = image
+        self.navigationItem.titleView = imageView
         print("in SurveyAction the request code is", requestCode)
+        requestCodeLable.text = String(requestCode)
         // Do any additional setup after loading the view.
     }
 

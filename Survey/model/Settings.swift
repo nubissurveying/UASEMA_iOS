@@ -58,7 +58,7 @@ class Settings: NSObject {
         return endTime;
     }
     public func getRtid()-> String? {
-        if(rtid == nil) {return nil}
+        
         return rtid;
     }
     public func isLoggedIn()-> Bool {
@@ -90,9 +90,13 @@ class Settings: NSObject {
         return nil
     }
     public func getSurveyByTime(now : Date) -> Survey?{
+//        print("the date to find is ", now)
+        
         for i in 0 ..< surveys.count {
+//            print("current survey is",surveys[i].getDate())
             let timeDiffInMin = Int(now.timeIntervalSince(surveys[i].getDate())) /  (60 );
             if(0 < timeDiffInMin && timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY) {
+                print("founded", surveys[i].getDate())
                 return surveys[i]
             }
         }
