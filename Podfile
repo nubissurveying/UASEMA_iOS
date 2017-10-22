@@ -8,5 +8,6 @@ target ‘Survey’ do
 
 pod "EasyToast"
 pod "SwiftSpinner"
+pod 'CryptoSwift', :git => "https://github.com/krzyzanowskim/CryptoSwift", :branch => "master"
 
 end

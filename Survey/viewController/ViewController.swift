@@ -242,7 +242,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
         if (segue.identifier == "alarmAct" && settings.getSurveys().count > 0) {
             let now = Date()
             let survey = settings.getSurveyByTime(now: now);
-            print("this is the survey found by time",survey)
+//            print("this is the survey found by time",survey)
             //            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //            let requestCode = (Int(now.timeIntervalSince((survey?.getDate())!)) < Constants.TIME_TO_REMINDER * 60) ?  survey?.getRequestCode() : (survey?.getRequestCode())! + 1;
             let requestCode = (survey == nil) ? -1: survey?.getRequestCode()

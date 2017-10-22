@@ -1,15 +1,28 @@
 PODS:
+  - CryptoSwift (0.8.0)
   - EasyToast (2.0.2)
   - SwiftSpinner (1.2.1)
 
 DEPENDENCIES:
+  - CryptoSwift (from `https://github.com/krzyzanowskim/CryptoSwift`, branch `master`)
   - EasyToast
   - SwiftSpinner
 
+EXTERNAL SOURCES:
+  CryptoSwift:
+    :branch: master
+    :git: https://github.com/krzyzanowskim/CryptoSwift
+
+CHECKOUT OPTIONS:
+  CryptoSwift:
+    :commit: 3688310705fed8af7248585adaafdc4b98b5f67e
+    :git: https://github.com/krzyzanowskim/CryptoSwift
+
 SPEC CHECKSUMS:
+  CryptoSwift: 475ae2a25439f52412686d68b854c0ca724c8dfd
   EasyToast: 2844de2158fe8d2313c6de81b5a858a909d82532
   SwiftSpinner: 62a28bbb4035f252a1e91b0e17fc40bdbbfa0aab
 
-PODFILE CHECKSUM: 635c9468f422687ca1c56b8aa7143d198c3dfb67
+PODFILE CHECKSUM: df70b2b59ec0194b8430b6da2d302ce801a16a5c
 
 COCOAPODS: 1.2.1
