@@ -8,6 +8,7 @@
 
 import UIKit
 import CryptoSwift
+import Foundation
 
 class MCrypt: NSObject {
 
@@ -32,43 +33,65 @@ class MCrypt: NSObject {
 //        }
 //    }
 //
-//    public byte[] encrypt(String text) throws Exception
-//{
-//    if(text == null || text.length() == 0)
-//    throw new Exception("Empty string");
+    enum cryptError: Error {
+        case encrypt
+        case decrypt
+        case deCryptEmptyInput
+        case enCryptEmptyInput
+    }
+    public func encrypt(text :String? )throws -> [UInt8]? {
+        if(text == nil || text?.count == 0){
+            throw cryptError.enCryptEmptyInput
+            return nil
+        }
+
+        var encrypted =  [UInt8]()
+
+        do{
+            let input = text?.data(using: String.Encoding.utf8)
+            
+            let inbytes:[UInt8] = input!.bytes
+//            AES(SecKey,iv,.CBC)
+            encrypted = try! AES(key: Array(SecretKey.utf8), blockMode: .CBC(iv: Array(iv.utf8)), padding: .pkcs7).encrypt(inbytes)
+            
+//            let dData: NSData = NSData(bytes: encryptedDeviceID)
+            
+//            let strDeviceID = dData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0))
+//            cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
 //
-//    byte[] encrypted = null;
+//            encrypted = cipher.doFinal(padString(text).getBytes());
+        } catch {
+            throw cryptError.encrypt
+        }
+
+        return encrypted;
+    }
+
+    public func decrypt(code : String?) throws-> [UInt8]? {
+        if(code == nil || code?.count == 0){
+            throw cryptError.deCryptEmptyInput
+            return nil
+        }
+        
+
+        var decrypted = [UInt8]()
+
+        do {
+            
+            let input = code?.data(using: String.Encoding.utf8)
+            
+            let inbytes:[UInt8] = input!.bytes
+            //            AES(SecKey,iv,.CBC)
+            decrypted = try! AES(key: Array(SecretKey.utf8), blockMode: .CBC(iv: Array(iv.utf8)), padding: .pkcs7).decrypt(inbytes)
+//            cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
 //
-//    try {
-//    cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
-//
-//    encrypted = cipher.doFinal(padString(text).getBytes());
-//    } catch (Exception e)
-//    {
-//    throw new Exception("[encrypt] " + e.getMessage());
-//    }
-//
-//    return encrypted;
-//    }
-//
-//    public byte[] decrypt(String code) throws Exception
-//{
-//    if(code == null || code.length() == 0)
-//    throw new Exception("Empty string");
-//
-//    byte[] decrypted = null;
-//
-//    try {
-//    cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
-//
-//    decrypted = cipher.doFinal(hexToBytes(code));
-//    } catch (Exception e)
-//    {
-//    throw new Exception("[decrypt] " + e.getMessage());
-//    }
-//    return decrypted;
-//    }
-    
+//            decrypted = cipher.doFinal(hexToBytes(code));
+        } catch {
+            throw cryptError.decrypt
+        }
+        return decrypted;
+    }
+
     
     
     public static func bytesToHex(data : [UInt8]) -> String?
@@ -104,9 +127,7 @@ class MCrypt: NSObject {
             for i in 0 ..< len{
                 let start = str?.index((str?.startIndex)!, offsetBy: i * 2)
                 let end = str?.index((str?.startIndex)!, offsetBy: i * 2 + 2)
-                var temp = str![start!...end!]
-                
-                let newStr = String(temp)
+                let newStr = String(str![start!...end!])
                 buffer[i] = newStr.hexa2Bytes[0]
             }
             return buffer;

@@ -85,7 +85,7 @@ class Notification: NSObject {
             
             
             
-            center.add(request2, withCompletionHandler: nil)
+            center.add(request2, withCompletionHandler:nil)
             center.add(request,withCompletionHandler: nil)
         }
         UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in

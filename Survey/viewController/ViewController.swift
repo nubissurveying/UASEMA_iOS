@@ -21,6 +21,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
     //  private FirebaseAnalytics mFirebaseAnalytics;
     private var hasInternet = true;
     private var defaults = UserDefaults.standard
+//    private var comesFromNotification = false
     @IBOutlet weak var myWebView: UIWebView!
     
     override func viewDidLoad() {
@@ -43,6 +44,10 @@ class ViewController: UIViewController , UIWebViewDelegate{
 //        SwiftSpinner.hide()
 //        print(settings.toString())
         print("internet is :", isInternetAvailable())
+        
+        HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
+        
+        
         route(settings: settings)
     }
 
@@ -55,10 +60,10 @@ class ViewController: UIViewController , UIWebViewDelegate{
         
         //  User is logged in and during survey
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
-            SwiftSpinner.hide()
+//            SwiftSpinner.hide()
             print("route comes to User is logged in and during survey")
-            self.performSegue(withIdentifier: "alarmAct", sender: nil)
-
+//            self.performSegue(withIdentifier: "alarmAct", sender: nil)
+            showWebView(url: "https://uas.usc.edu/survey/uas/ema/daily/index.php?android=1");
             //  User is logged in, is not during survey, and has not skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
             print("route comes to User is logged in, is not during survey, and has not skipped previous")
