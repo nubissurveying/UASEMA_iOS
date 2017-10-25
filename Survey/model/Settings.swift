@@ -114,6 +114,7 @@ class Settings: NSObject {
     
     /** Time Tag */
     public func getTimeTag(requestCode: Int)-> String?{
+        print("request code is ", requestCode)
         let position = requestCode / 3;
         if(position == surveys.count - 1){
             return UrlBuilder.TIME_LAST;
@@ -178,8 +179,8 @@ class Settings: NSObject {
     /** Set alarms from dates */
     private static func buildSurveysDev(  start : Date,   end : Date) ->[Survey]{
     
-        let minute = 60
-        let minutesDiff = Int(end.timeIntervalSince(start))  / minute;
+//        let minute = 60
+        let minutesDiff = 60;
         var beepMinDiff = [Int]()
         for  i in stride(from: 0, to: minutesDiff, by: Constants.TIME_BETWEEN_SURVEYS_DEV) {
             beepMinDiff.append(i);
@@ -187,7 +188,7 @@ class Settings: NSObject {
         
         var alarmTimes = [Survey]();
         for  i in 0 ..< beepMinDiff.count{
-            let calendar = Calendar.current.date(byAdding: .minute, value: beepMinDiff[i], to: start)
+            let calendar = Calendar.current.date(byAdding: .minute, value: beepMinDiff[i], to: Date())
             alarmTimes.append(Survey(requestCode: i * 3, date: calendar!));
         }
             return alarmTimes;

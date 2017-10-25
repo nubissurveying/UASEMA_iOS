@@ -56,6 +56,7 @@ class UrlBuilder: NSObject {
     public static func build(page : String,  settings : Settings, now : Date, includeParams : Bool) -> String{
         let response = baseURL + "?ema=1&p=" + page + (includeParams ? buildParams(page: page, settings: settings, now: now) : "");
 //    LogUtil.e("TT", "UrlBuilder => build() == " + response);
+        print(response)
     return response;
     }
 }

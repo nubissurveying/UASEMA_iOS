@@ -26,8 +26,10 @@ class ViewController: UIViewController , UIWebViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        SwiftSpinner.show("Loading...")
+        
         myWebView.delegate = self
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.applicationWillEnterForeground(notification:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
         imageView.contentMode = .scaleToFill
@@ -40,9 +42,14 @@ class ViewController: UIViewController , UIWebViewDelegate{
         let options = UIBarButtonItem.init(image: UIImage.init(named: "options"), style: .plain, target: self, action: #selector(self.showOptions))
         self.navigationItem.setRightBarButton(options, animated: true)
         // Do any additional setup after loading the view, typically from a nib.
+        
+    }
+    @objc func applicationWillEnterForeground(notification: NSNotification) {
+        print("did enter foreground")
+        SwiftSpinner.show("Loading from notification...")
         settings = Settings.getSettingFromDefault()
-//        SwiftSpinner.hide()
-//        print(settings.toString())
+        //        SwiftSpinner.hide()
+        //        print(settings.toString())
         print("internet is :", isInternetAvailable())
         
         HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
@@ -50,11 +57,25 @@ class ViewController: UIViewController , UIWebViewDelegate{
         
         route(settings: settings)
     }
-
+    override func viewWillAppear(_ animated: Bool) {
+        SwiftSpinner.show("Loading...")
+        settings = Settings.getSettingFromDefault()
+        //        SwiftSpinner.hide()
+        //        print(settings.toString())
+        print("internet is :", isInternetAvailable())
+        
+        HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
+        
+        
+        route(settings: settings)
+        
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
     func route(settings: Settings){
         let now = Date();
         
@@ -63,7 +84,13 @@ class ViewController: UIViewController , UIWebViewDelegate{
 //            SwiftSpinner.hide()
             print("route comes to User is logged in and during survey")
 //            self.performSegue(withIdentifier: "alarmAct", sender: nil)
-            showWebView(url: "https://uas.usc.edu/survey/uas/ema/daily/index.php?android=1");
+            let survey = settings.getSurveyByTime(now: now);
+            let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
+            var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
+            if(timeTag == nil) {timeTag = ""}
+            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
+//            ?ema=1&p=phone.start&language=en&device=ios&selecteddate=&
+            
             //  User is logged in, is not during survey, and has not skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
             print("route comes to User is logged in, is not during survey, and has not skipped previous")
@@ -238,6 +265,19 @@ class ViewController: UIViewController , UIWebViewDelegate{
 //            }
             Notification.removeNotification(ids: ids)
             
+            let center = UserDefaults.standard
+           
+            center.removeObject(forKey: Constants.CookieNameKey)
+            center.removeObject(forKey: Constants.CookieValueKey)
+            center.removeObject(forKey: Constants.CookiePathKey)
+            center.removeObject(forKey: Constants.CookieDomainKey)
+            center.removeObject(forKey: Constants.CookieSOKey)
+            center.removeObject(forKey: Constants.CookieSKey)
+            
+           
+            
+            print("Cookie is stored")
+            
             Settings.clearSettingToDefault()
             self.view.showToast("Logout", position: .bottom, popTime: 3, dismissOnTap: true)
             self.showWebView(url: UrlBuilder.build(page: "testandroid", settings: self.settings, now: Date(),  includeParams: false));
@@ -260,7 +300,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
         })
         let refreshWebAction = UIAlertAction(title: "Refresh", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
-            self.myWebView.reload()
+            self.route(settings: self.settings)
 
         })
         
