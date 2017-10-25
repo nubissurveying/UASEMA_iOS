@@ -55,7 +55,14 @@ class ViewController: UIViewController , UIWebViewDelegate{
         HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
         
         
-        route(settings: settings)
+        route(settings: settings, now: Date())
+//        let now = Date()
+//        let survey = settings.getSurveyByTime(now: now);
+//        let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
+//        var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
+//        if(timeTag == nil) {timeTag = ""}
+//        showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
+
     }
     override func viewWillAppear(_ animated: Bool) {
         SwiftSpinner.show("Loading...")
@@ -67,7 +74,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
         HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
         
         
-        route(settings: settings)
+        route(settings: settings, now: Date())
         
     }
     override func didReceiveMemoryWarning() {
@@ -76,10 +83,13 @@ class ViewController: UIViewController , UIWebViewDelegate{
     }
     
     
-    func route(settings: Settings){
-        let now = Date();
+//    @IBOutlet weak var routeCondition: UILabel!
+    func route(settings: Settings, now : Date){
+       
         
         //  User is logged in and during survey
+//        let conditiontext = String(settings.isLoggedIn()) + ", " + String(settings.allFieldsSet()) + ", " + String(settings.shouldShowSurvey(calendar: now))
+//        routeCondition.text = conditiontext
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
 //            SwiftSpinner.hide()
             print("route comes to User is logged in and during survey")
@@ -89,7 +99,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
             var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
             if(timeTag == nil) {timeTag = ""}
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
-//            ?ema=1&p=phone.start&language=en&device=ios&selecteddate=&
+
             
             //  User is logged in, is not during survey, and has not skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
@@ -246,11 +256,11 @@ class ViewController: UIViewController , UIWebViewDelegate{
             self.performSegue(withIdentifier: "record", sender: nil)
             
         })
-        let SurveyAction = UIAlertAction(title: "TestSurveyScreen", style: .default, handler: {
-            (alert: UIAlertAction!) -> Void in
-            self.performSegue(withIdentifier: "alarmAct", sender: nil)
-            
-        })
+//        let SurveyAction = UIAlertAction(title: "TestSurveyScreen", style: .default, handler: {
+//            (alert: UIAlertAction!) -> Void in
+//            self.performSegue(withIdentifier: "alarmAct", sender: nil)
+//
+//        })
         
         let logoutAction = UIAlertAction(title: "Logout", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
@@ -300,7 +310,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
         })
         let refreshWebAction = UIAlertAction(title: "Refresh", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
-            self.route(settings: self.settings)
+            self.route(settings: self.settings, now: Date())
 
         })
         
@@ -310,7 +320,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
             print("Cancelled")
         })
         optionMenu.addAction(refreshWebAction)
-        optionMenu.addAction(SurveyAction)
+//        optionMenu.addAction(SurveyAction)
         optionMenu.addAction(adminAction)
         optionMenu.addAction(refreshAction)
         optionMenu.addAction(recordAction)
@@ -339,7 +349,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
     }
     override func viewDidAppear(_ animated: Bool) {
         SwiftSpinner.show("Loading...")
-        route(settings: settings)
+        route(settings: settings, now: Date())
     }
     func isInternetAvailable() -> Bool
     {

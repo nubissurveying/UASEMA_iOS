@@ -13,7 +13,6 @@
 		2EA558461F8B722200D2E9EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA558441F8B722200D2E9EE /* Main.storyboard */; };
 		2EA558491F8B722200D2E9EE /* Survey.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558471F8B722200D2E9EE /* Survey.xcdatamodeld */; };
 		2EA5584B1F8B722200D2E9EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EA5584A1F8B722200D2E9EE /* Assets.xcassets */; };
-		2EA5584E1F8B722200D2E9EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA5584C1F8B722200D2E9EE /* LaunchScreen.storyboard */; };
 		2EAA84A41F9C19B0000B60C7 /* MCrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EAA84A31F9C19B0000B60C7 /* MCrypt.swift */; };
 		2EAA84A61F9C2388000B60C7 /* StringHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EAA84A51F9C2388000B60C7 /* StringHex.swift */; };
 		2EAA84B01F9C2954000B60C7 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EAA84B11F9C2954000B60C7 /* CryptoSwift.framework */; };
@@ -41,7 +40,6 @@
 		2EA558451F8B722200D2E9EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2EA558481F8B722200D2E9EE /* Survey.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Survey.xcdatamodel; sourceTree = "<group>"; };
 		2EA5584A1F8B722200D2E9EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2EA5584D1F8B722200D2E9EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2EA5584F1F8B722200D2E9EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2EAA84A31F9C19B0000B60C7 /* MCrypt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCrypt.swift; sourceTree = "<group>"; };
 		2EAA84A51F9C2388000B60C7 /* StringHex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringHex.swift; sourceTree = "<group>"; };
@@ -116,7 +114,6 @@
 				2EA558401F8B722200D2E9EE /* AppDelegate.swift */,
 				2EA558441F8B722200D2E9EE /* Main.storyboard */,
 				2EA5584A1F8B722200D2E9EE /* Assets.xcassets */,
-				2EA5584C1F8B722200D2E9EE /* LaunchScreen.storyboard */,
 				2EA5584F1F8B722200D2E9EE /* Info.plist */,
 				2EA558471F8B722200D2E9EE /* Survey.xcdatamodeld */,
 			);
@@ -240,7 +237,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EA5584E1F8B722200D2E9EE /* LaunchScreen.storyboard in Resources */,
 				2EA5584B1F8B722200D2E9EE /* Assets.xcassets in Resources */,
 				2EA558461F8B722200D2E9EE /* Main.storyboard in Resources */,
 			);
@@ -333,14 +329,6 @@
 				2EA558451F8B722200D2E9EE /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		2EA5584C1F8B722200D2E9EE /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2EA5584D1F8B722200D2E9EE /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

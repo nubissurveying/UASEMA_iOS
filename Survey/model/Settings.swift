@@ -103,8 +103,17 @@ class Settings: NSObject {
         return nil;
     }
     public func shouldShowSurvey(calendar : Date) -> Bool{
-        let currentSurvey = getSurveyByTime(now: calendar);
-        return currentSurvey != nil && !currentSurvey!.isTaken() && !currentSurvey!.isClosed();
+        for sur in surveys {
+            //            print("current survey is",surveys[i].getDate())
+            let timeDiffInMin = Int(calendar.timeIntervalSince(sur.getDate())) / (60);
+            if(0 <= timeDiffInMin && timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY + 1) {
+                print("founded", sur.getDate())
+                return !sur.isTaken() && !sur.isClosed()
+            }
+        }
+        print("found nothing")
+        return false
+        
     }
     
     /** User logged in && ready to take surveys */
