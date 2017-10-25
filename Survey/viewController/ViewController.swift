@@ -87,6 +87,24 @@ class ViewController: UIViewController , UIWebViewDelegate{
         }
     }
     func showWebView(url: String) {
+        HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
+        let center = UserDefaults.standard
+        if center.string(forKey: Constants.CookieNameKey) != nil{
+            let cookieProps : [HTTPCookiePropertyKey:Any] = [
+                HTTPCookiePropertyKey.name : center.string(forKey: Constants.CookieNameKey)!,
+                HTTPCookiePropertyKey.value : center.string(forKey: Constants.CookieValueKey)!,
+                HTTPCookiePropertyKey.domain : center.string(forKey: Constants.CookieDomainKey)!,
+                HTTPCookiePropertyKey.path : center.string(forKey: Constants.CookiePathKey)!,
+                HTTPCookiePropertyKey.secure : center.bool(forKey: Constants.CookieSKey)
+            ]
+            if let cookie = HTTPCookie(properties: cookieProps){
+                HTTPCookieStorage.shared.setCookie(cookie)
+                print(cookie,"cookie should be set")
+            }
+            print("cookie should be set")
+        }
+        
+        
         print(url)
         let urlrequest = URL(string: url)
         if(isInternetAvailable()){
@@ -109,7 +127,29 @@ class ViewController: UIViewController , UIWebViewDelegate{
             print("regex result ",result!)
             saveInfo(alert: result!)
         }
+        if let cookies = HTTPCookieStorage.shared.cookies{
+            print("here is the cookies")
+            for cookie in cookies{
+//                print(cookie.name)
+                print(cookie.name == "PHPSESSION")
+                if(cookie.name == "PHPSESSION"){
+                 
+                    let center = UserDefaults.standard
+                    center.set(cookie.name, forKey: Constants.CookieNameKey)
+                    center.set(cookie.value, forKey: Constants.CookieValueKey)
+                    center.set(cookie.path, forKey: Constants.CookiePathKey)
+                    center.set(cookie.domain, forKey: Constants.CookieDomainKey)
+                    center.set(cookie.isSessionOnly, forKey: Constants.CookieSOKey)
+                    center.set(cookie.isSecure, forKey: Constants.CookieSKey)
+                  
+                    print("Cookie is stored")
+                }
+            }
+        }
+        
+        
     }
+
     func webViewDidStartLoad(_ webView: UIWebView) {
         SwiftSpinner.show("Loading...")
     }
