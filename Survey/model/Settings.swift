@@ -191,7 +191,7 @@ class Settings: NSObject {
 //        let minute = 60
         let minutesDiff = 60;
         var beepMinDiff = [Int]()
-        for  i in stride(from: 0, to: minutesDiff, by: Constants.TIME_BETWEEN_SURVEYS_DEV) {
+        for  i in stride(from: 1 - Constants.TIME_BETWEEN_SURVEYS_DEV, to: minutesDiff, by: Constants.TIME_BETWEEN_SURVEYS_DEV) {
             beepMinDiff.append(i);
         }
         

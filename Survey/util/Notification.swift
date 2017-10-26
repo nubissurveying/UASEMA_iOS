@@ -57,6 +57,7 @@ class Notification: NSObject {
             content.title = "Survey is Ready"
             content.body = "Survey is for" + DateUtil.stringifyTime(calendar: first)
             content.sound = UNNotificationSound.default()
+            content.categoryIdentifier = Constants.CategoryName
             // Deliver the notification in five seconds.
             
             var date = DateComponents()
@@ -72,6 +73,7 @@ class Notification: NSObject {
             content2.title = "Survey is Ready"
             content2.body = "Survey is for" + DateUtil.stringifyTime(calendar: second!)
             content2.sound = UNNotificationSound.default()
+            content2.categoryIdentifier = Constants.CategoryName
             // Deliver the notification in five seconds.
             date = DateComponents()
             date.hour = Calendar.current.component(.hour, from: second!)
@@ -132,6 +134,29 @@ class Notification: NSObject {
         
         center.removeDeliveredNotifications(withIdentifiers: ids)
         center.removeAllDeliveredNotifications()
+        UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
+            var message = ""
+            message += "\(requests.count) requests ------- \n"
+            for request in requests{
+                message += request.identifier + "\n"
+            }
+            UserDefaults.standard.set(message, forKey: Constants.NotificationsTimeKey)
+            
+        })
+        
+    }
+    static func removeNotificationForASurvey(SurveyDate: Date!){
+        if(SurveyDate == nil){
+            return ;
+        }
+        let center = UNUserNotificationCenter.current()
+        var ids = [String]()
+        let first = SurveyDate
+        let second = Calendar.current.date(byAdding: .minute, value: 1, to: first!)
+        ids.append(DateUtil.stringifyAll(calendar: first!))
+        ids.append(DateUtil.stringifyAll(calendar: second!))
+        center.removePendingNotificationRequests(withIdentifiers: ids)
+        
         UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
             var message = ""
             message += "\(requests.count) requests ------- \n"

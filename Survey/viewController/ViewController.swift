@@ -11,8 +11,9 @@ import SwiftSpinner
 import EasyToast
 import SystemConfiguration
 import Foundation
+import UserNotifications
 
-class ViewController: UIViewController , UIWebViewDelegate{
+class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCenterDelegate{
 //    public static let URL = "URL";
 //    private WebView webView;
 //    private ProgressDialog dialog;
@@ -26,7 +27,7 @@ class ViewController: UIViewController , UIWebViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        UNUserNotificationCenter.current().delegate = self
         myWebView.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.applicationWillEnterForeground(notification:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
@@ -42,33 +43,24 @@ class ViewController: UIViewController , UIWebViewDelegate{
         let options = UIBarButtonItem.init(image: UIImage.init(named: "options"), style: .plain, target: self, action: #selector(self.showOptions))
         self.navigationItem.setRightBarButton(options, animated: true)
         // Do any additional setup after loading the view, typically from a nib.
+//        let notificationManger = NotificationManager()
+//        notificationManger.registerForNotifications()
         
     }
     @objc func applicationWillEnterForeground(notification: NSNotification) {
         print("did enter foreground")
         SwiftSpinner.show("Loading from notification...")
         settings = Settings.getSettingFromDefault()
-        //        SwiftSpinner.hide()
-        //        print(settings.toString())
+
         print("internet is :", isInternetAvailable())
-        
         HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
-        
-        
         route(settings: settings, now: Date())
-//        let now = Date()
-//        let survey = settings.getSurveyByTime(now: now);
-//        let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
-//        var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
-//        if(timeTag == nil) {timeTag = ""}
-//        showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
 
     }
     override func viewWillAppear(_ animated: Bool) {
         SwiftSpinner.show("Loading...")
         settings = Settings.getSettingFromDefault()
-        //        SwiftSpinner.hide()
-        //        print(settings.toString())
+
         print("internet is :", isInternetAvailable())
         
         HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
@@ -77,6 +69,9 @@ class ViewController: UIViewController , UIWebViewDelegate{
         route(settings: settings, now: Date())
         
     }
+    
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -95,6 +90,9 @@ class ViewController: UIViewController , UIWebViewDelegate{
             print("route comes to User is logged in and during survey")
 //            self.performSegue(withIdentifier: "alarmAct", sender: nil)
             let survey = settings.getSurveyByTime(now: now);
+            if(survey != nil) {
+                Notification.removeNotificationForASurvey(SurveyDate: (survey?.getDate())!)
+            }
             let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
             var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
             if(timeTag == nil) {timeTag = ""}
@@ -372,5 +370,23 @@ class ViewController: UIViewController , UIWebViewDelegate{
         return (isReachable && !needsConnection)
     }
 
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound, .badge])
+    }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
+        route(settings: settings, now: Date())
+//        let action = response.actionIdentifier
+////        let request = response.notification.request
+//        if(action == Constants.notificationActionDo){
+//            route(settings: settings, now: Date())
+////
+//        }
+//        if (action == Constants.notificationActionIgnore){
+////            self.view.showToast("Ignored", position: .bottom, popTime: 3, dismissOnTap: false)
+//        }
+        completionHandler()
+    }
 }
 

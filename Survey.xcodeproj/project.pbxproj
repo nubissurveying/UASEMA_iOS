@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0900C9E4F006748AD4B98047 /* Pods_Survey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D31E2412DD3EA82F3A02754 /* Pods_Survey.framework */; };
+		2E3645F81FA13D2100A8FC5B /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */; };
 		2E7436281F944A4A005B5CE2 /* SurveyActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7436271F944A4A005B5CE2 /* SurveyActionViewController.swift */; };
 		2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558401F8B722200D2E9EE /* AppDelegate.swift */; };
 		2EA558461F8B722200D2E9EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA558441F8B722200D2E9EE /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		2E7436271F944A4A005B5CE2 /* SurveyActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyActionViewController.swift; sourceTree = "<group>"; };
 		2EA5583D1F8B722200D2E9EE /* Survey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA558401F8B722200D2E9EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				2E7436271F944A4A005B5CE2 /* SurveyActionViewController.swift */,
 				2EE5C9051F934D050097F328 /* alarmTableViewCell.swift */,
 				2EE5C9061F934D050097F328 /* recordViewController.swift */,
+				2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */,
 				2EE5C9071F934D050097F328 /* ViewController.swift */,
 			);
 			path = viewController;
@@ -315,6 +318,7 @@
 				2EE5C9161F934D050097F328 /* recordViewController.swift in Sources */,
 				2EAA84A41F9C19B0000B60C7 /* MCrypt.swift in Sources */,
 				2EE5C90C1F934D050097F328 /* DateUtil.swift in Sources */,
+				2E3645F81FA13D2100A8FC5B /* NotificationManager.swift in Sources */,
 				2EA558491F8B722200D2E9EE /* Survey.xcdatamodeld in Sources */,
 				2EE5C9121F934D050097F328 /* Constants.swift in Sources */,
 			);

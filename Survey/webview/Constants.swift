@@ -26,6 +26,9 @@ class Constants: NSObject {
     public static let CookieSOKey = "CookieSOKey"
     public static let CookieSKey = "CookieSKey"
     
+    public static let CategoryName = "survey.steps"
+    public static let notificationActionDo = "do.survey.action"
+    public static let notificationActionIgnore = "ignore.action"
     
     public static let notificationLimit = 10;
     //    public static int TIME_BETWEEN_SURVEYS_PRO = 45;
