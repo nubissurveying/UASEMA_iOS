@@ -152,21 +152,29 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         let soundrecorded = FileManager.default.fileExists(atPath: url.path)
         if(soundrecorded){
             self.view.showToast("uploading", position: .bottom, popTime: 3, dismissOnTap: false)
+            
             removeFileAt(url: url)
         } else {
             self.view.showToast("nothing to upload", position: .bottom, popTime: 3, dismissOnTap: false)
         }
-        
+        upload(url: url)
         
         self.mcImage.isEnabled  = true
         self.SaveButton.isEnabled = true
     }
-    
+    func upload(url : URL){
+        print("try to upload using alamofire")
+        let testString = "fd39214dadb0817d67b508135a93a5b688313d64f990f807b337bcad226cc30604e0f53dcb940d18c1fee0552a8ee6418fc392a6b6aa83b375093b777b72052b9df7bae2d8384180e7491487f0a1e0e30157d393b1462bbe625fd6a79f546340"
+        Alamofire.upload(url, to: "http://localhost/ema/index.php" + "?ema=1&q=" + testString).responseJSON { response in
+            debugPrint(response)
+        }
+        print("end uploading using alamofire")
+    }
     func playAudio(){
         let audioFilename = getDocumentsDirectory().appendingPathComponent(recordName)
         if(!FileManager.default.fileExists(atPath: audioFilename.path)){
             self.view.showToast("nothing to play", position: .bottom, popTime: 3, dismissOnTap: false)
-            return 
+            return
         }
         
         

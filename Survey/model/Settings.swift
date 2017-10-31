@@ -19,7 +19,8 @@ class Settings: NSObject {
     private var surveys : [Survey] = [];
     private var setAtTime: Date!;
     
-    public var serverURL = "https://uas.usc.edu/survey/uas/ema/daily/index.php";
+    public var serverURL = "https://uas.usc.edu/survey/uas/ema/daily/index.php"
+    public static var sURL = "https://uas.usc.edu/survey/uas/ema/daily/index.php"
     
     override init() {
         
@@ -48,6 +49,7 @@ class Settings: NSObject {
         self.rtid = rtid;
      
     }
+    
     public func getSurveys() -> [Survey] {
         return surveys;
     }
