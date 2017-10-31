@@ -1,9 +1,11 @@
 PODS:
+  - Alamofire (4.4.0)
   - CryptoSwift (0.8.0)
   - EasyToast (2.0.2)
   - SwiftSpinner (1.2.1)
 
 DEPENDENCIES:
+  - Alamofire
   - CryptoSwift (from `https://github.com/krzyzanowskim/CryptoSwift`, branch `master`)
   - EasyToast
   - SwiftSpinner
@@ -19,10 +21,11 @@ CHECKOUT OPTIONS:
     :git: https://github.com/krzyzanowskim/CryptoSwift
 
 SPEC CHECKSUMS:
+  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
   CryptoSwift: 475ae2a25439f52412686d68b854c0ca724c8dfd
   EasyToast: 2844de2158fe8d2313c6de81b5a858a909d82532
   SwiftSpinner: 62a28bbb4035f252a1e91b0e17fc40bdbbfa0aab
 
-PODFILE CHECKSUM: df70b2b59ec0194b8430b6da2d302ce801a16a5c
+PODFILE CHECKSUM: a3c5ec087ab990e0762cd83d7829617a70094b8f
 
 COCOAPODS: 1.2.1

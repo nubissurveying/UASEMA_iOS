@@ -106,7 +106,7 @@ class Settings: NSObject {
         for sur in surveys {
             //            print("current survey is",surveys[i].getDate())
             let timeDiffInMin = Int(calendar.timeIntervalSince(sur.getDate())) / (60);
-            if(0 <= timeDiffInMin && timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY + 1) {
+            if(sur.getDate() <= calendar && timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY + 1) {
                 print("founded", sur.getDate())
                 return !sur.isTaken() && !sur.isClosed()
             }
@@ -194,7 +194,10 @@ class Settings: NSObject {
         for  i in stride(from: 1 - Constants.TIME_BETWEEN_SURVEYS_DEV, to: minutesDiff, by: Constants.TIME_BETWEEN_SURVEYS_DEV) {
             beepMinDiff.append(i);
         }
-        
+//        let current = Date();
+//        let hour = Calendar.current.component(.minute, from: current)
+//        let min = Calendar.current.component(.hour, from: current)
+//        let initTime = Calendar.current.date(bySettingHour: hour, minute: min, second: 0, of: Date())
         var alarmTimes = [Survey]();
         for  i in 0 ..< beepMinDiff.count{
             let calendar = Calendar.current.date(byAdding: .minute, value: beepMinDiff[i], to: Date())

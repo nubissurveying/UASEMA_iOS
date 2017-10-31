@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import EasyToast
+import Alamofire
 
 class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPlayerDelegate {
 
@@ -127,15 +128,47 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
+    func removeFileAt(url: URL){
+        do{
+            try FileManager.default.removeItem(at: url)
+            
+        }catch let error as NSError {
+            print("delete fail: \(error)")
+        }
+    }
+    
     @IBAction func SaveUpload(_ sender: Any) {
         mcImage.setImage(UIImage(named: "microphone"),for: UIControlState.normal)
         isRecording = false;
         playAudio()
+        uploadAudio(url: getDocumentsDirectory().appendingPathComponent(recordName))
         
     }
-    func playAudio(){
+    func uploadAudio(url : URL){
+        self.mcImage.isEnabled  = false
+        self.SaveButton.isEnabled = false
         
+        var now = Date()
+        let soundrecorded = FileManager.default.fileExists(atPath: url.path)
+        if(soundrecorded){
+            self.view.showToast("uploading", position: .bottom, popTime: 3, dismissOnTap: false)
+            removeFileAt(url: url)
+        } else {
+            self.view.showToast("nothing to upload", position: .bottom, popTime: 3, dismissOnTap: false)
+        }
+        
+        
+        self.mcImage.isEnabled  = true
+        self.SaveButton.isEnabled = true
+    }
+    
+    func playAudio(){
         let audioFilename = getDocumentsDirectory().appendingPathComponent(recordName)
+        if(!FileManager.default.fileExists(atPath: audioFilename.path)){
+            self.view.showToast("nothing to play", position: .bottom, popTime: 3, dismissOnTap: false)
+            return 
+        }
+        
         
         do {
             print("audio play")

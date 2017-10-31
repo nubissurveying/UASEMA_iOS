@@ -81,7 +81,7 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
 //    @IBOutlet weak var routeCondition: UILabel!
     func route(settings: Settings, now : Date){
        
-        
+        print("here comes route")
         //  User is logged in and during survey
 //        let conditiontext = String(settings.isLoggedIn()) + ", " + String(settings.allFieldsSet()) + ", " + String(settings.shouldShowSurvey(calendar: now))
 //        routeCondition.text = conditiontext
@@ -90,6 +90,7 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
             print("route comes to User is logged in and during survey")
 //            self.performSegue(withIdentifier: "alarmAct", sender: nil)
             let survey = settings.getSurveyByTime(now: now);
+            
             if(survey != nil) {
                 Notification.removeNotificationForASurvey(SurveyDate: (survey?.getDate())!)
             }
@@ -134,9 +135,9 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
             ]
             if let cookie = HTTPCookie(properties: cookieProps){
                 HTTPCookieStorage.shared.setCookie(cookie)
-                print(cookie,"cookie should be set")
+//                print(cookie,"cookie should be set")
             }
-            print("cookie should be set")
+//            print("cookie should be set")
         }
         
         
@@ -145,6 +146,7 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
         if(isInternetAvailable()){
             
             myWebView.loadRequest(URLRequest(url: urlrequest!))
+            
         } else{
             let noInternet = "<html><body><h3><font face=arial color=#5691ea>" +  "No internet connection detected. Make sure you are connected to the cellular network or wifi." + "</font></h3></body></html>"
             
@@ -153,9 +155,10 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
         
     }
     func webViewDidFinishLoad(_ webView: UIWebView) {
-        SwiftSpinner.hide()
+        webView.stringByEvaluatingJavaScript(from: "delete window.alert;")
+
         let doc = webView.stringByEvaluatingJavaScript(from: "document.documentElement.outerHTML")
-//        print(doc)
+
         let regex = "rtid\\~.*\\~\\d{4}-\\d{2}-\\d{2}"
         if let range = doc?.range(of:regex, options: .regularExpression) {
             let result = doc?.substring(with: range)
@@ -163,10 +166,10 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
             saveInfo(alert: result!)
         }
         if let cookies = HTTPCookieStorage.shared.cookies{
-            print("here is the cookies")
+//            print("here is the cookies")
             for cookie in cookies{
 //                print(cookie.name)
-                print(cookie.name == "PHPSESSION")
+//                print(cookie.name == "PHPSESSION")
                 if(cookie.name == "PHPSESSION"){
                  
                     let center = UserDefaults.standard
@@ -177,15 +180,16 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
                     center.set(cookie.isSessionOnly, forKey: Constants.CookieSOKey)
                     center.set(cookie.isSecure, forKey: Constants.CookieSKey)
                   
-                    print("Cookie is stored")
+//                    print("Cookie is stored")
                 }
             }
         }
-        
+        SwiftSpinner.hide()
         
     }
 
     func webViewDidStartLoad(_ webView: UIWebView) {
+//        webView.stringByEvaluatingJavaScript(from: "window.alert=null;")
         SwiftSpinner.show("Loading...")
     }
     func saveInfo(alert: String){
@@ -375,17 +379,10 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
         completionHandler([.alert, .sound, .badge])
     }
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
         route(settings: settings, now: Date())
-//        let action = response.actionIdentifier
-////        let request = response.notification.request
-//        if(action == Constants.notificationActionDo){
-//            route(settings: settings, now: Date())
-////
-//        }
-//        if (action == Constants.notificationActionIgnore){
-////            self.view.showToast("Ignored", position: .bottom, popTime: 3, dismissOnTap: false)
-//        }
+        self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
+        
+
         completionHandler()
     }
 }
