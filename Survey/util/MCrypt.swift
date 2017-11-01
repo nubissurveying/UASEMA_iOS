@@ -112,7 +112,8 @@ class MCrypt: NSObject {
             }
             
         }
-        return str;
+        let nstr = str.replacingOccurrences(of: " ", with: "")
+        return nstr;
     }
     
     

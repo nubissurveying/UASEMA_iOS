@@ -20,7 +20,7 @@ class NubisDelayedAnswer: NSObject {
     static public var N_twoHyphens = "--";
     static public var N_boundary = "*****";
     
-//    private ByteArrayOutputStream bos = null;
+    private var bos : OutputStream!
     
     private var postData = "";
     private var type : Int!
@@ -63,38 +63,54 @@ class NubisDelayedAnswer: NSObject {
         POST_fileName = filename;
     }
     
-//    public func setByteArrayOutputStream(){
-//        try {
-//            FileInputStream fis = new FileInputStream(POST_fileName);
-//            bos = new ByteArrayOutputStream();
-//            byte[] buf = new byte[1024];
-//            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-//                bos.write(buf, 0, readNum); //no doubt here is 0
-//            }
-//        }
-//            catch (Exception e){
-//
-//        }
-//    }
+    public func setByteArrayOutputStream(){
+        do {
+            
+            let fis = InputStream(fileAtPath: POST_fileName);
+            bos = OutputStream();
+            let bufferSize = 1024
+            let buf = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+            
+            while (fis?.hasBytesAvailable)! {
+                let read = fis?.read(buf, maxLength: bufferSize)
+                print("input stream reader count : " , read!)
+                bos.write(buf, maxLength: read! )
+            }
+            buf.deallocate(capacity: bufferSize)
+            
+            fis?.close()
+        }
+        catch let e as NSError{
+            print(e.localizedDescription)
+        }
+
+    }
+
     
     
-    
-//    public ByteArrayOutputStream getByteArrayOutputStream(){
-//        try {
-//            if (bos == null){ //null -> set it
-//            FileInputStream fis = new FileInputStream(POST_fileName);
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//            byte[] buf = new byte[1024];
-//            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-//                bos.write(buf, 0, readNum); //no doubt here is 0
-//            }
-//        }
-//            return bos;
-//        }
-//        catch (Exception e){
-//            return null;
-//        }
-//    }
+    public func getByteArrayOutputStream(output: OutputStream){
+        do {
+            
+            let fis = InputStream(fileAtPath: POST_fileName);
+            
+            let bufferSize = 1024
+            let buf = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+            
+            while (fis?.hasBytesAvailable)! {
+                let read = fis?.read(buf, maxLength: bufferSize)
+                print("input stream reader count : " , read!)
+                output.write(buf, maxLength: read! )
+            }
+            buf.deallocate(capacity: bufferSize)
+            
+            fis?.close()
+            
+        }
+        catch let e as NSError{
+            print(e.localizedDescription)
+        }
+        
+    }
     
     public func getGetString() -> String? {
         do {

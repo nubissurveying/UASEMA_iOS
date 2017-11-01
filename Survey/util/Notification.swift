@@ -61,6 +61,7 @@ class Notification: NSObject {
             // Deliver the notification in five seconds.
             
             var date = DateComponents()
+            date.second = Calendar.current.component(.second, from: first)
             date.hour = Calendar.current.component(.hour, from: first)
             date.minute = Calendar.current.component(.minute, from: first)
             date.day = Calendar.current.component(.day, from: first)
@@ -76,6 +77,7 @@ class Notification: NSObject {
             content2.categoryIdentifier = Constants.CategoryName
             // Deliver the notification in five seconds.
             date = DateComponents()
+            date.second = Calendar.current.component(.second, from: second!)
             date.hour = Calendar.current.component(.hour, from: second!)
             date.minute = Calendar.current.component(.minute, from: second!)
             date.day = Calendar.current.component(.day, from: second!)

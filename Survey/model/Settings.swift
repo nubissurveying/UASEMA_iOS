@@ -94,12 +94,18 @@ class Settings: NSObject {
     public func getSurveyByTime(now : Date) -> Survey?{
 //        print("the date to find is ", now)
         
-        for i in 0 ..< surveys.count {
-//            print("current survey is",surveys[i].getDate())
-            let timeDiffInMin = Int(now.timeIntervalSince(surveys[i].getDate())) /  (60 );
-            if(0 < timeDiffInMin && timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY) {
-                print("founded", surveys[i].getDate())
-                return surveys[i]
+        for sur in surveys {
+           
+            if(sur.getDate() <= Date() ) {
+                
+                let timeDiffInMin = Int(Date().timeIntervalSince(sur.getDate())) / (60);
+                if(timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY + 1){
+                    print("founded in get survey by time", sur.getDate(), "time diff ", timeDiffInMin, sur.isTaken(), sur.isClosed())
+                    return sur
+                }
+                
+            } else {
+                break
             }
         }
         return nil;
@@ -107,13 +113,20 @@ class Settings: NSObject {
     public func shouldShowSurvey(calendar : Date) -> Bool{
         for sur in surveys {
             //            print("current survey is",surveys[i].getDate())
-            let timeDiffInMin = Int(calendar.timeIntervalSince(sur.getDate())) / (60);
-            if(sur.getDate() <= calendar && timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY + 1) {
-                print("founded", sur.getDate())
-                return !sur.isTaken() && !sur.isClosed()
+            
+            if(sur.getDate() <= Date() ) {
+                
+                let timeDiffInMin = Int(Date().timeIntervalSince(sur.getDate())) / (60);
+                if(timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY + 1){
+                    print("founded in should show survey", sur.getDate(), "time diff ", timeDiffInMin, sur.isTaken(), sur.isClosed())
+                    return !sur.isTaken() && !sur.isClosed()
+                }
+                
+            } else {
+                break
             }
         }
-        print("found nothing")
+        print("found nothing in should show survey")
         return false
         
     }

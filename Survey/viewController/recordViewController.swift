@@ -20,6 +20,9 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     var audioPlayer: AVAudioPlayer!
     var isRecording = false
     let recordName = "recording.m4a"
+    let streamName = "localStream"
+    let settings = Settings.getSettingFromDefault()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mcImage.backgroundColor = .clear
@@ -79,10 +82,12 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         let audioFilename = getDocumentsDirectory().appendingPathComponent(recordName)
         
         let settings = [
+          
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
             AVNumberOfChannelsKey: 1,
             AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+
         ]
         
         do {
@@ -153,7 +158,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         if(soundrecorded){
             self.view.showToast("uploading", position: .bottom, popTime: 3, dismissOnTap: false)
             
-            removeFileAt(url: url)
+//            removeFileAt(url: url)
         } else {
             self.view.showToast("nothing to upload", position: .bottom, popTime: 3, dismissOnTap: false)
         }
@@ -164,12 +169,52 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     }
     func upload(url : URL){
         print("try to upload using alamofire")
-        let testString = "fd39214dadb0817d67b508135a93a5b688313d64f990f807b337bcad226cc30604e0f53dcb940d18c1fee0552a8ee6418fc392a6b6aa83b375093b777b72052b9df7bae2d8384180e7491487f0a1e0e30157d393b1462bbe625fd6a79f546340"
-        Alamofire.upload(url, to: "http://localhost/ema/index.php" + "?ema=1&q=" + testString).responseJSON { response in
+        
+        
+        
+        let delayedAnswer = NubisDelayedAnswer(type: NubisDelayedAnswer.N_POST_FILE)
+        dispatchDelayedAnswer(delayedAnswer: delayedAnswer, url: url)
+        
+        let fileinputStream = InputStream(url: getDocumentsDirectory().appendingPathComponent(streamName))
+//        let fileinputStream = InputStream(url: getDocumentsDirectory().appendingPathComponent(recordName))
+        print("here comes upload encrypt string", Encrypt(inputStr: delayedAnswer.getGetString()!))
+        let localurl = "http://localhost:8888/ema/index.php?"
+        print("fileinputstream == ", fileinputStream.debugDescription)
+        Alamofire.upload(fileinputStream!, to: localurl + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!)).response { response in
             debugPrint(response)
+            }.uploadProgress { progress in // main queue by default
+                print("Upload Progress: \(progress.fractionCompleted)")
         }
         print("end uploading using alamofire")
     }
+    func dispatchDelayedAnswer(delayedAnswer : NubisDelayedAnswer, url: URL){
+        
+        let dic = Bundle.main.infoDictionary!
+        let buildNumber = dic["CFBundleVersion"]! as! String
+        delayedAnswer.addGetParameter(key: "version", value: buildNumber)
+        delayedAnswer.addGetParameter(key: "rtid", value: settings.getRtid()!)
+        delayedAnswer.addGetParameter(key: "phonets", value: DateUtil.stringifyAllAlt(calendar: Date()))
+        delayedAnswer.addGetParameter(key: "p", value: "openendedsound")
+        delayedAnswer.addGetParameter(key: "ema", value: "1")
+        delayedAnswer.addFileName(filename: url.path)
+        //        delayedanswer.setByteArrayOutputStream()
+        let output = OutputStream(toFileAtPath: getDocumentsDirectory().appendingPathComponent(streamName).path, append:true)
+        output?.open()
+        var input = NubisDelayedAnswer.N_twoHyphens + NubisDelayedAnswer.N_boundary + NubisDelayedAnswer.N_lineEnd
+        output?.write(input, maxLength: input.count)
+        
+        input = "Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + "test" + "\"" + NubisDelayedAnswer.N_lineEnd
+        output?.write(input, maxLength: input.count)
+        
+        output?.write(NubisDelayedAnswer.N_lineEnd, maxLength: NubisDelayedAnswer.N_lineEnd.count)
+        delayedAnswer.getByteArrayOutputStream(output: output!)
+        
+        output?.write(NubisDelayedAnswer.N_lineEnd, maxLength: NubisDelayedAnswer.N_lineEnd.count)
+        input = NubisDelayedAnswer.N_twoHyphens + NubisDelayedAnswer.N_boundary + NubisDelayedAnswer.N_twoHyphens + NubisDelayedAnswer.N_lineEnd
+        output?.write(input, maxLength: input.count)
+        output?.close()
+    }
+    
     func playAudio(){
         let audioFilename = getDocumentsDirectory().appendingPathComponent(recordName)
         if(!FileManager.default.fileExists(atPath: audioFilename.path)){
@@ -200,5 +245,15 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         // Pass the selected object to the new view controller.
     }
     */
+    public func Encrypt(inputStr:String)->String{
+        do {
+            let mcrypt = MCrypt();
+            return try MCrypt.bytesToHex( data: mcrypt.encrypt(text: inputStr)! )!;
+        }
+        catch let error as NSError{
+            print("mycrypt in record uploading error \(error.localizedDescription)")
+        }
+        return inputStr;
+    }
 
 }

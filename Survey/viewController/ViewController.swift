@@ -80,11 +80,12 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
     
 //    @IBOutlet weak var routeCondition: UILabel!
     func route(settings: Settings, now : Date){
-       
+        
         print("here comes route")
         //  User is logged in and during survey
 //        let conditiontext = String(settings.isLoggedIn()) + ", " + String(settings.allFieldsSet()) + ", " + String(settings.shouldShowSurvey(calendar: now))
 //        routeCondition.text = conditiontext
+        print("should show survey ",settings.shouldShowSurvey(calendar: now))
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
 //            SwiftSpinner.hide()
             print("route comes to User is logged in and during survey")
@@ -99,27 +100,28 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
             if(timeTag == nil) {timeTag = ""}
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
 
-            
+            self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
             //  User is logged in, is not during survey, and has not skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
             print("route comes to User is logged in, is not during survey, and has not skipped previous")
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_START, settings: settings, now: now, includeParams: true));
-            
+            self.view.showToast("not in survey, not skip", position: .bottom, popTime: 3, dismissOnTap: false)
             //  User is logged in, but has skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && settings.skippedPrevious(now: now)){
             print("route comes to User is logged in, but has skipped previous")
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_NOREACTION, settings: settings, now: now, includeParams: true));
-            
+            self.view.showToast("skip", position: .bottom, popTime: 3, dismissOnTap: false)
             //  UserId set from APK; is logged in, but has no start and end times;
         } else if (settings.isLoggedIn() && !settings.allFieldsSet()){
             print("route comes to UserId set from APK; is logged in, but has no start and end times;")
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_INIT_NODATE, settings: settings, now: now,  includeParams: true));
-            
+            self.view.showToast("login no start and end", position: .bottom, popTime: 3, dismissOnTap: false)
             //  No user; either opted out, or started with APK with no RTID
         } else if (!settings.isLoggedIn()) {
             print("route comes to No user; either opted out, or started with APK with no RTID")
             showWebView(url: UrlBuilder.build(page: "testandroid", settings: settings, now: now,  includeParams: false));
             //showWebView(UrlBuilder.build(UrlBuilder.PHONE_START, settings, now,  false));
+            self.view.showToast("not login", position: .bottom, popTime: 3, dismissOnTap: false)
         }
     }
     func showWebView(url: String) {
@@ -380,7 +382,7 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
     }
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         route(settings: settings, now: Date())
-        self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
+//        self.view.showToast("", position: .bottom, popTime: 3, dismissOnTap: false)
         
 
         completionHandler()
