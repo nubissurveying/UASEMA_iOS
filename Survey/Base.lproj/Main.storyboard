@@ -19,31 +19,11 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JCc-vS-Udp">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="454"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="OZw-6i-473"/>
-                                </connections>
-                            </webView>
-                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="JCc-vS-Udp" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Hfl-OV-7WZ"/>
-                            <constraint firstItem="JCc-vS-Udp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="L6O-Q8-Quy"/>
-                            <constraint firstItem="JCc-vS-Udp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="MP1-ON-clh"/>
-                            <constraint firstItem="JCc-vS-Udp" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="TdK-dK-TPi"/>
-                            <constraint firstItem="JCc-vS-Udp" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aQ9-7A-D24"/>
-                            <constraint firstItem="JCc-vS-Udp" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-50" id="bXZ-1i-i7A"/>
-                            <constraint firstItem="JCc-vS-Udp" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="hZs-WM-ZTh"/>
-                            <constraint firstItem="JCc-vS-Udp" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-50" id="ly6-Pb-B85"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="op7-Vy-hpI"/>
                     <connections>
-                        <outlet property="myWebView" destination="JCc-vS-Udp" id="YuU-08-Vmy"/>
                         <segue destination="ukn-pt-l6h" kind="show" identifier="admin" id="Yp2-9P-3De"/>
                         <segue destination="Uqd-aP-DNE" kind="show" identifier="record" id="Z3a-hK-RVu"/>
                         <segue destination="W6e-1r-rqh" kind="show" identifier="alarmAct" id="a5J-gO-EHi"/>
@@ -51,7 +31,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="672.79999999999995" y="457.42128935532236"/>
+            <point key="canvasLocation" x="671.25" y="457.3943661971831"/>
         </scene>
         <!--Record View Controller-->
         <scene sceneID="3BO-3t-Zq8">

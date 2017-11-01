@@ -19,12 +19,16 @@ class Constants: NSObject {
     public static let surveysKey = "UASEmasurveysKey"
     public static let setAtTimeKey = "UASEmasetAtTimeKey"
     public static let NotificationsTimeKey = "NotificationsTimeKey"
+    
     public static let CookieNameKey = "CookieNameKey"
     public static let CookieValueKey = "CookieValueKey"
     public static let CookieDomainKey = "CookieDomainKey"
     public static let CookiePathKey = "CookiePathKey"
     public static let CookieSOKey = "CookieSOKey"
     public static let CookieSKey = "CookieSKey"
+    public static let CookieName = "PHPSESSION"
+    public static let CookieDomain = "uas.usc.edu"
+    public static let CookiePath = "/survey/uas/ema/daily"
     
     public static let CategoryName = "survey.steps"
     public static let notificationActionDo = "do.survey.action"

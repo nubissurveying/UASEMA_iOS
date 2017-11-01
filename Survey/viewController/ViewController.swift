@@ -12,26 +12,55 @@ import EasyToast
 import SystemConfiguration
 import Foundation
 import UserNotifications
+import WebKit
 
-class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCenterDelegate{
+class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificationCenterDelegate{
 //    public static let URL = "URL";
 //    private WebView webView;
 //    private ProgressDialog dialog;
+    var myWebView : WKWebView!
     private var settings : Settings = Settings();
 //    private MyAlarmManager alarmManager;
     //  private FirebaseAnalytics mFirebaseAnalytics;
     private var hasInternet = true;
     private var defaults = UserDefaults.standard
 //    private var comesFromNotification = false
-    @IBOutlet weak var myWebView: UIWebView!
+//    @IBOutlet weak var myWebView: UIWebView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         UNUserNotificationCenter.current().delegate = self
-        myWebView.delegate = self
         
+        
+        // init wkwebview
+        let userContentController = WKUserContentController()
+        let center = UserDefaults.standard
+        if center.object(forKey: Constants.CookieValueKey) != nil{
+            var cookieString = center.string(forKey: Constants.CookieValueKey)!
+            cookieString = cookieString.replacingOccurrences(of: "(", with: "")
+            cookieString = cookieString.replacingOccurrences(of: ")", with: "")
+            cookieString = cookieString.replacingOccurrences(of: "Optional", with: "")
+            cookieString = cookieString.replacingOccurrences(of: " ", with: "")
+            let cookieWillBeInject = "document.cookie = \"" + cookieString + "\""
+            print("wkwebview injected script content ", cookieWillBeInject)
+            let cookieScript : WKUserScript = WKUserScript(source: cookieWillBeInject, injectionTime: WKUserScriptInjectionTime.atDocumentStart, forMainFrameOnly: false )
+            userContentController.addUserScript(cookieScript)
+            print("wkwebview injected script ", cookieScript.debugDescription)
+        }
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController = userContentController
+        configuration.websiteDataStore = WKWebsiteDataStore.default()
+        print("wkwibview configuration ", configuration.debugDescription)
+        myWebView = WKWebView(frame : CGRect(x: 0, y: 0, width: view.frame.width, height:view.frame.height),configuration: configuration)
+        view.addSubview(myWebView)
+        myWebView.navigationDelegate = self
+//        myWebView.delegate = self
+        
+        // set notification
         NotificationCenter.default.addObserver(self, selector: #selector(self.applicationWillEnterForeground(notification:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
+        // set title
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
         imageView.contentMode = .scaleToFill
         let image = UIImage(named: "uas_logo.png")
@@ -47,10 +76,21 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
 //        notificationManger.registerForNotifications()
         
     }
+
     @objc func applicationWillEnterForeground(notification: NSNotification) {
         print("did enter foreground")
         SwiftSpinner.show("Loading from notification...")
         settings = Settings.getSettingFromDefault()
+//        if(settings.getRtid() != ""){
+//            let center = UserDefaults.standard
+//            center.set(cookie.name, forKey: Constants.CookieNameKey)
+//            center.set(cookie.value, forKey: Constants.CookieValueKey)
+//            center.set(cookie.path, forKey: Constants.CookiePathKey)
+//            center.set(cookie.domain, forKey: Constants.CookieDomainKey)
+//            center.set(cookie.isSessionOnly, forKey: Constants.CookieSOKey)
+//            center.set(cookie.isSecure, forKey: Constants.CookieSKey)
+//            print("Cookie is stored")
+//        }
 
         print("internet is :", isInternetAvailable())
         HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
@@ -63,7 +103,7 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
 
         print("internet is :", isInternetAvailable())
         
-        HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
+//        HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
         
         
         route(settings: settings, now: Date())
@@ -100,98 +140,193 @@ class ViewController: UIViewController , UIWebViewDelegate, UNUserNotificationCe
             if(timeTag == nil) {timeTag = ""}
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
 
-            self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
+//            self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
             //  User is logged in, is not during survey, and has not skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
             print("route comes to User is logged in, is not during survey, and has not skipped previous")
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_START, settings: settings, now: now, includeParams: true));
-            self.view.showToast("not in survey, not skip", position: .bottom, popTime: 3, dismissOnTap: false)
+//            self.view.showToast("not in survey, not skip", position: .bottom, popTime: 3, dismissOnTap: false)
             //  User is logged in, but has skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && settings.skippedPrevious(now: now)){
             print("route comes to User is logged in, but has skipped previous")
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_NOREACTION, settings: settings, now: now, includeParams: true));
-            self.view.showToast("skip", position: .bottom, popTime: 3, dismissOnTap: false)
+//            self.view.showToast("skip", position: .bottom, popTime: 3, dismissOnTap: false)
             //  UserId set from APK; is logged in, but has no start and end times;
         } else if (settings.isLoggedIn() && !settings.allFieldsSet()){
             print("route comes to UserId set from APK; is logged in, but has no start and end times;")
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_INIT_NODATE, settings: settings, now: now,  includeParams: true));
-            self.view.showToast("login no start and end", position: .bottom, popTime: 3, dismissOnTap: false)
+//            self.view.showToast("login no start and end", position: .bottom, popTime: 3, dismissOnTap: false)
             //  No user; either opted out, or started with APK with no RTID
         } else if (!settings.isLoggedIn()) {
             print("route comes to No user; either opted out, or started with APK with no RTID")
             showWebView(url: UrlBuilder.build(page: "testandroid", settings: settings, now: now,  includeParams: false));
             //showWebView(UrlBuilder.build(UrlBuilder.PHONE_START, settings, now,  false));
-            self.view.showToast("not login", position: .bottom, popTime: 3, dismissOnTap: false)
+//            self.view.showToast("not login", position: .bottom, popTime: 3, dismissOnTap: false)
         }
     }
     func showWebView(url: String) {
-        HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
-        let center = UserDefaults.standard
-        if center.string(forKey: Constants.CookieNameKey) != nil{
-            let cookieProps : [HTTPCookiePropertyKey:Any] = [
-                HTTPCookiePropertyKey.name : center.string(forKey: Constants.CookieNameKey)!,
-                HTTPCookiePropertyKey.value : center.string(forKey: Constants.CookieValueKey)!,
-                HTTPCookiePropertyKey.domain : center.string(forKey: Constants.CookieDomainKey)!,
-                HTTPCookiePropertyKey.path : center.string(forKey: Constants.CookiePathKey)!,
-                HTTPCookiePropertyKey.secure : center.bool(forKey: Constants.CookieSKey)
-            ]
-            if let cookie = HTTPCookie(properties: cookieProps){
-                HTTPCookieStorage.shared.setCookie(cookie)
-//                print(cookie,"cookie should be set")
-            }
+//        HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
+//        let center = UserDefaults.standard
+//        if center.string(forKey: Constants.CookieNameKey) != nil{
+//            let cookieProps : [HTTPCookiePropertyKey:Any] = [
+//                HTTPCookiePropertyKey.name : center.string(forKey: Constants.CookieNameKey)!,
+//                HTTPCookiePropertyKey.value : center.string(forKey: Constants.CookieValueKey)!,
+//                HTTPCookiePropertyKey.domain : center.string(forKey: Constants.CookieDomainKey)!,
+//                HTTPCookiePropertyKey.path : center.string(forKey: Constants.CookiePathKey)!,
+//                HTTPCookiePropertyKey.secure : center.bool(forKey: Constants.CookieSKey)
+//            ]
+//            print("cookie to be inject ", cookieProps)
+//            if let cookie = HTTPCookie(properties: cookieProps){
+//                HTTPCookieStorage.shared.setCookie(cookie)
+//                print(cookie,"cookie is setting")
+//            }
 //            print("cookie should be set")
-        }
+//        }
         
         
         print(url)
         let urlrequest = URL(string: url)
         if(isInternetAvailable()){
             
-            myWebView.loadRequest(URLRequest(url: urlrequest!))
+            myWebView.load(URLRequest(url: urlrequest!))
             
         } else{
             let noInternet = "<html><body><h3><font face=arial color=#5691ea>" +  "No internet connection detected. Make sure you are connected to the cellular network or wifi." + "</font></h3></body></html>"
             
             myWebView.loadHTMLString(noInternet, baseURL: urlrequest)
         }
+//        myWebView.reload()
         
     }
-    func webViewDidFinishLoad(_ webView: UIWebView) {
-        webView.stringByEvaluatingJavaScript(from: "delete window.alert;")
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        print("here comes did finish")
+        webView.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: {(result: Any?, error: Error?) in
+            if error == nil {
+                let regex = "rtid\\~.*\\~\\d{4}-\\d{2}-\\d{2}"
+                let resultString = String(describing: result)
 
-        let doc = webView.stringByEvaluatingJavaScript(from: "document.documentElement.outerHTML")
+                if let range = resultString.range(of:regex, options: .regularExpression) {
+                    let nresult = resultString.substring(with: range)
+                    self.saveInfo(alert: nresult)
+                } else if resultString.range(of: "Password") != nil {
+                    if UserDefaults.standard.object(forKey: Constants.CookieValueKey) != nil{
+                        if (UserDefaults.standard.string(forKey: Constants.CookieValueKey)?.count)! > Constants.CookieName.count {
+//                            print("default exist check ",UserDefaults.standard.string(forKey: Constants.CookieValueKey))
+                            self.route(settings: self.settings, now: Date())
+                        }
+                    }
+                }
+ 
+            }
+        })
+        webView.evaluateJavaScript("document.cookie", completionHandler: {(result: Any?, error: Error?) in
+            if error == nil {
 
-        let regex = "rtid\\~.*\\~\\d{4}-\\d{2}-\\d{2}"
-        if let range = doc?.range(of:regex, options: .regularExpression) {
-            let result = doc?.substring(with: range)
-            print("regex result ",result!)
-            saveInfo(alert: result!)
-        }
-        if let cookies = HTTPCookieStorage.shared.cookies{
-//            print("here is the cookies")
-            for cookie in cookies{
-//                print(cookie.name)
-//                print(cookie.name == "PHPSESSION")
-                if(cookie.name == "PHPSESSION"){
-                 
-                    let center = UserDefaults.standard
-                    center.set(cookie.name, forKey: Constants.CookieNameKey)
-                    center.set(cookie.value, forKey: Constants.CookieValueKey)
-                    center.set(cookie.path, forKey: Constants.CookiePathKey)
-                    center.set(cookie.domain, forKey: Constants.CookieDomainKey)
-                    center.set(cookie.isSessionOnly, forKey: Constants.CookieSOKey)
-                    center.set(cookie.isSecure, forKey: Constants.CookieSKey)
-                  
-//                    print("Cookie is stored")
+                let resultString = String(describing: result)
+                print("webcontent cookie in didfinish ",resultString)
+                let cookieArray = resultString.components(separatedBy: ";")
+                for cookie in cookieArray {
+                    print("print all cookie", cookie)
+                    var parsedCookie = cookie
+                    parsedCookie = parsedCookie.replacingOccurrences(of: "(", with: "")
+                    parsedCookie = parsedCookie.replacingOccurrences(of: ")", with: "")
+                    parsedCookie = parsedCookie.replacingOccurrences(of: "Optional", with: "")
+                    parsedCookie = parsedCookie.replacingOccurrences(of: " ", with: "")
+                    if cookie.range(of: Constants.CookieName + "=") != nil {
+                        print("cookie needed ",parsedCookie)
+                        let center = UserDefaults.standard
+                        center.set(parsedCookie, forKey: Constants.CookieValueKey)
+                        print("Cookie is stored")
+                    }
                 }
             }
-        }
-        SwiftSpinner.hide()
+        })
         
+        
+//        if let cookies = HTTPCookieStorage.shared.cookies{
+//            print("here is the cookies")
+//            for cookie in cookies{
+//                print("cookie name ",cookie.name)
+//                //                print(cookie.name == "PHPSESSION")
+//                if(cookie.name == "PHPSESSION"){
+//                    
+//                    let center = UserDefaults.standard
+//                    center.set(cookie.name, forKey: Constants.CookieNameKey)
+//                    center.set(cookie.value, forKey: Constants.CookieValueKey)
+//                    center.set(cookie.path, forKey: Constants.CookiePathKey)
+//                    center.set(cookie.domain, forKey: Constants.CookieDomainKey)
+//                    center.set(cookie.isSessionOnly, forKey: Constants.CookieSOKey)
+//                    center.set(cookie.isSecure, forKey: Constants.CookieSKey)
+//                    
+//                    print("Cookie is stored")
+//                }
+//            }
+//        }
+        SwiftSpinner.hide()
     }
-
-    func webViewDidStartLoad(_ webView: UIWebView) {
-//        webView.stringByEvaluatingJavaScript(from: "window.alert=null;")
+//    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+//        let response = navigationResponse.response
+//        print("here is the cookies")
+//        if let cookies = response.{
+//            for cookie in cookies{
+//                print("cookie name ",cookie.name)
+//                //                print(cookie.name == "PHPSESSION")
+//                if(cookie.name == "PHPSESSION"){
+//
+//                    let center = UserDefaults.standard
+//                    center.set(cookie.name, forKey: Constants.CookieNameKey)
+//                    center.set(cookie.value, forKey: Constants.CookieValueKey)
+//                    center.set(cookie.path, forKey: Constants.CookiePathKey)
+//                    center.set(cookie.domain, forKey: Constants.CookieDomainKey)
+//                    center.set(cookie.isSessionOnly, forKey: Constants.CookieSOKey)
+//                    center.set(cookie.isSecure, forKey: Constants.CookieSKey)
+//
+//                    print("Cookie is stored")
+//                }
+//            }
+//        }
+//    }
+//    func webViewDidFinishLoad(_ webView: UIWebView) {
+//        webView.stringByEvaluatingJavaScript(from: "delete window.alert;")
+//
+//        let doc = webView.stringByEvaluatingJavaScript(from: "document.documentElement.outerHTML")
+//
+//        let regex = "rtid\\~.*\\~\\d{4}-\\d{2}-\\d{2}"
+//        if let range = doc?.range(of:regex, options: .regularExpression) {
+//            let result = doc?.substring(with: range)
+//            print("regex result ",result!)
+//            saveInfo(alert: result!)
+//        }
+//        if let cookies = HTTPCookieStorage.shared.cookies{
+////            print("here is the cookies")
+//            for cookie in cookies{
+////                print(cookie.name)
+////                print(cookie.name == "PHPSESSION")
+//                if(cookie.name == "PHPSESSION"){
+//
+//                    let center = UserDefaults.standard
+//                    center.set(cookie.name, forKey: Constants.CookieNameKey)
+//                    center.set(cookie.value, forKey: Constants.CookieValueKey)
+//                    center.set(cookie.path, forKey: Constants.CookiePathKey)
+//                    center.set(cookie.domain, forKey: Constants.CookieDomainKey)
+//                    center.set(cookie.isSessionOnly, forKey: Constants.CookieSOKey)
+//                    center.set(cookie.isSecure, forKey: Constants.CookieSKey)
+//
+////                    print("Cookie is stored")
+//                }
+//            }
+//        }
+//        SwiftSpinner.hide()
+//
+//    }
+//    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+//        <#code#>
+//    }
+//    func webViewDidStartLoad(_ webView: UIWebView) {
+////        webView.stringByEvaluatingJavaScript(from: "window.alert=null;")
+//        SwiftSpinner.show("Loading...")
+//    }
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         SwiftSpinner.show("Loading...")
     }
     func saveInfo(alert: String){
