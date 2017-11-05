@@ -34,27 +34,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         
         // init wkwebview
-        let userContentController = WKUserContentController()
-        let center = UserDefaults.standard
-        if center.object(forKey: Constants.CookieValueKey) != nil{
-            var cookieString = center.string(forKey: Constants.CookieValueKey)!
-            cookieString = cookieString.replacingOccurrences(of: "(", with: "")
-            cookieString = cookieString.replacingOccurrences(of: ")", with: "")
-            cookieString = cookieString.replacingOccurrences(of: "Optional", with: "")
-            cookieString = cookieString.replacingOccurrences(of: " ", with: "")
-            let cookieWillBeInject = "document.cookie = \"" + cookieString + "\""
-            print("wkwebview injected script content ", cookieWillBeInject)
-            let cookieScript : WKUserScript = WKUserScript(source: cookieWillBeInject, injectionTime: WKUserScriptInjectionTime.atDocumentStart, forMainFrameOnly: false )
-            userContentController.addUserScript(cookieScript)
-            print("wkwebview injected script ", cookieScript.debugDescription)
-        }
-        let configuration = WKWebViewConfiguration()
-        configuration.userContentController = userContentController
-        configuration.websiteDataStore = WKWebsiteDataStore.default()
-        print("wkwibview configuration ", configuration.debugDescription)
-        myWebView = WKWebView(frame : CGRect(x: 0, y: 0, width: view.frame.width, height:view.frame.height),configuration: configuration)
-        view.addSubview(myWebView)
-        myWebView.navigationDelegate = self
+        setWKWebview()
 //        myWebView.delegate = self
         
         // set notification
@@ -76,7 +56,30 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 //        notificationManger.registerForNotifications()
         
     }
-
+    func setWKWebview(){
+        let userContentController = WKUserContentController()
+        let center = UserDefaults.standard
+        if center.object(forKey: Constants.CookieValueKey) != nil{
+            var cookieString = center.string(forKey: Constants.CookieValueKey)!
+            cookieString = cookieString.replacingOccurrences(of: "(", with: "")
+            cookieString = cookieString.replacingOccurrences(of: ")", with: "")
+            cookieString = cookieString.replacingOccurrences(of: "Optional", with: "")
+            cookieString = cookieString.replacingOccurrences(of: " ", with: "")
+            let cookieWillBeInject = "document.cookie = \"" + cookieString + "\""
+            print("wkwebview injected script content ", cookieWillBeInject)
+            let cookieScript : WKUserScript = WKUserScript(source: cookieWillBeInject, injectionTime: WKUserScriptInjectionTime.atDocumentStart, forMainFrameOnly: false )
+            userContentController.addUserScript(cookieScript)
+            print("wkwebview injected script ", cookieScript.debugDescription)
+        }
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController = userContentController
+        configuration.websiteDataStore = WKWebsiteDataStore.default()
+        print("wkwibview configuration ", configuration.debugDescription)
+        myWebView = WKWebView(frame : CGRect(x: 0, y: 0, width: view.frame.width, height:view.frame.height),configuration: configuration)
+        view.addSubview(myWebView)
+        myWebView.navigationDelegate = self
+    }
+    
     @objc func applicationWillEnterForeground(notification: NSNotification) {
         print("did enter foreground")
         SwiftSpinner.show("Loading from notification...")
@@ -204,18 +207,14 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             if error == nil {
                 let regex = "rtid\\~.*\\~\\d{4}-\\d{2}-\\d{2}"
                 let resultString = String(describing: result)
-
+//                print(resultString)
                 if let range = resultString.range(of:regex, options: .regularExpression) {
                     let nresult = resultString.substring(with: range)
                     self.saveInfo(alert: nresult)
-                } else if resultString.range(of: "Password") != nil {
-                    if UserDefaults.standard.object(forKey: Constants.CookieValueKey) != nil{
-                        if (UserDefaults.standard.string(forKey: Constants.CookieValueKey)?.count)! > Constants.CookieName.count {
-//                            print("default exist check ",UserDefaults.standard.string(forKey: Constants.CookieValueKey))
-                            self.route(settings: self.settings, now: Date())
-                        }
-                    }
                 }
+//                if(self.settings.getRtid() != ""){
+//                    self.route(settings: self.settings, now: Date())
+//                }
  
             }
         })
@@ -392,7 +391,12 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         let recordAction = UIAlertAction(title: "Sound recording", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
-            self.performSegue(withIdentifier: "record", sender: nil)
+            if(self.settings.isLoggedIn()){
+                self.performSegue(withIdentifier: "record", sender: nil)
+            } else {
+                self.view.showToast("Please loggin first", position: .bottom, popTime: 3, dismissOnTap: false)
+            }
+            
             
         })
 //        let SurveyAction = UIAlertAction(title: "TestSurveyScreen", style: .default, handler: {
@@ -416,18 +420,17 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             
             let center = UserDefaults.standard
            
-            center.removeObject(forKey: Constants.CookieNameKey)
-            center.removeObject(forKey: Constants.CookieValueKey)
-            center.removeObject(forKey: Constants.CookiePathKey)
-            center.removeObject(forKey: Constants.CookieDomainKey)
-            center.removeObject(forKey: Constants.CookieSOKey)
-            center.removeObject(forKey: Constants.CookieSKey)
             
+            center.removeObject(forKey: Constants.CookieValueKey)
+            
+            center.synchronize()
+            print("check delete correctly", center.object(forKey: Constants.CookieValueKey) == nil)
            
             
             print("Cookie is stored")
             
             Settings.clearSettingToDefault()
+            self.settings = Settings()
             self.view.showToast("Logout", position: .bottom, popTime: 3, dismissOnTap: true)
             self.showWebView(url: UrlBuilder.build(page: "testandroid", settings: self.settings, now: Date(),  includeParams: false));
             
@@ -522,5 +525,6 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 
         completionHandler()
     }
+   
 }
 

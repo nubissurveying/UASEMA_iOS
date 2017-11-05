@@ -9,7 +9,7 @@
 import UIKit
 
 class Constants: NSObject {
-    public static var isDemo = true;
+    public static var isDemo = false;
     public static let SETTINGSDEFAULT = "UASEma"
     let defaults = UserDefaults.standard
     public static let loggedInKey = "UASEmaloggedInKey"
@@ -47,4 +47,5 @@ class Constants: NSObject {
     public static let TIME_TO_TAKE_SURVEY = isDemo ? TIME_TO_TAKE_SURVEY_DEV : TIME_TO_TAKE_SURVEY_PRO;
     public static let TIME_TO_REMINDER = isDemo ? TIME_TO_REMINDER_DEV : TIME_TO_REMINDER_PRO;
     public static let baseURL = "https://uas.usc.edu/survey/uas/ema/daily/index.php";
+   
 }

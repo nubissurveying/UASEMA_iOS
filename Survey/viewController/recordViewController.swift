@@ -19,7 +19,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     var audioRecorder: AVAudioRecorder!
     var audioPlayer: AVAudioPlayer!
     var isRecording = false
-    let recordName = "recording.m4a"
+    let recordName = "recording.acc"
     let streamName = "localStream"
     let settings = Settings.getSettingFromDefault()
     
@@ -175,16 +175,19 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         let delayedAnswer = NubisDelayedAnswer(type: NubisDelayedAnswer.N_POST_FILE)
         dispatchDelayedAnswer(delayedAnswer: delayedAnswer, url: url)
         
-        let fileinputStream = InputStream(url: getDocumentsDirectory().appendingPathComponent(streamName))
+//        let fileinputStream = InputStream(url: getDocumentsDirectory().appendingPathComponent(streamName))
 //        let fileinputStream = InputStream(url: getDocumentsDirectory().appendingPathComponent(recordName))
         print("here comes upload encrypt string", Encrypt(inputStr: delayedAnswer.getGetString()!))
-        let localurl = "http://localhost:8888/ema/index.php?"
-        print("fileinputstream == ", fileinputStream.debugDescription)
-        Alamofire.upload(fileinputStream!, to: localurl + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!)).response { response in
-            debugPrint(response)
-            }.uploadProgress { progress in // main queue by default
-                print("Upload Progress: \(progress.fractionCompleted)")
-        }
+        let localurl = "http://localhost:8888/ema/index.php"
+//        print("fileinputstream == ", fileinputStream.debugDescription)
+        print(localurl + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
+//        Alamofire.upload(fileinputStream!, to: localurl + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!)).response { response in
+//            debugPrint(response)
+//
+//            }.uploadProgress { progress in // main queue by default
+//                print("Upload Progress: \(progress.fractionCompleted)")
+//        }
+        uploadVideo(mp3Path: url, uploadURL: localurl + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
         print("end uploading using alamofire")
     }
     func dispatchDelayedAnswer(delayedAnswer : NubisDelayedAnswer, url: URL){
@@ -255,5 +258,32 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         }
         return inputStr;
     }
+    
+    //upload audio
+    func uploadVideo(mp3Path : URL, uploadURL: String){
+        Alamofire.upload(
+            //同样采用post表单上传
+            multipartFormData: { multipartFormData in
+                multipartFormData.append(mp3Path, withName: "uploadedfile", fileName: "test.acc", mimeType: "audio/x-aac")
+                //服务器地址
+        },to: uploadURL,encodingCompletion: { encodingResult in
+            switch encodingResult {
+            case .success(let upload, _, _):
+                //json处理
+                upload.responseJSON { response in
+                    //解包
+                    guard let result = response.result.value else { return }
+                    print("json:\(result)")
+                }
+                //上传进度
+                upload.uploadProgress(queue: DispatchQueue.global(qos: .utility)) { progress in
+                    print("audio upload progress: \(progress.fractionCompleted)")
+                }
+            case .failure(let encodingError):
+                print(encodingError)
+            }
+        })
+    }
+
 
 }
