@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0900C9E4F006748AD4B98047 /* Pods_Survey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D31E2412DD3EA82F3A02754 /* Pods_Survey.framework */; };
 		2E3645F81FA13D2100A8FC5B /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */; };
-		2E7436281F944A4A005B5CE2 /* SurveyActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7436271F944A4A005B5CE2 /* SurveyActionViewController.swift */; };
 		2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558401F8B722200D2E9EE /* AppDelegate.swift */; };
 		2EA558461F8B722200D2E9EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA558441F8B722200D2E9EE /* Main.storyboard */; };
 		2EA558491F8B722200D2E9EE /* Survey.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558471F8B722200D2E9EE /* Survey.xcdatamodeld */; };
@@ -19,9 +18,7 @@
 		2EAA84B01F9C2954000B60C7 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EAA84B11F9C2954000B60C7 /* CryptoSwift.framework */; };
 		2EE5C90C1F934D050097F328 /* DateUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C8FA1F934D050097F328 /* DateUtil.swift */; };
 		2EE5C90D1F934D050097F328 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C8FB1F934D050097F328 /* Notification.swift */; };
-		2EE5C90E1F934D050097F328 /* NubisAsyncResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C8FC1F934D050097F328 /* NubisAsyncResponse.swift */; };
 		2EE5C90F1F934D050097F328 /* NubisDelayedAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C8FD1F934D050097F328 /* NubisDelayedAnswer.swift */; };
-		2EE5C9101F934D050097F328 /* NubisHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C8FE1F934D050097F328 /* NubisHTTP.swift */; };
 		2EE5C9111F934D050097F328 /* Uri.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C8FF1F934D050097F328 /* Uri.swift */; };
 		2EE5C9121F934D050097F328 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C9011F934D050097F328 /* Constants.swift */; };
 		2EE5C9131F934D050097F328 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C9021F934D050097F328 /* Strings.swift */; };
@@ -36,7 +33,6 @@
 
 /* Begin PBXFileReference section */
 		2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
-		2E7436271F944A4A005B5CE2 /* SurveyActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyActionViewController.swift; sourceTree = "<group>"; };
 		2EA5583D1F8B722200D2E9EE /* Survey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA558401F8B722200D2E9EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EA558451F8B722200D2E9EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -48,9 +44,7 @@
 		2EAA84B11F9C2954000B60C7 /* CryptoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CryptoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EE5C8FA1F934D050097F328 /* DateUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateUtil.swift; sourceTree = "<group>"; };
 		2EE5C8FB1F934D050097F328 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
-		2EE5C8FC1F934D050097F328 /* NubisAsyncResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NubisAsyncResponse.swift; sourceTree = "<group>"; };
 		2EE5C8FD1F934D050097F328 /* NubisDelayedAnswer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NubisDelayedAnswer.swift; sourceTree = "<group>"; };
-		2EE5C8FE1F934D050097F328 /* NubisHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NubisHTTP.swift; sourceTree = "<group>"; };
 		2EE5C8FF1F934D050097F328 /* Uri.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Uri.swift; sourceTree = "<group>"; };
 		2EE5C9011F934D050097F328 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2EE5C9021F934D050097F328 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
@@ -127,9 +121,7 @@
 			children = (
 				2EE5C8FA1F934D050097F328 /* DateUtil.swift */,
 				2EE5C8FB1F934D050097F328 /* Notification.swift */,
-				2EE5C8FC1F934D050097F328 /* NubisAsyncResponse.swift */,
 				2EE5C8FD1F934D050097F328 /* NubisDelayedAnswer.swift */,
-				2EE5C8FE1F934D050097F328 /* NubisHTTP.swift */,
 				2EAA84A51F9C2388000B60C7 /* StringHex.swift */,
 				2EAA84A31F9C19B0000B60C7 /* MCrypt.swift */,
 				2EE5C8FF1F934D050097F328 /* Uri.swift */,
@@ -150,7 +142,6 @@
 			isa = PBXGroup;
 			children = (
 				2EE5C9041F934D050097F328 /* admainViewController.swift */,
-				2E7436271F944A4A005B5CE2 /* SurveyActionViewController.swift */,
 				2EE5C9051F934D050097F328 /* alarmTableViewCell.swift */,
 				2EE5C9061F934D050097F328 /* recordViewController.swift */,
 				2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */,
@@ -301,15 +292,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EE5C90F1F934D050097F328 /* NubisDelayedAnswer.swift in Sources */,
-				2EE5C90E1F934D050097F328 /* NubisAsyncResponse.swift in Sources */,
 				2EE5C9151F934D050097F328 /* alarmTableViewCell.swift in Sources */,
 				2EE5C91A1F934D050097F328 /* UrlBuilder.swift in Sources */,
-				2E7436281F944A4A005B5CE2 /* SurveyActionViewController.swift in Sources */,
 				2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */,
 				2EAA84A61F9C2388000B60C7 /* StringHex.swift in Sources */,
 				2EE5C9131F934D050097F328 /* Strings.swift in Sources */,
 				2EE5C9141F934D050097F328 /* admainViewController.swift in Sources */,
-				2EE5C9101F934D050097F328 /* NubisHTTP.swift in Sources */,
 				2EE5C9111F934D050097F328 /* Uri.swift in Sources */,
 				2EE5C9191F934D050097F328 /* Survey.swift in Sources */,
 				2EE5C90D1F934D050097F328 /* Notification.swift in Sources */,

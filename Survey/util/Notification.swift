@@ -15,9 +15,11 @@ class Notification: NSObject {
     
     
     static func setNotification() -> Int{
+        
         let center = UNUserNotificationCenter.current()
         
         let defaults = UserDefaults.standard
+        center.removeAllPendingNotificationRequests()
         if(defaults.object(forKey: Constants.surveysKey) == nil){
             return 0
         }
@@ -105,7 +107,7 @@ class Notification: NSObject {
         
         return count;
     }
-    static func removeNotification(ids: [String]){
+    static func removeNotification(){
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
 //        center.removePendingNotificationRequests(withIdentifiers: ids)
@@ -131,10 +133,10 @@ class Notification: NSObject {
         })
         
     }
-    static func removeDeliveredNotification(ids: [String]){
+    static func removeDeliveredNotification(){
         let center = UNUserNotificationCenter.current()
         
-        center.removeDeliveredNotifications(withIdentifiers: ids)
+        
         center.removeAllDeliveredNotifications()
         UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: {requests -> () in
             var message = ""

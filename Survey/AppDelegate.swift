@@ -57,9 +57,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        
         print("notification is set during entering background", Notification.setNotification())
-        let ids = [String]()
-        Notification.removeDeliveredNotification(ids: ids)
+        
+        Notification.removeDeliveredNotification()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -69,15 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         UIApplication.shared.applicationIconBadgeNumber = 0;
-//        let settings = Settings.getSettingFromDefault()
-        let ids = [String]()
-//        for sur in settings.getSurveys(){
-//            let Date1 = sur.getDate()
-//            let Date2 = Calendar.current.date(byAdding: .minute, value: 1, to: Date1)
-//            ids.append(DateUtil.stringifyAll(calendar: Date1))
-//            ids.append(DateUtil.stringifyAll(calendar: Date2!))
-//        }
-        Notification.removeDeliveredNotification(ids: ids)
+
+        Notification.removeDeliveredNotification()
 //        let settings = Settings.getSettingFromDefault()
 //        route(settings: settings)
     }

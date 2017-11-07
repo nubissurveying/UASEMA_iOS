@@ -9,7 +9,7 @@
 import UIKit
 
 class Constants: NSObject {
-    public static var isDemo = false;
+    public static var isDemo = false
     public static let SETTINGSDEFAULT = "UASEma"
     let defaults = UserDefaults.standard
     public static let loggedInKey = "UASEmaloggedInKey"

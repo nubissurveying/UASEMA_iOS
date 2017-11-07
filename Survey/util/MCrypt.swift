@@ -17,22 +17,7 @@ class MCrypt: NSObject {
     
     private let SecretKey = "f29fjamvcnvq01md";//Dummy secretKey (CHANGE IT!)
     
-//    override init() {
-//        ivspec = new IvParameterSpec(iv.getBytes());
-//
-//        keyspec = new SecretKeySpec(SecretKey.getBytes(), "AES");
-//
-//        try {
-//        cipher = Cipher.getInstance("AES/CBC/NoPadding");
-//        } catch (NoSuchAlgorithmException e) {
-//        // TODO Auto-generated catch block
-//        e.printStackTrace();
-//        } catch (NoSuchPaddingException e) {
-//        // TODO Auto-generated catch block
-//        e.printStackTrace();
-//        }
-//    }
-//
+
     enum cryptError: Error {
         case encrypt
         case decrypt
@@ -41,54 +26,42 @@ class MCrypt: NSObject {
     }
     public func encrypt(text :String? )throws -> [UInt8]? {
         if(text == nil || text?.count == 0){
-            throw cryptError.enCryptEmptyInput
+
             return nil
         }
 
         var encrypted =  [UInt8]()
 
-        do{
+   
             let input = text?.data(using: String.Encoding.utf8)
             
             let inbytes:[UInt8] = input!.bytes
-//            AES(SecKey,iv,.CBC)
+
             encrypted = try! AES(key: Array(SecretKey.utf8), blockMode: .CBC(iv: Array(iv.utf8)), padding: .pkcs7).encrypt(inbytes)
-            
-//            let dData: NSData = NSData(bytes: encryptedDeviceID)
-            
-//            let strDeviceID = dData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0))
-//            cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
-//
-//            encrypted = cipher.doFinal(padString(text).getBytes());
-        } catch {
-            throw cryptError.encrypt
-        }
+        
+        
 
         return encrypted;
     }
 
-    public func decrypt(code : String?) throws-> [UInt8]? {
+    public func decrypt(code : String?) -> [UInt8]? {
         if(code == nil || code?.count == 0){
-            throw cryptError.deCryptEmptyInput
+            
             return nil
         }
         
 
         var decrypted = [UInt8]()
 
-        do {
+        
             
             let input = code?.data(using: String.Encoding.utf8)
             
             let inbytes:[UInt8] = input!.bytes
-            //            AES(SecKey,iv,.CBC)
+
             decrypted = try! AES(key: Array(SecretKey.utf8), blockMode: .CBC(iv: Array(iv.utf8)), padding: .pkcs7).decrypt(inbytes)
-//            cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
-//
-//            decrypted = cipher.doFinal(hexToBytes(code));
-        } catch {
-            throw cryptError.decrypt
-        }
+
+        
         return decrypted;
     }
 

@@ -133,7 +133,7 @@ class Settings: NSObject {
     
     /** User logged in && ready to take surveys */
     public func allFieldsSet()-> Bool{
-    return !(rtid == nil || beginTime == nil || endTime == nil);
+    return !(rtid == "" || beginTime == nil || endTime == nil);
     }
     
     /** Time Tag */

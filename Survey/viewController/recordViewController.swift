@@ -153,7 +153,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         self.mcImage.isEnabled  = false
         self.SaveButton.isEnabled = false
         
-        var now = Date()
+//        var now = Date()
         let soundrecorded = FileManager.default.fileExists(atPath: url.path)
         if(soundrecorded){
             self.view.showToast("uploading", position: .bottom, popTime: 3, dismissOnTap: false)
@@ -178,16 +178,16 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
 //        let fileinputStream = InputStream(url: getDocumentsDirectory().appendingPathComponent(streamName))
 //        let fileinputStream = InputStream(url: getDocumentsDirectory().appendingPathComponent(recordName))
         print("here comes upload encrypt string", Encrypt(inputStr: delayedAnswer.getGetString()!))
-        let localurl = "http://localhost:8888/ema/index.php"
+//        let localurl = "http://localhost:8888/ema/index.php"
 //        print("fileinputstream == ", fileinputStream.debugDescription)
-        print(localurl + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
+        print(Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
 //        Alamofire.upload(fileinputStream!, to: localurl + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!)).response { response in
 //            debugPrint(response)
 //
 //            }.uploadProgress { progress in // main queue by default
 //                print("Upload Progress: \(progress.fractionCompleted)")
 //        }
-        uploadVideo(mp3Path: url, uploadURL: localurl + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
+        uploadVideo(mp3Path: url, uploadURL: Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
         print("end uploading using alamofire")
     }
     func dispatchDelayedAnswer(delayedAnswer : NubisDelayedAnswer, url: URL){

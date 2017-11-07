@@ -64,7 +64,7 @@ class NubisDelayedAnswer: NSObject {
     }
     
     public func setByteArrayOutputStream(){
-        do {
+        
             
             let fis = InputStream(fileAtPath: POST_fileName);
             bos = OutputStream();
@@ -79,17 +79,15 @@ class NubisDelayedAnswer: NSObject {
             buf.deallocate(capacity: bufferSize)
             
             fis?.close()
-        }
-        catch let e as NSError{
-            print(e.localizedDescription)
-        }
+        
+        
 
     }
 
     
     
     public func getByteArrayOutputStream(output: OutputStream){
-        do {
+        
             
             let fis = InputStream(fileAtPath: POST_fileName);
             
@@ -104,12 +102,6 @@ class NubisDelayedAnswer: NSObject {
             buf.deallocate(capacity: bufferSize)
             
             fis?.close()
-            
-        }
-        catch let e as NSError{
-            print(e.localizedDescription)
-        }
-        
     }
     
     public func getGetString() -> String? {
