@@ -201,7 +201,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 //                        print("Cookie is stored")
                     }
                 }
-            }
+            
                 
 
         })
