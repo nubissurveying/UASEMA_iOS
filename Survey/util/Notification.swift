@@ -57,7 +57,7 @@ class Notification: NSObject {
             let second = Calendar.current.date(byAdding: .minute, value: 1, to: first)
             
             content.title = "Survey is Ready"
-            content.body = "Survey is for" + DateUtil.stringifyTime(calendar: first)
+            content.body = "Survey is for " + DateUtil.stringifyTime(calendar: first)
             content.sound = UNNotificationSound.default()
             content.categoryIdentifier = Constants.CategoryName
             // Deliver the notification in five seconds.
@@ -74,7 +74,7 @@ class Notification: NSObject {
             let request = UNNotificationRequest.init(identifier: DateUtil.stringifyAll(calendar: first), content: content, trigger: trigger)
  
             content2.title = "Survey is Ready"
-            content2.body = "Survey is for" + DateUtil.stringifyTime(calendar: second!)
+            content2.body = "Survey is for " + DateUtil.stringifyTime(calendar: second!)
             content2.sound = UNNotificationSound.default()
             content2.categoryIdentifier = Constants.CategoryName
             // Deliver the notification in five seconds.
