@@ -22,6 +22,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     
     private var hasInternet = true;
     private var defaults = UserDefaults.standard
+    private var isInSurvey = false;
     
     
     
@@ -38,8 +39,9 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         NotificationCenter.default.addObserver(self, selector: #selector(self.applicationWillEnterForeground(notification:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
         // set title
-        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         imageView.contentMode = .scaleToFill
+//        imageView.contentMode = .s
         let image = UIImage(named: "uas_logo.png")
         imageView.image = image
         self.navigationItem.titleView = imageView
@@ -77,7 +79,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         print("did enter foreground")
         SwiftSpinner.show("Loading from notification...")
         settings = Settings.getSettingFromDefault()
-        print("internet is :", isInternetAvailable())
+        print("back from app will enter foreground")
+//        self.view.showToast("app will enter foreground", position: .bottom, popTime: 3, dismissOnTap: false)
         HTTPCookieStorage.shared.cookieAcceptPolicy = HTTPCookie.AcceptPolicy.always
         route(settings: settings, now: Date())
         
@@ -85,8 +88,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     override func viewWillAppear(_ animated: Bool) {
         SwiftSpinner.show("Loading...")
         settings = Settings.getSettingFromDefault()
-        
-        print("internet is :", isInternetAvailable())
+//        self.view.showToast("enter view will applear", position: .bottom, popTime: 3, dismissOnTap: false)
+        print("back from app will enter view will applear")
         
         route(settings: settings, now: Date())
         
@@ -108,43 +111,62 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         print("should show survey ",settings.shouldShowSurvey(calendar: now))
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
-            
-            print("route comes to User is logged in and during survey")
-            let survey = settings.getSurveyByTime(now: now);
-            
-            if(survey != nil) {
-                Notification.removeNotificationForASurvey(SurveyDate: (survey?.getDate())!)
+            if(!isInSurvey){
+                let survey = settings.getSurveyByTime(now: now);
+                
+                if(survey != nil) {
+                    Notification.removeNotificationForASurvey(SurveyDate: (survey?.getDate())!)
+                }
+                let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
+                var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
+                if(timeTag == nil) {timeTag = ""}
+                showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
+                isInSurvey = true;
+            } else {
+                SwiftSpinner.hide()
             }
-            let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
-            var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
-            if(timeTag == nil) {timeTag = ""}
-            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
+            print("route comes to User is logged in and during survey, is in survey", isInSurvey)
             
             //            self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
             //  User is logged in, is not during survey, and has not skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
+//            if(isInSurvey){
+                showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_START, settings: settings, now: now, includeParams: true));
+                //            self.view.showToast("not in survey, not skip", position: .bottom, popTime: 3, dismissOnTap: false)
+                isInSurvey = false
+//            }
             print("route comes to User is logged in, is not during survey, and has not skipped previous")
-            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_START, settings: settings, now: now, includeParams: true));
-            //            self.view.showToast("not in survey, not skip", position: .bottom, popTime: 3, dismissOnTap: false)
             
             //  User is logged in, but has skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && settings.skippedPrevious(now: now)){
+//            if(isInSurvey){
+                showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_NOREACTION, settings: settings, now: now, includeParams: true));
+                //            self.view.showToast("skip", position: .bottom, popTime: 3, dismissOnTap: false)
+                isInSurvey = false
+//            }
             print("route comes to User is logged in, but has skipped previous")
-            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_NOREACTION, settings: settings, now: now, includeParams: true));
-            //            self.view.showToast("skip", position: .bottom, popTime: 3, dismissOnTap: false)
             
             //  UserId set from APK; is logged in, but has no start and end times;
         } else if (settings.isLoggedIn() && !settings.allFieldsSet()){
             print("route comes to UserId set from APK; is logged in, but has no start and end times;")
-            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_INIT_NODATE, settings: settings, now: now,  includeParams: true));
-            //            self.view.showToast("login no start and end", position: .bottom, popTime: 3, dismissOnTap: false)
+//            if(isInSurvey){
+                showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_INIT_NODATE, settings: settings, now: now,  includeParams: true));
+                //            self.view.showToast("login no start and end", position: .bottom, popTime: 3, dismissOnTap: false)
+                isInSurvey = false
+//            }
             
             //  No user; either opted out, or started with APK with no RTID
         } else if (!settings.isLoggedIn()) {
+            
             print("route comes to No user; either opted out, or started with APK with no RTID")
-            showWebView(url: UrlBuilder.build(page: "testandroid", settings: settings, now: now,  includeParams: false));
-            //showWebView(UrlBuilder.build(UrlBuilder.PHONE_START, settings, now,  false));
-            //            self.view.showToast("not login", position: .bottom, popTime: 3, dismissOnTap: false)
+            
+//            if(isInSurvey){
+                showWebView(url: UrlBuilder.build(page: "testandroid", settings: settings, now: now,  includeParams: false));
+                //showWebView(UrlBuilder.build(UrlBuilder.PHONE_START, settings, now,  false));
+                //            self.view.showToast("not login", position: .bottom, popTime: 3, dismissOnTap: false)
+                isInSurvey = false
+//            }
+            
         }
     }
     func showWebView(url: String) {
@@ -259,18 +281,18 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             })
             
             
-            let refreshAction = UIAlertAction(title: "Show Notifications", style: .default, handler: {
-                (alert: UIAlertAction!) -> Void in
-                
-                let notifications = self.defaults.string(forKey: Constants.NotificationsTimeKey)
-                
-                let alert = UIAlertController(title: "All notification in center", message: notifications, preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                //            Notification.showNotificaiton()
-                
-            })
-            
+//            let refreshAction = UIAlertAction(title: "Show Notifications", style: .default, handler: {
+//                (alert: UIAlertAction!) -> Void in
+//
+//                let notifications = self.defaults.string(forKey: Constants.NotificationsTimeKey)
+//
+//                let alert = UIAlertController(title: "All notification in center", message: notifications, preferredStyle: UIAlertControllerStyle.alert)
+//                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+//                self.present(alert, animated: true, completion: nil)
+//                //            Notification.showNotificaiton()
+//
+//            })
+        
             let recordAction = UIAlertAction(title: "Sound recording", style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 if(self.settings.isLoggedIn()){
@@ -332,10 +354,11 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 (alert: UIAlertAction!) -> Void in
                 print("Cancelled")
             })
+            optionMenu.addAction(adminAction)
             optionMenu.addAction(refreshWebAction)
             //        optionMenu.addAction(SurveyAction)
-            optionMenu.addAction(adminAction)
-            optionMenu.addAction(refreshAction)
+        
+//            optionMenu.addAction(refreshAction)
             optionMenu.addAction(recordAction)
             optionMenu.addAction(issueAction)
             optionMenu.addAction(logoutAction)
