@@ -16,7 +16,7 @@ import WebKit
 
 class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificationCenterDelegate{
 
-    
+    var netTimer: Timer!
     var myWebView : WKWebView!
     private var settings : Settings = Settings();
     
@@ -40,7 +40,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         // set title
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFit
 //        imageView.contentMode = .s
         let image = UIImage(named: "uas_logo.png")
         imageView.image = image
@@ -77,7 +77,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     
     @objc func applicationWillEnterForeground(notification: NSNotification) {
         print("did enter foreground")
-        SwiftSpinner.show("Loading from notification...")
+//        SwiftSpinner.show("Loading from WillEnterForeground...")
+        setSpinner(message: "Loading from WillEnterForeground...")
         settings = Settings.getSettingFromDefault()
         print("back from app will enter foreground")
 //        self.view.showToast("app will enter foreground", position: .bottom, popTime: 3, dismissOnTap: false)
@@ -86,7 +87,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
     }
     override func viewWillAppear(_ animated: Bool) {
-        SwiftSpinner.show("Loading...")
+//        SwiftSpinner.show("Loading from ViewWillAppear...")
+        setSpinner(message: "Loading from ViewWillAppear...")
         settings = Settings.getSettingFromDefault()
 //        self.view.showToast("enter view will applear", position: .bottom, popTime: 3, dismissOnTap: false)
         print("back from app will enter view will applear")
@@ -95,7 +97,16 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
     }
     
-    
+    func setSpinner(message: String){
+        SwiftSpinner.show(message)
+        netTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(closeSpinner), userInfo: nil, repeats: false)
+    }
+    @objc func closeSpinner(){
+        SwiftSpinner.hide()
+        
+        netTimer.invalidate()
+//        self.view.showToast("Check ", position: .bottom, popTime: 3, dismissOnTap: true)
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -229,7 +240,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        SwiftSpinner.show("Loading...")
+//        SwiftSpinner.show("Loading from didStartProvisionalNavigation...")
+        setSpinner(message: "Loading from didStartProvisionalNavigation...")
     }
     
         
@@ -371,7 +383,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         }
         
     override func viewDidAppear(_ animated: Bool) {
-            SwiftSpinner.show("Loading...")
+//            SwiftSpinner.show("Loading from viewDidAppear...")
+            setSpinner(message: "Loading from viewDidAppear...")
             route(settings: settings, now: Date())
         }
         

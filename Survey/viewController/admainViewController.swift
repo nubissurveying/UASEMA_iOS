@@ -23,7 +23,7 @@ class admainViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFit
         let image = UIImage(named: "uas_logo.png")
         imageView.image = image
         self.navigationItem.titleView = imageView
