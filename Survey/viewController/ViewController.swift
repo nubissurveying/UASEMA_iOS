@@ -124,7 +124,10 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
             if(!isInSurvey){
                 let survey = settings.getSurveyByTime(now: now);
-                
+                survey?.setAlarmed()
+                if(isInternetAvailable()) {
+                    survey?.setAsTaken()
+                }
                 if(survey != nil) {
                     Notification.removeNotificationForASurvey(SurveyDate: (survey?.getDate())!)
                 }
@@ -179,10 +182,15 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 //            }
             
         }
+        if(settings.getRtid() != ""){
+            Survey.updateClosed(settings: settings)
+            settings.saveSettingToDefault()
+        }
+        
     }
     func showWebView(url: String) {
         
-        print(url)
+        print("show webview ",url)
         let urlrequest = URL(string: url)
         if(isInternetAvailable()){
             var request = URLRequest(url: urlrequest!)
@@ -191,6 +199,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             request.setValue(getCookie(), forHTTPHeaderField: "Cookie")
             //            request.httpShouldHandleCookies = false
             myWebView.load(request)
+            
             
             
         } else{

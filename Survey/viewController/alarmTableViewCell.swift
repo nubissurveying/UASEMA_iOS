@@ -11,6 +11,10 @@ import UIKit
 class alarmTableViewCell: UITableViewCell {
 
     @IBOutlet weak var alarmDetail: UILabel!
+    @IBOutlet weak var alarmDate: UILabel!
+    @IBOutlet weak var alarmed: UILabel!
+    @IBOutlet weak var taken: UILabel!
+    @IBOutlet weak var closed: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

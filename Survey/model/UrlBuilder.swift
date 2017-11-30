@@ -48,7 +48,7 @@ class UrlBuilder: NSObject {
             "&date=" + Uri.encode(content: DateUtil.stringifyAll(calendar: now)) +
             "&starttime=" + Uri.encode(content: DateUtil.stringifyTime(calendar: settings.getbeginTime())) +
             "&endtime=" + Uri.encode(content: DateUtil.stringifyTime(calendar: settings.getEndTime())) +
-            "&pinginfo=" + (page == PHONE_ALARM ? Uri.encode(content: settings.alarmTimes()) : "");
+            "&pinginfo=" + (page == PHONE_ALARM ? Uri.encode(content: settings.alarmTags()) : "");
     }
     
     private static let baseURL = "https://uas.usc.edu/survey/uas/ema/daily/index.php";

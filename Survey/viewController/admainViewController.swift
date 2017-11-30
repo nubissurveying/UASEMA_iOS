@@ -11,7 +11,7 @@ import UIKit
 class admainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     
-    let settings = Settings()
+    var settings = Settings()
     let defaults = UserDefaults.standard
     var surveys = [String]()
 
@@ -33,16 +33,22 @@ class admainViewController: UIViewController, UITableViewDelegate, UITableViewDa
             beginContent.text = ": " + defaults.string(forKey: Constants.beginTimeKey)!
             endContent.text = ": " + defaults.string(forKey: Constants.endTimeKey)!
             surveys = (defaults.string(forKey: Constants.surveysKey)?.components(separatedBy: "\n"))!
+            settings = Settings.getSettingFromDefault()
         }
         // Do any additional setup after loading the view.
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return surveys.count
+        return settings.getSurveys().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "alarm", for: indexPath) as! alarmTableViewCell
-        cell.alarmDetail.text = surveys[indexPath.row]
+        let sur = settings.getSurveys()[indexPath.row]
+        cell.alarmDetail.text = String(sur.getRequestCode())
+        cell.alarmDate.text = DateUtil.stringifyAll(calendar: sur.getDate())
+        cell.alarmed.text = String(sur.getAlarmed())
+        cell.taken.text = String(sur.isTaken())
+        cell.closed.text = String(sur.isClosed())
         
         return cell
     }

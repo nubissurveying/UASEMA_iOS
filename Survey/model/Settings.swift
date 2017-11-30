@@ -119,7 +119,8 @@ class Settings: NSObject {
                 let timeDiffInMin = Int(Date().timeIntervalSince(sur.getDate())) / (60);
                 if(timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY + 1){
                     print("founded in should show survey", sur.getDate(), "time diff ", timeDiffInMin, sur.isTaken(), sur.isClosed())
-                    return !sur.isTaken() && !sur.isClosed()
+//                    return !sur.isTaken() && !sur.isClosed()
+                    return !sur.isClosed()
                 }
                 
             } else {
@@ -152,13 +153,27 @@ class Settings: NSObject {
     }
     
     /**Build alarm times as url param*/
-    public func alarmTimes()->String{
+    public func alarmTags()->String{
         
         var dic = [Int : String]()
         if(surveys.count > 0){
             for i in 0 ..< surveys.count{
                 let sur = surveys[i]
-                dic[i + 1] = DateUtil.stringifyTime(calendar: sur.getDate());
+//                dic[i + 1] = DateUtil.stringifyTime(calendar: sur.getDate()) + "FFF";
+                var alarmed = "F"
+                if(sur.getAlarmed()) {
+                    alarmed =  "T"
+                }
+                var taken = "F"
+                if(sur.isTaken()) {
+                    taken = "T"
+                }
+                var closed = "F"
+                if(sur.isClosed()){
+                    closed = "T"
+                }
+                
+                dic[i + 1] = String(sur.getRequestCode()) + alarmed + taken + closed
             }
         }
         return dic.description
@@ -204,7 +219,7 @@ class Settings: NSObject {
     private static func buildSurveysDev(  start : Date,   end : Date) ->[Survey]{
     
 //        let minute = 60
-        let minutesDiff = 60;
+        let minutesDiff = 380;
         var beepMinDiff = [Int]()
         for  i in stride(from: 1 - Constants.TIME_BETWEEN_SURVEYS_DEV, to: minutesDiff, by: Constants.TIME_BETWEEN_SURVEYS_DEV) {
             beepMinDiff.append(i);
@@ -312,6 +327,9 @@ class Settings: NSObject {
         return [Survey]()
     }
     public func saveSettingToDefault(){
+        if(self.rtid == "") {
+            return
+        }
         let defaults = UserDefaults.standard
         defaults.set(self.loggedIn, forKey: Constants.loggedInKey)
         defaults.set(self.rtid , forKey: Constants.rtidKey)
@@ -339,9 +357,9 @@ class Settings: NSObject {
             let res = Settings();
             res.rtid = defaults.string(forKey: Constants.rtidKey)!
             res.loggedIn = defaults.bool(forKey: Constants.loggedInKey)
-            res.beginTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.beginTimeKey)!)
-            res.endTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.endTimeKey)!)
-            res.setAtTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.setAtTimeKey)!)
+            res.beginTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.beginTimeKey)!)!
+            res.endTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.endTimeKey)!)!
+            res.setAtTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.setAtTimeKey)!)!
             
             let surveysString = defaults.string(forKey: Constants.surveysKey)
             let surveyArray = surveysString?.split(separator: "\n")
