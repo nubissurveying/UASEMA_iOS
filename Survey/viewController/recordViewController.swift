@@ -10,8 +10,11 @@ import UIKit
 import AVFoundation
 import EasyToast
 import Alamofire
+import MobileCoreServices
+import AVKit
 
-class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPlayerDelegate {
+
+class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPlayerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var mcImage: UIButton!
     @IBOutlet weak var SaveButton: UIButton!
@@ -22,6 +25,8 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     let recordName = "recording.acc"
     let streamName = "localStream"
     let settings = Settings.getSettingFromDefault()
+    let imagePicker: UIImagePickerController! = UIImagePickerController()
+    let saveFileName = "/test.mp4"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,11 +65,116 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    //video part
+    @IBAction func videoRecord(_ sender: Any) {
+        print("here to record video")
+        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
+            if UIImagePickerController.availableCaptureModes(for: .rear) != nil {
+                
+                imagePicker.sourceType = .camera
+                imagePicker.mediaTypes = [kUTTypeMovie as String]
+                imagePicker.allowsEditing = false
+                imagePicker.delegate = self
+                
+                present(imagePicker, animated: true, completion: {})
+            } else {
+                postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
+            }
+        } else {
+            postAlert("Camera inaccessable", message: "Application cannot access the camera.")
+        }
+    }
+    
+    @IBAction func VideoUpload(_ sender: Any) {
+        print("here to upload video","play the last recording")
+        // Find the video in the app's document directory
+        let paths = NSSearchPathForDirectoriesInDomains(
+            FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+        let documentsDirectory: URL = URL(fileURLWithPath: paths[0])
+        let dataPath = documentsDirectory.appendingPathComponent(saveFileName)
+        print(dataPath.absoluteString)
+        let videoAsset = (AVAsset(url: dataPath))
+        let playerItem = AVPlayerItem(asset: videoAsset)
+        
+        // Play the video
+        let player = AVPlayer(playerItem: playerItem)
+        let playerViewController = AVPlayerViewController()
+        playerViewController.player = player
+        
+        self.present(playerViewController, animated: true) {
+            playerViewController.player!.play()
+        }
+    }
+    
+    // MARK: UIImagePickerControllerDelegate delegate methods
+    // Finished recording a video
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        print("Got a video")
+        
+        if let pickedVideo:URL = (info[UIImagePickerControllerMediaURL] as? URL) {
+            // Save video to the main photo album
+            let selectorToCall = #selector(recordViewController.videoWasSavedSuccessfully(_:didFinishSavingWithError:context:))
+            UISaveVideoAtPathToSavedPhotosAlbum(pickedVideo.relativePath, self, selectorToCall, nil)
+            
+            // Save the video to the app directory so we can play it later
+            let videoData = try? Data(contentsOf: pickedVideo)
+            let paths = NSSearchPathForDirectoriesInDomains(
+                FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+            let documentsDirectory: URL = URL(fileURLWithPath: paths[0])
+            let dataPath = documentsDirectory.appendingPathComponent(saveFileName)
+            try! videoData?.write(to: dataPath, options: [])
+            print("Saved to " + dataPath.absoluteString)
+        }
+        
+        imagePicker.dismiss(animated: true, completion: {
+            print("imagePicker", "dismiss and upload")
+            let paths = NSSearchPathForDirectoriesInDomains(
+                FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+            let documentsDirectory: URL = URL(fileURLWithPath: paths[0])
+            let dataPath = documentsDirectory.appendingPathComponent(self.saveFileName)
+            self.uploadWithDelayedAnswer(url: dataPath, minType: "video/mp4", fileName: "test.mp4")
+        })
+    }
+    
+    // Called when the user selects cancel
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        print("User canceled image")
+        dismiss(animated: true, completion: {
+            // Anything you want to happen when the user selects cancel
+        })
+    }
+    
+    // Any tasks you want to perform after recording a video
+    @objc func videoWasSavedSuccessfully(_ video: String, didFinishSavingWithError error: NSError!, context: UnsafeMutableRawPointer){
+        if let theError = error {
+            print("An error happened while saving the video = \(theError)")
+        } else {
+            DispatchQueue.main.async(execute: { () -> Void in
+                // What you want to happen
+            })
+        }
+    }
+    
+    
+    // MARK: Utility methods for app
+    // Utility method to display an alert to the user.
+    func postAlert(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message,
+                                      preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    
+
+    
+    //audio part
     @IBAction func MicActon(_ sender: Any) {
         if(isRecording){
             mcImage.setImage(UIImage(named: "microphone_check"), for: UIControlState.normal)
@@ -162,24 +272,26 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         } else {
             self.view.showToast("nothing to upload", position: .bottom, popTime: 3, dismissOnTap: false)
         }
-        upload(url: url)
+        uploadWithDelayedAnswer(url: url,minType: "audio/x-aac",fileName: "test.acc")
         
         self.mcImage.isEnabled  = true
         self.SaveButton.isEnabled = true
     }
-    func upload(url : URL){
+    func uploadWithDelayedAnswer(url : URL, minType: String, fileName: String){
         print("try to upload using alamofire")
         
         
-        
+        let localBase = "http://10.120.72.193:8888/ema/index.php"
         let delayedAnswer = NubisDelayedAnswer(type: NubisDelayedAnswer.N_POST_FILE)
         dispatchDelayedAnswer(delayedAnswer: delayedAnswer, url: url)
 
         print("here comes upload encrypt string", Encrypt(inputStr: delayedAnswer.getGetString()!))
 
-        print(Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
+//        print(Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
+        print(localBase + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
 
-        uploadVideo(mp3Path: url, uploadURL: Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
+        uploadFile(filePath: url, uploadURL: localBase + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!), mimeType: minType, fileName: fileName)
+        
         print("end uploading using alamofire")
     }
     func dispatchDelayedAnswer(delayedAnswer : NubisDelayedAnswer, url: URL){
@@ -252,11 +364,12 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     }
     
     //upload audio
-    func uploadVideo(mp3Path : URL, uploadURL: String){
+    func uploadFile(filePath : URL, uploadURL: String, mimeType: String, fileName: String){
+        
         Alamofire.upload(
             //同样采用post表单上传
             multipartFormData: { multipartFormData in
-                multipartFormData.append(mp3Path, withName: "uploadedfile", fileName: "test.acc", mimeType: "audio/x-aac")
+                multipartFormData.append(filePath, withName: "uploadedfile", fileName: fileName, mimeType: mimeType)
                 //服务器地址
         },to: uploadURL,encodingCompletion: { encodingResult in
             switch encodingResult {

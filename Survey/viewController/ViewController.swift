@@ -60,9 +60,18 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         let options = UIBarButtonItem.init(image: UIImage.init(named: "options"), style: .plain, target: self, action: #selector(self.showOptions))
         self.navigationItem.setRightBarButton(options, animated: true)
         
-        setupCoreLocation()
-        setFile()
-        setAcce()
+        startAccService()
+        
+    }
+    func startAccService(){
+        if(settings.getAcc() == 1){
+            print("viewController"," start accService")
+            setupCoreLocation()
+            setFile()
+            setAcce()
+        } else {
+            print("viewController"," accService is not required to start")
+        }
     }
     func setWKWebview(){
         let userContentController = WKUserContentController()
@@ -237,6 +246,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                     print("regex match",nresult)
                     JsonParser.updateSetting(webpage: nresult, settings: self.settings)
                     self.saveInfo()
+                    self.startAccService()
                 }
                 
             }
@@ -583,7 +593,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 //                print(threshold)
                 if(threshold == 0 && !self.uploaded && self.count == 0){
                     print("upload and reset file")
-                    let localBase = "http://10.120.64.78:8888/ema/index.php"
+                    let localBase = "http://10.120.72.193:8888/ema/index.php"
 //                    self.view.showToast("upload from" + self.fileURL.path, position: .bottom, popTime: 3, dismissOnTap: false)
                     Upload.upload(fileUrl: self.fileURL, desUrl: localBase)
                     self.resetFile()
