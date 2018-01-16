@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0900C9E4F006748AD4B98047 /* Pods_Survey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D31E2412DD3EA82F3A02754 /* Pods_Survey.framework */; };
+		2E1A0FB720040B7400F8158E /* LocalFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A0FB620040B7400F8158E /* LocalFileManager.swift */; };
 		2E3645F81FA13D2100A8FC5B /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */; };
+		2E895E372001DC9E008C52C5 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E895E362001DC9E008C52C5 /* Upload.swift */; };
 		2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558401F8B722200D2E9EE /* AppDelegate.swift */; };
 		2EA558461F8B722200D2E9EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA558441F8B722200D2E9EE /* Main.storyboard */; };
 		2EA558491F8B722200D2E9EE /* Survey.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558471F8B722200D2E9EE /* Survey.xcdatamodeld */; };
@@ -29,10 +31,13 @@
 		2EE5C9181F934D050097F328 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C9091F934D050097F328 /* Settings.swift */; };
 		2EE5C9191F934D050097F328 /* Survey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C90A1F934D050097F328 /* Survey.swift */; };
 		2EE5C91A1F934D050097F328 /* UrlBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C90B1F934D050097F328 /* UrlBuilder.swift */; };
+		2EEE47281FDB60B60084989C /* JsonParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEE47271FDB60B60084989C /* JsonParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E1A0FB620040B7400F8158E /* LocalFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFileManager.swift; sourceTree = "<group>"; };
 		2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		2E895E362001DC9E008C52C5 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		2EA5583D1F8B722200D2E9EE /* Survey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA558401F8B722200D2E9EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EA558451F8B722200D2E9EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -55,6 +60,7 @@
 		2EE5C9091F934D050097F328 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		2EE5C90A1F934D050097F328 /* Survey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Survey.swift; sourceTree = "<group>"; };
 		2EE5C90B1F934D050097F328 /* UrlBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlBuilder.swift; sourceTree = "<group>"; };
+		2EEE47271FDB60B60084989C /* JsonParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonParser.swift; sourceTree = "<group>"; };
 		67E5116A8EF8B9F6E5A8E5D1 /* Pods-Survey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Survey.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Survey/Pods-Survey.debug.xcconfig"; sourceTree = "<group>"; };
 		9D31E2412DD3EA82F3A02754 /* Pods_Survey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Survey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFAAA4946A37D3E96A92475E /* Pods-Survey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Survey.release.xcconfig"; path = "Pods/Target Support Files/Pods-Survey/Pods-Survey.release.xcconfig"; sourceTree = "<group>"; };
@@ -106,7 +112,6 @@
 				2EE5C9081F934D050097F328 /* model */,
 				2EE5C8F91F934D050097F328 /* util */,
 				2EE5C9031F934D050097F328 /* viewController */,
-				2EE5C9001F934D050097F328 /* webview */,
 				2EA558401F8B722200D2E9EE /* AppDelegate.swift */,
 				2EA558441F8B722200D2E9EE /* Main.storyboard */,
 				2EA5584A1F8B722200D2E9EE /* Assets.xcassets */,
@@ -125,17 +130,12 @@
 				2EAA84A51F9C2388000B60C7 /* StringHex.swift */,
 				2EAA84A31F9C19B0000B60C7 /* MCrypt.swift */,
 				2EE5C8FF1F934D050097F328 /* Uri.swift */,
-			);
-			path = util;
-			sourceTree = "<group>";
-		};
-		2EE5C9001F934D050097F328 /* webview */ = {
-			isa = PBXGroup;
-			children = (
 				2EE5C9011F934D050097F328 /* Constants.swift */,
 				2EE5C9021F934D050097F328 /* Strings.swift */,
+				2E895E362001DC9E008C52C5 /* Upload.swift */,
+				2E1A0FB620040B7400F8158E /* LocalFileManager.swift */,
 			);
-			path = webview;
+			path = util;
 			sourceTree = "<group>";
 		};
 		2EE5C9031F934D050097F328 /* viewController */ = {
@@ -156,6 +156,7 @@
 				2EE5C9091F934D050097F328 /* Settings.swift */,
 				2EE5C90A1F934D050097F328 /* Survey.swift */,
 				2EE5C90B1F934D050097F328 /* UrlBuilder.swift */,
+				2EEE47271FDB60B60084989C /* JsonParser.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -205,6 +206,11 @@
 					2EA5583C1F8B722200D2E9EE = {
 						CreatedOnToolsVersion = 9.0;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -250,6 +256,7 @@
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/EasyToast/EasyToast.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftSpinner/SwiftSpinner.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -257,6 +264,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EasyToast.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSpinner.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -311,6 +319,7 @@
 				2EE5C9131F934D050097F328 /* Strings.swift in Sources */,
 				2EE5C9141F934D050097F328 /* admainViewController.swift in Sources */,
 				2EE5C9111F934D050097F328 /* Uri.swift in Sources */,
+				2EEE47281FDB60B60084989C /* JsonParser.swift in Sources */,
 				2EE5C9191F934D050097F328 /* Survey.swift in Sources */,
 				2EE5C90D1F934D050097F328 /* Notification.swift in Sources */,
 				2EE5C9171F934D050097F328 /* ViewController.swift in Sources */,
@@ -318,9 +327,11 @@
 				2EE5C9161F934D050097F328 /* recordViewController.swift in Sources */,
 				2EAA84A41F9C19B0000B60C7 /* MCrypt.swift in Sources */,
 				2EE5C90C1F934D050097F328 /* DateUtil.swift in Sources */,
+				2E895E372001DC9E008C52C5 /* Upload.swift in Sources */,
 				2E3645F81FA13D2100A8FC5B /* NotificationManager.swift in Sources */,
 				2EA558491F8B722200D2E9EE /* Survey.xcdatamodeld in Sources */,
 				2EE5C9121F934D050097F328 /* Constants.swift in Sources */,
+				2E1A0FB720040B7400F8158E /* LocalFileManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

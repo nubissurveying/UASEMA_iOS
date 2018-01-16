@@ -174,19 +174,11 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         
         let delayedAnswer = NubisDelayedAnswer(type: NubisDelayedAnswer.N_POST_FILE)
         dispatchDelayedAnswer(delayedAnswer: delayedAnswer, url: url)
-        
-//        let fileinputStream = InputStream(url: getDocumentsDirectory().appendingPathComponent(streamName))
-//        let fileinputStream = InputStream(url: getDocumentsDirectory().appendingPathComponent(recordName))
+
         print("here comes upload encrypt string", Encrypt(inputStr: delayedAnswer.getGetString()!))
-//        let localurl = "http://localhost:8888/ema/index.php"
-//        print("fileinputstream == ", fileinputStream.debugDescription)
+
         print(Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
-//        Alamofire.upload(fileinputStream!, to: localurl + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!)).response { response in
-//            debugPrint(response)
-//
-//            }.uploadProgress { progress in // main queue by default
-//                print("Upload Progress: \(progress.fractionCompleted)")
-//        }
+
         uploadVideo(mp3Path: url, uploadURL: Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
         print("end uploading using alamofire")
     }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class Settings: NSObject {
     private static var mInstance : Settings!;
@@ -18,6 +19,11 @@ class Settings: NSObject {
     private var endTime : Date!;
     private var surveys : [Survey] = [];
     private var setAtTime: Date!;
+    private var accelrecording = 0
+    private var videorecording = 0
+    
+    
+    
     
     public var serverURL = "https://uas.usc.edu/survey/uas/ema/daily/index.php"
     public static var sURL = "https://uas.usc.edu/survey/uas/ema/daily/index.php"
@@ -40,10 +46,20 @@ class Settings: NSObject {
         self.rtid = (rtid == "") ? self.rtid : rtid;   //  rtid == "" when changing settings after logging out;
         self.beginTime = beginTime;
         self.endTime = endTime;
-        self.surveys = (Constants.isDemo) ? Settings.buildSurveysDev(start: beginTime, end: endTime) : Settings.buildSurveysPro(start: beginTime, end: endTime);
+//        self.surveys = (Constants.isDemo) ? Settings.buildSurveysDev(start: beginTime, end: endTime) : Settings.buildSurveysPro(start: beginTime, end: endTime);
         self.setAtTime = setAtTime;
         
     }
+    public func  updateAndSave(  rtid : String,   beginTime : Date,   endTime : Date,   setAtTime : Date , surs : [Survey]){
+        self.loggedIn = true;
+        self.rtid = (rtid == "") ? self.rtid : rtid;   //  rtid == "" when changing settings after logging out;
+        self.beginTime = beginTime;
+        self.endTime = endTime;
+        self.surveys = surs
+        self.setAtTime = setAtTime;
+        
+    }
+    
     public func  updateUserIdAndSave(  rtid : String){
         loggedIn = true;
         self.rtid = rtid;
@@ -65,6 +81,19 @@ class Settings: NSObject {
     }
     public func isLoggedIn()-> Bool {
         return loggedIn;
+    }
+    
+    public func setAcc(acc: Int){
+        self.accelrecording = acc
+    }
+    public func getAcc() -> Int{
+        return self.accelrecording
+    }
+    public func setVid(vid: Int){
+        self.videorecording = vid
+    }
+    public func getVid() -> Int{
+        return self.videorecording
     }
     
     /** Should take survey; Set survey as taken */
@@ -216,6 +245,20 @@ class Settings: NSObject {
 //    }
     
     /** Set alarms from dates */
+    public static func buildSurveyFromJSON(json : JSON)->[Survey]{
+        var alarmTimes = [Survey]();
+        var count = 1;
+        if json["pings"].count > 0 {
+            print(json["pings"])
+            for time in json["pings"] {
+                print(time)
+                let cur = DateUtil.dateAll(calendar: String(describing: time.1))
+                alarmTimes.append(Survey(requestCode: count * 3, date: cur!))
+                count += 1
+            }
+        }
+        return alarmTimes
+    }
     private static func buildSurveysDev(  start : Date,   end : Date) ->[Survey]{
     
 //        let minute = 60
@@ -271,12 +314,14 @@ class Settings: NSObject {
     
     public func toString()->String {
         var res = "TT Settings => "
-         res +=   "\n allFieldsSet: " + String(allFieldsSet())
-         res +=   "\n loggedIn: " + String(loggedIn)
-         res +=   "\n rtid: " + rtid
+        res +=   "\n allFieldsSet: " + String(allFieldsSet())
+        res +=   "\n loggedIn: " + String(loggedIn)
+        res +=   "\n rtid: " + rtid
         res +=   "\n begin: " + DateUtil.stringifyAll(calendar: beginTime)
         res +=   "\n end: " + DateUtil.stringifyAll(calendar: endTime)
-         res +=   "\n surveys: " + ((surveys.count > 0) ? String(surveys.count) : "null")
+        res += "\n accelrecording: \(self.accelrecording)"
+        res += "\n videorecording: \(self.videorecording)"
+        res +=   "\n surveys: " + ((surveys.count > 0) ? String(surveys.count) : "null")
         res +=   "\n" + stringifyAlarms(surveys: surveys);
         return res
     }
@@ -337,6 +382,8 @@ class Settings: NSObject {
         defaults.set(DateUtil.stringifyAll(calendar: beginTime), forKey: Constants.beginTimeKey)
         defaults.set(DateUtil.stringifyAll(calendar: endTime), forKey: Constants.endTimeKey)
         defaults.set(DateUtil.stringifyAll(calendar: setAtTime), forKey: Constants.setAtTimeKey)
+        defaults.set(self.accelrecording, forKey: Constants.AccelrecordingKey)
+        defaults.set(self.videorecording, forKey: Constants.VideorecordingKey)
 
     }
     static  func clearSettingToDefault(){
@@ -347,7 +394,8 @@ class Settings: NSObject {
         defaults.removeObject(forKey: Constants.beginTimeKey)
         defaults.removeObject(forKey: Constants.endTimeKey)
         defaults.removeObject(forKey: Constants.setAtTimeKey)
-        
+        defaults.removeObject(forKey: Constants.AccelrecordingKey)
+        defaults.removeObject(forKey: Constants.VideorecordingKey)
     }
     public static func getSettingFromDefault() -> Settings{
         let defaults = UserDefaults.standard
@@ -361,15 +409,24 @@ class Settings: NSObject {
             res.endTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.endTimeKey)!)!
             res.setAtTime = DateUtil.dateAll(calendar: defaults.string(forKey: Constants.setAtTimeKey)!)!
             
-            let surveysString = defaults.string(forKey: Constants.surveysKey)
-            let surveyArray = surveysString?.split(separator: "\n")
-            var ss = [Survey]()
-            for str in surveyArray! {
-                ss.append(Survey.getSuveryFromString(input:String(str)))
+            if (defaults.string(forKey: Constants.surveysKey) != "null") {
+                let surveysString = defaults.string(forKey: Constants.surveysKey)
+                let surveyArray = surveysString?.split(separator: "\n")
+                var ss = [Survey]()
+                for str in surveyArray! {
+                    ss.append(Survey.getSuveryFromString(input:String(str)))
+                }
+                res.surveys = ss
             }
-            res.surveys = ss
+            
+            
+            res.setAcc(acc: defaults.integer(forKey: Constants.AccelrecordingKey))
+            res.setVid(vid: defaults.integer(forKey: Constants.VideorecordingKey))
             return res
             
         }
+    }
+    public func setSurs(surs: [Survey]){
+        self.surveys = surs
     }
 }

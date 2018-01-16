@@ -13,8 +13,11 @@ import SystemConfiguration
 import Foundation
 import UserNotifications
 import WebKit
+import CoreLocation
+import CoreMotion
+import Alamofire
 
-class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificationCenterDelegate{
+class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificationCenterDelegate, CLLocationManagerDelegate{
 
     var netTimer: Timer!
     var myWebView : WKWebView!
@@ -24,12 +27,20 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     private var defaults = UserDefaults.standard
     private var isInSurvey = false;
     
+    var locationManager = CLLocationManager()
+    var motionManager = CMMotionManager()
+    var Hz = 50.0
+
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
         UNUserNotificationCenter.current().delegate = self
-        
+//        locationManager.delegate = self
+        //json test
+//        JsonParser.updateSettingSample()
         
         // init wkwebview
         setWKWebview()
@@ -49,7 +60,9 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         let options = UIBarButtonItem.init(image: UIImage.init(named: "options"), style: .plain, target: self, action: #selector(self.showOptions))
         self.navigationItem.setRightBarButton(options, animated: true)
         
-        
+        setupCoreLocation()
+        setFile()
+        setAcce()
     }
     func setWKWebview(){
         let userContentController = WKUserContentController()
@@ -211,16 +224,21 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
     }
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("here comes did finish")
+        print("here comes did finish ")
         webView.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: {(result: Any?, error: Error?) in
             if error == nil {
-                let regex = "rtid\\~.*\\~\\d{4}-\\d{2}-\\d{2}"
+//                print("html content", result)
+                let regex = "\\{\"rtid.*\\}"
                 let resultString = String(describing: result)
-                //                print(resultString)
+//                print("regex match",resultString)
                 if let range = resultString.range(of:regex, options: .regularExpression) {
                     let nresult = resultString.substring(with: range)
-                    self.saveInfo(alert: nresult)
+                    
+                    print("regex match",nresult)
+                    JsonParser.updateSetting(webpage: nresult, settings: self.settings)
+                    self.saveInfo()
                 }
+                
             }
         })
         webView.evaluateJavaScript("document.cookie", completionHandler: {(result: Any?, error: Error?) in
@@ -254,18 +272,13 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     }
     
         
-    func saveInfo(alert: String){
-        let dateFomatter = DateFormatter()
-        dateFomatter.dateFormat = "yyyy-MM-dd"
-        var infos = alert.split(separator: "~")
-        print(infos[1])
-        print(infos[2])
-        let start = dateFomatter.date(from: String(infos[2]))
-        let end = Calendar.current.date(byAdding: .day, value: 7, to: start!)
-        
-        self.settings.updateAndSave(rtid: String(infos[1]), beginTime: start!, endTime: end!, setAtTime: Date())
+    func saveInfo(){
+
         self.settings.saveSettingToDefault()
-        print("notification is set during login", Notification.setNotification())
+        if(self.settings.getSurveys().count > 0){
+            print("notification is set during login", Notification.setNotification())
+        }
+        
         
     }
     var tField: UITextField!
@@ -296,9 +309,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
-                
-                
-                
+
             })
             
             
@@ -321,8 +332,6 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 } else {
                     self.view.showToast("Please loggin first", position: .bottom, popTime: 3, dismissOnTap: false)
                 }
-                
-                
             })
             
             
@@ -369,6 +378,17 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 self.route(settings: self.settings, now: Date())
                 
             })
+            let bufferAction = UIAlertAction(title: "show Buffer", style: .default, handler: {
+                (alert: UIAlertAction!) -> Void in
+                
+                
+                
+                let message = "\(self.appended) \(self.count) \n" +  self.buffer
+                let alert = UIAlertController(title: Strings.main_technicalissues_title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                
+            })
             
             //
             let cancelAction = UIAlertAction(title: "Cancel",style: .destructive, handler: {
@@ -383,6 +403,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             optionMenu.addAction(recordAction)
             optionMenu.addAction(issueAction)
             optionMenu.addAction(logoutAction)
+            optionMenu.addAction(bufferAction)
             optionMenu.addAction(cancelAction)
             // 5
             optionMenu.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
@@ -391,7 +412,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             
         }
         
-    override func viewDidAppear(_ animated: Bool) {
+        override func viewDidAppear(_ animated: Bool) {
 //            SwiftSpinner.show("Loading from viewDidAppear...")
             setSpinner(message: "Loading from viewDidAppear...")
             route(settings: settings, now: Date())
@@ -442,6 +463,166 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             }
             return ""
         }
+    
+    //location service
+    var locationFileURL : URL!
+    let locationFileName = "locationFileName"
+    var locationUploadFlag = false;
+    func setupCoreLocation()  {
+        print("setupCoreLocation")
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            print("in setup ","not determined")
+            locationManager.requestAlwaysAuthorization()
+            break
+        case .authorizedAlways:
+            print("in setup ","authorized")
+            enableLocationServices()
+        default:
+            break
+        }
+    }
+    func enableLocationServices()  {
+        if CLLocationManager.locationServicesEnabled(){
+            
+            locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+            //            locationManager.requestWhenInUseAuthorization()
+            
+            locationManager.startMonitoringSignificantLocationChanges()
+            locationManager.distanceFilter = 2
+            locationManager.allowsBackgroundLocationUpdates = true
+            locationManager.pausesLocationUpdatesAutomatically = false
+            locationManager.startUpdatingLocation()
+            locationFileURL = DocumentDirUrl.appendingPathComponent(locationFileName).appendingPathExtension("txt")
+            LocalFileManager.setFile(fileURL: locationFileURL, writeString: "location Service test\n")
+        }
+    }
+    func disableLocationServices(){
+        locationManager.stopUpdatingLocation()
+    }
+    //location
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedAlways:
+            print("location authorized")
+            enableLocationServices()
+        case .denied, .restricted:
+            print("not authorized")
+        default:
+            break
+        }
+    }
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations.last!
+        print("Date: ",DateUtil.stringifyAll(calendar: Date())," Coord: \(location.coordinate)")
+        LocalFileManager.appendfile(fileURL: locationFileURL, dataString: "Date: " + DateUtil.stringifyAll(calendar: Date()) + " Coord: \(location.coordinate)\n")
+        let threshold = self.calendar.component(.second, from: Date())
+        if(threshold > 30 && !locationUploadFlag){
+            locationUploadFlag = true
+            let localBase = "http://10.120.64.78:8888/ema/index.php"
+            Upload.upload(fileUrl: locationFileURL, desUrl: localBase)
+            print("LocationManager ","location is uploaded")
+            
+        } else if(threshold != 0) {
+            locationUploadFlag = false
+        }
+    }
+    
+    
+    //Accelerometer
+    var count = 0.0
+    var tempSum = 0.0
+    var fileURL : URL! = nil
+    var basicUrl = "http://10.120.64.78:8888/TEST.php"
+    var fileName = "rtid_replacement_acce_data"
+    let DocumentDirUrl = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+    let calendar = Calendar.current
+    var buffer = ""
+    var uploaded = false
+    var appended = false
+    func setFile(){
+        fileURL = DocumentDirUrl.appendingPathComponent(fileName).appendingPathExtension("txt")
+        print("file path : \(fileURL.path)")
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: fileURL.path){
+            print("File exist")
+        } else {
+            print("File not exist")
+            let writeString = "ritd replacement\n"
+            do{
+                try writeString.write(to:fileURL,atomically: true,encoding: String.Encoding.utf8)
+            } catch let error as NSError {
+                print("fail to write to url")
+                print(error)
+            }
+            
+        }
+    }
+    func setAcce() {
+        motionManager.accelerometerUpdateInterval = 1.0/Hz
+        motionManager.startAccelerometerUpdates(to : OperationQueue.current!){
+            (data, error) in
+            if let myData = data {
+                //                print(myData)
+                var svm = myData.acceleration.x * myData.acceleration.x +
+                    myData.acceleration.y * myData.acceleration.y +
+                    myData.acceleration.z * myData.acceleration.z
+                
+                svm = sqrt(svm) - 1
+                self.tempSum = self.tempSum + svm
+                self.count = self.count + 1.0
+                if(self.count > self.Hz){
+                    self.count = 0;
+                    self.buffer +=  DateUtil.stringifyAllAlt(calendar: Date()) + " \(svm)" + "\n"
+                    print("buffer test",self.buffer)
+                    svm = 0.0;
+                    
+                }
+                let threshold = self.calendar.component(.second, from: Date())
+                
+//                print(threshold)
+                if(threshold == 0 && !self.uploaded && self.count == 0){
+                    print("upload and reset file")
+                    let localBase = "http://10.120.64.78:8888/ema/index.php"
+//                    self.view.showToast("upload from" + self.fileURL.path, position: .bottom, popTime: 3, dismissOnTap: false)
+                    Upload.upload(fileUrl: self.fileURL, desUrl: localBase)
+                    self.resetFile()
+                    self.uploaded = true
+                } else if (threshold == 30 && !self.appended && self.count == 0) {
+                    print("append file")
+                    self.appendfile(dataString: self.buffer)
+                    self.buffer = ""
+                    self.appended = true
+                } else if(threshold != 0 && threshold != 30){
+                    self.appended = false
+                    self.uploaded = false
+                }
+            }
+        }
+    }
+    func appendfile(dataString : String){
+//        self.view.showToast("append to " + self.fileURL.path, position: .bottom, popTime: 3, dismissOnTap: false)
+        //        print("data to be append ", dataString)
+        do{
+            let fileHandle = try FileHandle(forWritingTo: self.fileURL)
+            fileHandle.seekToEndOfFile()
+            fileHandle.write(dataString.data(using: .utf8)!)
+            fileHandle.closeFile()
+            
+        } catch {
+            print("Error writing to file \(error)")
+        }
+    }
+    func resetFile(){
+        self.fileURL = DocumentDirUrl.appendingPathComponent(fileName).appendingPathExtension("txt")
+//        self.view.showToast("reset to " + self.fileURL.path, position: .bottom, popTime: 3, dismissOnTap: false)
+        do {
+            try "".write(to: self.fileURL, atomically: true, encoding: .utf8)
+        } catch let error {
+            print(error)
+        }
+    }
+    
         
 }
 

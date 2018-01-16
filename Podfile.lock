@@ -3,12 +3,14 @@ PODS:
   - CryptoSwift (0.8.0)
   - EasyToast (2.0.2)
   - SwiftSpinner (1.2.1)
+  - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
   - Alamofire
   - CryptoSwift (from `https://github.com/krzyzanowskim/CryptoSwift`, branch `master`)
   - EasyToast
   - SwiftSpinner
+  - SwiftyJSON
 
 EXTERNAL SOURCES:
   CryptoSwift:
@@ -25,7 +27,8 @@ SPEC CHECKSUMS:
   CryptoSwift: 475ae2a25439f52412686d68b854c0ca724c8dfd
   EasyToast: 2844de2158fe8d2313c6de81b5a858a909d82532
   SwiftSpinner: 62a28bbb4035f252a1e91b0e17fc40bdbbfa0aab
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: a3c5ec087ab990e0762cd83d7829617a70094b8f
+PODFILE CHECKSUM: e575dbc029f7439fc50e9d91b8e40f60b6ae2275
 
 COCOAPODS: 1.3.1

@@ -70,6 +70,7 @@ class Survey: NSObject {
         
         let argus = input.split(separator: " ")
 //                print(argus)
+        
         let res = Survey(requestCode: Int(argus[1])!, date: DateUtil.dateAll(calendar: String(argus[9]) + " " + String(argus[10]))!)
         if(argus[3] == "true") {res.setAlarmed()}
         if(argus[5] == "true") {res.setAsTaken()}
