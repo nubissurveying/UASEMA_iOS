@@ -352,24 +352,23 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 (alert: UIAlertAction!) -> Void in
                 print("logout")
                 
+                
+                
+                
+                self.view.showToast("Logout", position: .bottom, popTime: 3, dismissOnTap: true)
+                
+                self.showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_LOGOUT, settings: self.settings, now: Date(),  includeParams: true));
+                Settings.clearSettingToDefault()
+                self.settings = Settings()
                 Notification.removeNotification()
                 
                 let center = UserDefaults.standard
                 
                 
                 center.removeObject(forKey: Constants.CookieValueKey)
-                
                 center.synchronize()
                 print("check delete correctly", center.object(forKey: Constants.CookieValueKey) == nil)
-                
-                
                 print("Cookie is stored")
-                
-                Settings.clearSettingToDefault()
-                self.settings = Settings()
-                self.view.showToast("Logout", position: .bottom, popTime: 3, dismissOnTap: true)
-                self.showWebView(url: UrlBuilder.build(page: "testandroid", settings: self.settings, now: Date(),  includeParams: false));
-                
             })
             let issueAction = UIAlertAction(title: "Technical issue", style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
@@ -599,9 +598,9 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 //                print(threshold)
                 if(threshold == 0 && !self.uploaded && self.count == 0){
                     print("upload and reset file")
-                    let localBase = "http://10.120.72.193:8888/ema/index.php"
+//                    let localBase = "http://10.120.72.193:8888/ema/index.php"
 //                    self.view.showToast("upload from" + self.fileURL.path, position: .bottom, popTime: 3, dismissOnTap: false)
-                    Upload.upload(fileUrl: self.fileURL, desUrl: localBase)
+                    Upload.upload(fileUrl: self.fileURL, desUrl: Constants.baseURL)
                     self.resetFile()
                     self.uploaded = true
                 } else if (threshold == 30 && !self.appended && self.count == 0) {
