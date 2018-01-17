@@ -18,6 +18,10 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
 
     @IBOutlet weak var mcImage: UIButton!
     @IBOutlet weak var SaveButton: UIButton!
+    @IBOutlet weak var videoImage: UIButton!
+    @IBOutlet weak var playButton: UIButton!
+    
+    
     var recordingSession: AVAudioSession!
     var audioRecorder: AVAudioRecorder!
     var audioPlayer: AVAudioPlayer!
@@ -39,6 +43,16 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         SaveButton.layer.cornerRadius = 5
         SaveButton.layer.borderWidth = 1
         SaveButton.layer.borderColor = UIColor.black.cgColor
+        
+        videoImage.backgroundColor = .clear
+        videoImage.layer.cornerRadius = 5
+        videoImage.layer.borderWidth = 1
+        videoImage.layer.borderColor = UIColor.black.cgColor
+        
+        playButton.backgroundColor = .clear
+        playButton.layer.cornerRadius = 5
+        playButton.layer.borderWidth = 1
+        playButton.layer.borderColor = UIColor.black.cgColor
         
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
         imageView.contentMode = .scaleAspectFit
@@ -74,6 +88,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     //video part
     @IBAction func videoRecord(_ sender: Any) {
         print("here to record video")
+        imagePicker.videoMaximumDuration = TimeInterval(Constants.videoMaximumDuration)
         if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
             if UIImagePickerController.availableCaptureModes(for: .rear) != nil {
                 
@@ -124,6 +139,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             
             // Save the video to the app directory so we can play it later
             let videoData = try? Data(contentsOf: pickedVideo)
+            
             let paths = NSSearchPathForDirectoriesInDomains(
                 FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
             let documentsDirectory: URL = URL(fileURLWithPath: paths[0])
@@ -138,7 +154,20 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
                 FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
             let documentsDirectory: URL = URL(fileURLWithPath: paths[0])
             let dataPath = documentsDirectory.appendingPathComponent(self.saveFileName)
-            self.uploadWithDelayedAnswer(url: dataPath, minType: "video/mp4", fileName: "test.mp4")
+            
+            //if video less than 10s refuse to upload
+            let asset = AVAsset(url:dataPath)
+            let duration = asset.duration
+            let durationTime = CMTimeGetSeconds(duration)
+            print("check upload ", " video length is \(durationTime)")
+            if(durationTime < 10){
+                print("check upload", "too short to upload")
+                self.view.showToast("too short to upload", position: .bottom, popTime: 2, dismissOnTap: false)
+            } else {
+                self.uploadWithDelayedAnswer(url: dataPath, minType: "video/mp4", fileName: "test.mp4")
+                self.view.showToast("uploading video", position: .bottom, popTime: 2, dismissOnTap: false)
+            }
+            
         })
     }
     
@@ -281,16 +310,16 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         print("try to upload using alamofire")
         
         
-        let localBase = "http://10.120.72.193:8888/ema/index.php"
+//        let localBase = "http://10.120.72.193:8888/ema/index.php"
         let delayedAnswer = NubisDelayedAnswer(type: NubisDelayedAnswer.N_POST_FILE)
         dispatchDelayedAnswer(delayedAnswer: delayedAnswer, url: url)
 
         print("here comes upload encrypt string", Encrypt(inputStr: delayedAnswer.getGetString()!))
 
 //        print(Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
-        print(localBase + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
+//        print(localBase + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
 
-        uploadFile(filePath: url, uploadURL: localBase + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!), mimeType: minType, fileName: fileName)
+        uploadFile(filePath: url, uploadURL: Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!), mimeType: minType, fileName: fileName)
         
         print("end uploading using alamofire")
     }

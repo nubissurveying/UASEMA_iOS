@@ -28,6 +28,7 @@ class UrlBuilder: NSObject {
     PHONE_OPTOUT = "phone.optout",              //  Opt out
     PHONE_START = "phone.start",                //  Start: Used if no user
     PHONE_LOGOUT = "logout",
+    PHONE_NOALARMS = "noalarmsset",
     SENDMAIL = "sendmail",
     SETTINGS_CHANGE = "settings.change",        //  Used for block_between, passed, (master)
     TEST = "test",

@@ -82,32 +82,47 @@
                                     <constraint firstAttribute="width" constant="179" id="RbC-s8-XdC"/>
                                     <constraint firstAttribute="height" constant="72" id="m3A-Eu-894"/>
                                 </constraints>
-                                <state key="normal" image="microphone"/>
+                                <state key="normal" image="video"/>
                                 <connections>
                                     <action selector="videoRecord:" destination="Uqd-aP-DNE" eventType="touchUpInside" id="HQN-EX-AIb"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pxP-Rl-Cbj">
-                                <rect key="frame" x="222" y="278" width="46" height="30"/>
-                                <state key="normal" title="Button"/>
+                                <rect key="frame" x="16" y="354" width="171" height="30"/>
+                                <state key="normal" title="Play the last video">
+                                    <color key="titleColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="VideoUpload:" destination="Uqd-aP-DNE" eventType="touchUpInside" id="hYb-Xd-Gu8"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Make sure your video is longer then 10s and less then 4min. Click &quot;use video&quot; to save and upload" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gUO-VZ-MrV">
+                                <rect key="frame" x="10" y="392" width="302" height="82"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="82" id="R5d-oB-wko"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="gUO-VZ-MrV" firstAttribute="trailing" secondItem="5Vd-Fg-AQx" secondAttribute="trailing" id="5tQ-t0-eJn"/>
                             <constraint firstItem="ye0-uy-K2q" firstAttribute="leading" secondItem="wPL-v4-zif" secondAttribute="leading" constant="10" id="8TJ-Kz-0al"/>
                             <constraint firstItem="4zI-N4-oFz" firstAttribute="leading" secondItem="wPL-v4-zif" secondAttribute="leading" constant="8" id="Ct8-q1-PAh"/>
+                            <constraint firstItem="pxP-Rl-Cbj" firstAttribute="trailing" secondItem="j72-Er-PnY" secondAttribute="trailing" id="DT5-Oe-Wfd"/>
                             <constraint firstItem="wPL-v4-zif" firstAttribute="bottom" secondItem="ye0-uy-K2q" secondAttribute="bottom" constant="175" id="F6h-ho-cB6"/>
+                            <constraint firstItem="pxP-Rl-Cbj" firstAttribute="top" secondItem="ye0-uy-K2q" secondAttribute="bottom" constant="25" id="FQE-gG-bpy"/>
                             <constraint firstItem="EA2-Y1-X4R" firstAttribute="top" secondItem="4zI-N4-oFz" secondAttribute="bottom" constant="8" symbolic="YES" id="Hzn-ga-uyk"/>
+                            <constraint firstItem="pxP-Rl-Cbj" firstAttribute="leading" secondItem="Rcq-Vf-xft" secondAttribute="leadingMargin" id="J3z-oR-iW5"/>
                             <constraint firstItem="ye0-uy-K2q" firstAttribute="top" secondItem="5Vd-Fg-AQx" secondAttribute="bottom" constant="12" id="O8J-NR-p4s"/>
-                            <constraint firstItem="ye0-uy-K2q" firstAttribute="centerY" secondItem="pxP-Rl-Cbj" secondAttribute="centerY" id="O9P-Iz-xri"/>
-                            <constraint firstItem="pxP-Rl-Cbj" firstAttribute="leading" secondItem="ye0-uy-K2q" secondAttribute="trailing" constant="33" id="Pb5-HQ-3ir"/>
+                            <constraint firstItem="gUO-VZ-MrV" firstAttribute="leading" secondItem="ye0-uy-K2q" secondAttribute="leading" id="Qwa-as-Tcr"/>
                             <constraint firstItem="j72-Er-PnY" firstAttribute="top" secondItem="4zI-N4-oFz" secondAttribute="bottom" constant="8" symbolic="YES" id="RVd-vt-xiO"/>
                             <constraint firstItem="4zI-N4-oFz" firstAttribute="centerX" secondItem="Rcq-Vf-xft" secondAttribute="centerX" id="SBu-Gi-y05"/>
                             <constraint firstItem="wPL-v4-zif" firstAttribute="trailing" secondItem="EA2-Y1-X4R" secondAttribute="trailing" constant="24" id="WDi-sM-ych"/>
                             <constraint firstItem="EA2-Y1-X4R" firstAttribute="leading" secondItem="j72-Er-PnY" secondAttribute="trailing" constant="8" symbolic="YES" id="bA9-J6-aT3"/>
+                            <constraint firstItem="gUO-VZ-MrV" firstAttribute="top" secondItem="pxP-Rl-Cbj" secondAttribute="bottom" constant="8" symbolic="YES" id="gaP-cS-7TD"/>
                             <constraint firstItem="4zI-N4-oFz" firstAttribute="top" secondItem="wPL-v4-zif" secondAttribute="top" id="jNu-fB-oc5"/>
                             <constraint firstItem="4zI-N4-oFz" firstAttribute="leading" secondItem="5Vd-Fg-AQx" secondAttribute="leading" id="kMR-WR-ccF"/>
                             <constraint firstItem="5Vd-Fg-AQx" firstAttribute="top" secondItem="EA2-Y1-X4R" secondAttribute="bottom" constant="41" id="kzM-ND-NdK"/>
@@ -119,6 +134,8 @@
                     <connections>
                         <outlet property="SaveButton" destination="EA2-Y1-X4R" id="Td5-Gg-D6a"/>
                         <outlet property="mcImage" destination="j72-Er-PnY" id="UAu-es-qb7"/>
+                        <outlet property="playButton" destination="pxP-Rl-Cbj" id="E7g-I0-zGh"/>
+                        <outlet property="videoImage" destination="ye0-uy-K2q" id="D5a-RE-NS8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UeE-ph-8Zw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -346,5 +363,6 @@
     </scenes>
     <resources>
         <image name="microphone" width="72" height="72"/>
+        <image name="video" width="50" height="50"/>
     </resources>
 </document>

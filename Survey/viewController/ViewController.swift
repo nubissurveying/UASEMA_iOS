@@ -192,6 +192,9 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 //            }
             
             //  No user; either opted out, or started with APK with no RTID
+        } else if (settings.isLoggedIn() && settings.hasNoAlarms() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
+            
+            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_NOALARMS, settings: settings, now: now, includeParams: true))
         } else if (!settings.isLoggedIn()) {
             
             print("route comes to No user; either opted out, or started with APK with no RTID")
@@ -409,8 +412,11 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             optionMenu.addAction(refreshWebAction)
             //        optionMenu.addAction(SurveyAction)
         
-//            optionMenu.addAction(refreshAction)
-            optionMenu.addAction(recordAction)
+            //            optionMenu.addAction(refreshAction)
+            if(settings.isLoggedIn()){
+                optionMenu.addAction(recordAction)
+            }
+        
             optionMenu.addAction(issueAction)
             optionMenu.addAction(logoutAction)
             optionMenu.addAction(bufferAction)
@@ -529,8 +535,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         let threshold = self.calendar.component(.second, from: Date())
         if(threshold > 30 && !locationUploadFlag){
             locationUploadFlag = true
-            let localBase = "http://10.120.64.78:8888/ema/index.php"
-            Upload.upload(fileUrl: locationFileURL, desUrl: localBase)
+//            let localBase = "http://10.120.64.78:8888/ema/index.php"
+            Upload.upload(fileUrl: locationFileURL, desUrl: Constants.baseURL)
             print("LocationManager ","location is uploaded")
             
         } else if(threshold != 0) {
@@ -543,7 +549,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     var count = 0.0
     var tempSum = 0.0
     var fileURL : URL! = nil
-    var basicUrl = "http://10.120.64.78:8888/TEST.php"
+//    var basicUrl = "http://10.120.64.78:8888/TEST.php"
     var fileName = "rtid_replacement_acce_data"
     let DocumentDirUrl = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
     let calendar = Calendar.current

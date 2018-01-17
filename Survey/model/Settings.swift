@@ -429,4 +429,7 @@ class Settings: NSObject {
     public func setSurs(surs: [Survey]){
         self.surveys = surs
     }
+    public func hasNoAlarms() -> Bool{
+        return surveys.count == 0
+    }
 }
