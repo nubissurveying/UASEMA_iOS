@@ -31,6 +31,20 @@ class DateUtil: NSObject {
         return dateFormatter.string(from: calendar)
     }
     
+    public static func stringifyDateUntilHour( calendar : Date) -> String{
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMddHH"
+        return dateFormatter.string(from: calendar)
+    }
+    
+    public static func stringifyDateUntilMin( calendar : Date) -> String{
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMddHHmm"
+        return dateFormatter.string(from: calendar)
+    }
+    
     public static func dateAll(calendar : String) -> Date?{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
@@ -47,4 +61,5 @@ class DateUtil: NSObject {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.date(from: calendar)
     }
+    
 }

@@ -64,14 +64,15 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
     }
     func startAccService(){
-        if(settings.getAcc() == 1){
-            print("viewController"," start accService")
-            setupCoreLocation()
-            setFile()
-            setAcce()
-        } else {
-            print("viewController"," accService is not required to start")
-        }
+        print("viewController"," start accService")
+        setupCoreLocation()
+        setFile()
+        setAcce()
+//        if(settings.getAcc() == 1){
+//
+//        } else {
+//            print("viewController"," accService is not required to start")
+//        }
     }
     func setWKWebview(){
         let userContentController = WKUserContentController()
@@ -390,17 +391,25 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 self.route(settings: self.settings, now: Date())
                 
             })
-            let bufferAction = UIAlertAction(title: "show Buffer", style: .default, handler: {
-                (alert: UIAlertAction!) -> Void in
-                
-                
-                
-                let message = "\(self.appended) \(self.count) \n" +  self.buffer
-                let alert = UIAlertController(title: Strings.main_technicalissues_title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                
-            })
+//            let bufferAction = UIAlertAction(title: "show Buffer", style: .default, handler: {
+//                (alert: UIAlertAction!) -> Void in
+//
+//                var message = ""
+//
+//                let hardSave = self.DocumentDirUrl.appendingPathComponent("localSave").appendingPathExtension("txt")
+//
+//                let manager = FileManager.default
+//
+//                if let data2 = manager.contents(atPath: hardSave.path) {
+//                    message = String(data: data2, encoding: String.Encoding.utf8)!
+//                }
+//
+//
+//                let alert = UIAlertController(title: Strings.main_technicalissues_title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+//                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+//                self.present(alert, animated: true, completion: nil)
+//
+//            })
             
             //
             let cancelAction = UIAlertAction(title: "Cancel",style: .destructive, handler: {
@@ -418,7 +427,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
             optionMenu.addAction(issueAction)
             optionMenu.addAction(logoutAction)
-            optionMenu.addAction(bufferAction)
+//            optionMenu.addAction(bufferAction)
             optionMenu.addAction(cancelAction)
             // 5
             optionMenu.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
@@ -534,8 +543,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         let threshold = self.calendar.component(.second, from: Date())
         if(threshold > 30 && !locationUploadFlag){
             locationUploadFlag = true
-//            let localBase = "http://10.120.64.78:8888/ema/index.php"
-            Upload.upload(fileUrl: locationFileURL, desUrl: Constants.baseURL)
+            let localBase = "http://10.120.65.133:8888/ema/index.php"
+            Upload.upload(fileUrl: locationFileURL, desUrl: localBase)
             print("LocationManager ","location is uploaded")
             
         } else if(threshold != 0) {
@@ -557,13 +566,15 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     var appended = false
     func setFile(){
         fileURL = DocumentDirUrl.appendingPathComponent(fileName).appendingPathExtension("txt")
+        let hardSave = DocumentDirUrl.appendingPathComponent("localSave").appendingPathExtension("txt")
+        
         print("file path : \(fileURL.path)")
         let fileManager = FileManager.default
         if fileManager.fileExists(atPath: fileURL.path){
             print("File exist")
         } else {
             print("File not exist")
-            let writeString = "ritd replacement\n"
+            let writeString = ""
             do{
                 try writeString.write(to:fileURL,atomically: true,encoding: String.Encoding.utf8)
             } catch let error as NSError {
@@ -572,13 +583,29 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             }
             
         }
+        
+        if fileManager.fileExists(atPath: hardSave.path){
+            print("File exist")
+        } else {
+            print("File not exist")
+            let writeString = "this is local copy\n"
+            do{
+                try writeString.write(to: hardSave,atomically: true,encoding: String.Encoding.utf8)
+            } catch let error as NSError {
+                print("fail to write to url")
+                print(error)
+            }
+            
+        }
     }
+    var filesToBeUpload : [URL] = []
     func setAcce() {
+        
         motionManager.accelerometerUpdateInterval = 1.0/Hz
         motionManager.startAccelerometerUpdates(to : OperationQueue.current!){
             (data, error) in
             if let myData = data {
-                //                print(myData)
+//                                print(myData)
                 var svm = myData.acceleration.x * myData.acceleration.x +
                     myData.acceleration.y * myData.acceleration.y +
                     myData.acceleration.z * myData.acceleration.z
@@ -586,57 +613,46 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 svm = sqrt(svm) - 1
                 self.tempSum = self.tempSum + svm
                 self.count = self.count + 1.0
-                if(self.count > self.Hz){
-                    self.count = 0;
-                    self.buffer +=  DateUtil.stringifyAllAlt(calendar: Date()) + " \(svm)" + "\n"
-                    print("buffer test",self.buffer)
-                    svm = 0.0;
-                    
-                }
-                let threshold = self.calendar.component(.second, from: Date())
+//                if(self.count > self.Hz){
+//                    self.count = 0;
+//                    let message =  DateUtil.stringifyAllAlt(calendar: Date()) + " \(svm)" + "\n"
+//                    if(self.settings.isLoggedIn()){
+//                        let fileUrl = self.DocumentDirUrl.appendingPathComponent(self.settings.getRtid()! + DateUtil.stringifyAllAlt(calendar: Date())).appendingPathExtension("txt")
+//                        LocalFileManager.appendfile(fileURL: fileUrl, dataString: message)
+//                    }
+//
+////                    print("buffer test",self.buffer)
+//                    svm = 0.0;
                 
-//                print(threshold)
-                if(threshold == 0 && !self.uploaded && self.count == 0){
-                    print("upload and reset file")
-//                    let localBase = "http://10.120.72.193:8888/ema/index.php"
-//                    self.view.showToast("upload from" + self.fileURL.path, position: .bottom, popTime: 3, dismissOnTap: false)
-                    Upload.upload(fileUrl: self.fileURL, desUrl: Constants.baseURL)
-                    self.resetFile()
-                    self.uploaded = true
-                } else if (threshold == 30 && !self.appended && self.count == 0) {
-                    print("append file")
-                    self.appendfile(dataString: self.buffer)
-                    self.buffer = ""
-                    self.appended = true
-                } else if(threshold != 0 && threshold != 30){
-                    self.appended = false
-                    self.uploaded = false
-                }
+                    
+                    //upload part
+//                    let thresholdSec = self.calendar.component(.second, from: Date())
+//                    let thresholdMin = self.calendar.component(.minute, from: Date())
+//                    //thresholdHour == 0 &&
+//                    //                print(threshold)
+////                    if(thresholdSec == 59){
+//                        if(self.settings.isLoggedIn()){
+//                            let currentName = self.settings.getRtid()! + DateUtil.stringifyAllAlt(calendar: Date())
+//                            let fileUrl = self.DocumentDirUrl.appendingPathComponent(currentName).appendingPathExtension("txt")
+//                            if(!self.filesToBeUpload.contains(fileUrl)) {
+//                                self.filesToBeUpload.append(fileUrl)
+//                                print("acc", "add to array" + fileUrl.path)
+//                            }
+//                            if(thresholdSec == 59 && self.isInternetAvailable()){
+//                                print("acc", "upload all")
+//                                let desUrl = self.DocumentDirUrl.appendingPathComponent(DateUtil.stringifyAllAlt(calendar: Date())).appendingPathExtension("txt")
+//                                self.filesToBeUpload = LocalFileManager.combineAndUpload(filesToBeUpload: self.filesToBeUpload, desUrl: desUrl)
+////                                self.filesToBeUpload = []
+//                            }
+//                        }
+//                    }
+//                }
+            
+                    
             }
         }
     }
-    func appendfile(dataString : String){
-//        self.view.showToast("append to " + self.fileURL.path, position: .bottom, popTime: 3, dismissOnTap: false)
-        //        print("data to be append ", dataString)
-        do{
-            let fileHandle = try FileHandle(forWritingTo: self.fileURL)
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(dataString.data(using: .utf8)!)
-            fileHandle.closeFile()
-            
-        } catch {
-            print("Error writing to file \(error)")
-        }
-    }
-    func resetFile(){
-        self.fileURL = DocumentDirUrl.appendingPathComponent(fileName).appendingPathExtension("txt")
-//        self.view.showToast("reset to " + self.fileURL.path, position: .bottom, popTime: 3, dismissOnTap: false)
-        do {
-            try "".write(to: self.fileURL, atomically: true, encoding: .utf8)
-        } catch let error {
-            print(error)
-        }
-    }
+
     
         
 }

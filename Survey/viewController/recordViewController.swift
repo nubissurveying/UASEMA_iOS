@@ -286,7 +286,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         isRecording = false;
         playAudio()
         uploadAudio(url: getDocumentsDirectory().appendingPathComponent(recordName))
-        
+//        uploadFile(filePath: getDocumentsDirectory().appendingPathComponent(recordName), uploadURL: "http://10.120.65.133:8888/TEST.php", mimeType: "audio/x-aac", fileName: "test.acc")
     }
     func uploadAudio(url : URL){
         self.mcImage.isEnabled  = false
@@ -310,7 +310,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         print("try to upload using alamofire")
         
         
-//        let localBase = "http://10.120.72.193:8888/ema/index.php"
+        let localBase = "http://10.120.65.133:8888/ema/index.php"
         let delayedAnswer = NubisDelayedAnswer(type: NubisDelayedAnswer.N_POST_FILE)
         dispatchDelayedAnswer(delayedAnswer: delayedAnswer, url: url)
 
@@ -319,7 +319,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
 //        print(Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
 //        print(localBase + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
 
-        uploadFile(filePath: url, uploadURL: Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!), mimeType: minType, fileName: fileName)
+        uploadFile(filePath: url, uploadURL: localBase + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!), mimeType: minType, fileName: fileName)
         
         print("end uploading using alamofire")
     }
@@ -394,7 +394,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     
     //upload audio
     func uploadFile(filePath : URL, uploadURL: String, mimeType: String, fileName: String){
-        
+        print("record upload", uploadURL)
         Alamofire.upload(
             //同样采用post表单上传
             multipartFormData: { multipartFormData in
