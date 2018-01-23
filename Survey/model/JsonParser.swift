@@ -30,7 +30,7 @@ class JsonParser : NSObject {
             print("parseJson","no rtid")
         }
         
-        if let reminder = json[reminder].int {
+        if let reminder = json["reminder"].int {
             Constants.TIME_TO_REMINDER = reminder / 60
             print("parseJson","set reminder", Constants.TIME_TO_REMINDER)
         } else {

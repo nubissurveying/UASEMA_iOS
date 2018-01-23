@@ -16,8 +16,9 @@ import WebKit
 import CoreLocation
 import CoreMotion
 import Alamofire
+import MessageUI
 
-class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificationCenterDelegate, CLLocationManagerDelegate{
+class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificationCenterDelegate, CLLocationManagerDelegate, MFMailComposeViewControllerDelegate{
 
     var netTimer: Timer!
     var myWebView : WKWebView!
@@ -30,7 +31,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     var locationManager = CLLocationManager()
     var motionManager = CMMotionManager()
     var Hz = 50.0
-
+    var LogUrl : URL?
     
     
     override func viewDidLoad() {
@@ -61,6 +62,9 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         self.navigationItem.setRightBarButton(options, animated: true)
         
         startAccService()
+        
+        LogUrl = DocumentDirUrl.appendingPathComponent("UrlLog").appendingPathExtension("txt")
+        LocalFileManager.setFile(fileURL: LogUrl!, writeString: "Log\n")
         
     }
     func startAccService(){
@@ -163,6 +167,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 SwiftSpinner.hide()
             }
             print("route comes to User is logged in and during survey, is in survey", isInSurvey)
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in and during survey, is in survey \(isInSurvey)")
             
             //            self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
             //  User is logged in, is not during survey, and has not skipped previous
@@ -173,6 +178,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 isInSurvey = false
 //            }
             print("route comes to User is logged in, is not during survey, and has not skipped previous")
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in, is not during survey, and has not skipped previous")
             
             //  User is logged in, but has skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && settings.skippedPrevious(now: now)){
@@ -182,6 +188,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 isInSurvey = false
 //            }
             print("route comes to User is logged in, but has skipped previous")
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in, but has skipped previous")
             
             //  UserId set from APK; is logged in, but has no start and end times;
         } else if (settings.isLoggedIn() && !settings.allFieldsSet()){
@@ -191,14 +198,16 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 //            self.view.showToast("login no start and end", position: .bottom, popTime: 3, dismissOnTap: false)
                 isInSurvey = false
 //            }
-            
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to UserId set from APK; is logged in, but has no start and end times;")
             //  No user; either opted out, or started with APK with no RTID
         } else if (settings.isLoggedIn() && settings.hasNoAlarms() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
             
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_NOALARMS, settings: settings, now: now, includeParams: true))
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to noAlarms")
         } else if (!settings.isLoggedIn()) {
             
             print("route comes to No user; either opted out, or started with APK with no RTID")
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to No user; either opted out, or started with APK with no RTID")
             
 //            if(isInSurvey){
                 showWebView(url: UrlBuilder.build(page: "testandroid", settings: settings, now: now,  includeParams: false));
@@ -215,7 +224,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
     }
     func showWebView(url: String) {
-        
+        LocalFileManager.appendfile(fileURL: LogUrl!, dataString: " " + url + "\n")
         print("show webview ",url)
         let urlrequest = URL(string: url)
         if(isInternetAvailable()){
@@ -238,9 +247,10 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     }
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("here comes did finish ")
+//        LocalFileManager.appendfile(fileURL: self.LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "actual url loaded " + (webView.url?.absoluteString)! + "\n") 
         webView.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: {(result: Any?, error: Error?) in
             if error == nil {
-//                print("html content", result)
+                print("html content", result)
                 let regex = "\\{\"rtid.*\\}"
                 let resultString = String(describing: result)
 //                print("regex match",resultString)
@@ -391,26 +401,34 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 self.route(settings: self.settings, now: Date())
                 
             })
-//            let bufferAction = UIAlertAction(title: "show Buffer", style: .default, handler: {
-//                (alert: UIAlertAction!) -> Void in
-//
-//                var message = ""
-//
-//                let hardSave = self.DocumentDirUrl.appendingPathComponent("localSave").appendingPathExtension("txt")
-//
-//                let manager = FileManager.default
-//
-//                if let data2 = manager.contents(atPath: hardSave.path) {
-//                    message = String(data: data2, encoding: String.Encoding.utf8)!
-//                }
-//
-//
-//                let alert = UIAlertController(title: Strings.main_technicalissues_title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-//                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
-//
-//            })
-            
+            let bufferAction = UIAlertAction(title: "send log", style: .default, handler: {
+                (alert: UIAlertAction!) -> Void in
+
+                if(MFMailComposeViewController.canSendMail()){
+                    print("send mail", "can send")
+                    let mailComposer = MFMailComposeViewController()
+                    mailComposer.mailComposeDelegate = self
+                    
+                    // set subject and message of the email
+                    mailComposer.setSubject("Log send at " + DateUtil.stringifyAll(calendar: Date()))
+                    mailComposer.setMessageBody("Log is at attachment\nPlease try to describe the bug", isHTML: false)
+                    mailComposer.setToRecipients(["qinjiahu@usc.edu"])
+                    
+                    if let fileData = NSData(contentsOf:self.LogUrl!) {
+                        print("send mail","file loaded")
+                        mailComposer.addAttachmentData(fileData as Data, mimeType: "text/plain", fileName: "Log.txt")
+                    }
+                    
+                    self.present(mailComposer, animated: true, completion: nil)
+                    
+                } else {
+                    print("send mail", "cannot send")
+                    self.view.showToast("Please try bind email account to your phone first", position: .bottom, popTime: 3, dismissOnTap: false)
+                }
+                Notification.showNotificaiton()
+
+            })
+        
             //
             let cancelAction = UIAlertAction(title: "Cancel",style: .destructive, handler: {
                 (alert: UIAlertAction!) -> Void in
@@ -427,7 +445,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
             optionMenu.addAction(issueAction)
             optionMenu.addAction(logoutAction)
-//            optionMenu.addAction(bufferAction)
+            optionMenu.addAction(bufferAction)
             optionMenu.addAction(cancelAction)
             // 5
             optionMenu.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
@@ -435,7 +453,9 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             
             
         }
-        
+        func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+            self.dismiss(animated: true, completion: nil)
+        }
         override func viewDidAppear(_ animated: Bool) {
 //            SwiftSpinner.show("Loading from viewDidAppear...")
             setSpinner(message: "Loading from viewDidAppear...")
@@ -613,40 +633,40 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 svm = sqrt(svm) - 1
                 self.tempSum = self.tempSum + svm
                 self.count = self.count + 1.0
-//                if(self.count > self.Hz){
-//                    self.count = 0;
-//                    let message =  DateUtil.stringifyAllAlt(calendar: Date()) + " \(svm)" + "\n"
-//                    if(self.settings.isLoggedIn()){
-//                        let fileUrl = self.DocumentDirUrl.appendingPathComponent(self.settings.getRtid()! + DateUtil.stringifyAllAlt(calendar: Date())).appendingPathExtension("txt")
-//                        LocalFileManager.appendfile(fileURL: fileUrl, dataString: message)
-//                    }
-//
-////                    print("buffer test",self.buffer)
-//                    svm = 0.0;
+                if(self.count > self.Hz){
+                    self.count = 0;
+                    let message =  DateUtil.stringifyAllAlt(calendar: Date()) + " \(svm)" + "\n"
+                    if(self.settings.isLoggedIn()){
+                        let fileUrl = self.DocumentDirUrl.appendingPathComponent(self.settings.getRtid()! + DateUtil.stringifyDateUntilMin(calendar: Date())).appendingPathExtension("txt")
+                        LocalFileManager.appendfile(fileURL: fileUrl, dataString: message)
+                    }
+
+//                    print("buffer test",self.buffer)
+                    svm = 0.0;
                 
                     
-                    //upload part
-//                    let thresholdSec = self.calendar.component(.second, from: Date())
-//                    let thresholdMin = self.calendar.component(.minute, from: Date())
-//                    //thresholdHour == 0 &&
-//                    //                print(threshold)
-////                    if(thresholdSec == 59){
-//                        if(self.settings.isLoggedIn()){
-//                            let currentName = self.settings.getRtid()! + DateUtil.stringifyAllAlt(calendar: Date())
-//                            let fileUrl = self.DocumentDirUrl.appendingPathComponent(currentName).appendingPathExtension("txt")
-//                            if(!self.filesToBeUpload.contains(fileUrl)) {
-//                                self.filesToBeUpload.append(fileUrl)
-//                                print("acc", "add to array" + fileUrl.path)
-//                            }
-//                            if(thresholdSec == 59 && self.isInternetAvailable()){
-//                                print("acc", "upload all")
-//                                let desUrl = self.DocumentDirUrl.appendingPathComponent(DateUtil.stringifyAllAlt(calendar: Date())).appendingPathExtension("txt")
-//                                self.filesToBeUpload = LocalFileManager.combineAndUpload(filesToBeUpload: self.filesToBeUpload, desUrl: desUrl)
-////                                self.filesToBeUpload = []
-//                            }
-//                        }
-//                    }
-//                }
+//                    upload part
+                    let thresholdSec = self.calendar.component(.second, from: Date())
+                    let thresholdMin = self.calendar.component(.minute, from: Date())
+                    //thresholdHour == 0 &&
+                    //                print(threshold)
+                    if(thresholdSec == 59){
+                        if(self.settings.isLoggedIn()){
+                            let currentName = self.settings.getRtid()! + DateUtil.stringifyDateUntilMin(calendar: Date())
+                            let fileUrl = self.DocumentDirUrl.appendingPathComponent(currentName).appendingPathExtension("txt")
+                            if(!self.filesToBeUpload.contains(fileUrl)) {
+                                self.filesToBeUpload.append(fileUrl)
+                                print("acc", "add to array" + fileUrl.path)
+                            }
+                            if(thresholdMin == 59 && self.isInternetAvailable()){
+                                print("acc", "upload all")
+                                let desUrl = self.DocumentDirUrl.appendingPathComponent(DateUtil.stringifyAllAlt(calendar: Date())).appendingPathExtension("txt")
+                                self.filesToBeUpload = LocalFileManager.combineAndUpload(filesToBeUpload: self.filesToBeUpload, desUrl: desUrl)
+//                                self.filesToBeUpload = []
+                            }
+                        }
+                    }
+                }
             
                     
             }

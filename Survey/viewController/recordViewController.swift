@@ -310,7 +310,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         print("try to upload using alamofire")
         
         
-        let localBase = "http://10.120.65.133:8888/ema/index.php"
+//        let localBase = "http://10.120.65.133:8888/ema/index.php"
         let delayedAnswer = NubisDelayedAnswer(type: NubisDelayedAnswer.N_POST_FILE)
         dispatchDelayedAnswer(delayedAnswer: delayedAnswer, url: url)
 
@@ -319,7 +319,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
 //        print(Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
 //        print(localBase + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!))
 
-        uploadFile(filePath: url, uploadURL: localBase + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!), mimeType: minType, fileName: fileName)
+        uploadFile(filePath: url, uploadURL: Constants.baseURL + "?ema=1&q=" + Encrypt(inputStr: delayedAnswer.getGetString()!), mimeType: minType, fileName: fileName)
         
         print("end uploading using alamofire")
     }

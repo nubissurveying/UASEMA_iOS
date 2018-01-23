@@ -125,10 +125,10 @@ class NubisDelayedAnswer: NSObject {
             }
             res.removeLast()
             res += "}"
-            print("delayanswer string:",res.count, res)
-            for ch in res.unicodeScalars {
-                print(ch, ch.value)
-            }
+//            print("delayanswer string:",res.count, res)
+//            for ch in res.unicodeScalars {
+//                print(ch, ch.value)
+//            }
             return res
     
         }

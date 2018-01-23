@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0900C9E4F006748AD4B98047 /* Pods_Survey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D31E2412DD3EA82F3A02754 /* Pods_Survey.framework */; };
-		2E1A0FB720040B7400F8158E /* LocalFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A0FB620040B7400F8158E /* LocalFileManager.swift */; };
 		2E3645F81FA13D2100A8FC5B /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */; };
 		2E895E372001DC9E008C52C5 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E895E362001DC9E008C52C5 /* Upload.swift */; };
 		2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA558401F8B722200D2E9EE /* AppDelegate.swift */; };
@@ -32,10 +31,10 @@
 		2EE5C9191F934D050097F328 /* Survey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C90A1F934D050097F328 /* Survey.swift */; };
 		2EE5C91A1F934D050097F328 /* UrlBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5C90B1F934D050097F328 /* UrlBuilder.swift */; };
 		2EEE47281FDB60B60084989C /* JsonParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEE47271FDB60B60084989C /* JsonParser.swift */; };
+		2EFB1E702016CDB700826EAA /* LocalFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFB1E6F2016CDB600826EAA /* LocalFileManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2E1A0FB620040B7400F8158E /* LocalFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFileManager.swift; sourceTree = "<group>"; };
 		2E3645F71FA13D2100A8FC5B /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		2E895E362001DC9E008C52C5 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		2EA5583D1F8B722200D2E9EE /* Survey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survey.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,6 +60,7 @@
 		2EE5C90A1F934D050097F328 /* Survey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Survey.swift; sourceTree = "<group>"; };
 		2EE5C90B1F934D050097F328 /* UrlBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlBuilder.swift; sourceTree = "<group>"; };
 		2EEE47271FDB60B60084989C /* JsonParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonParser.swift; sourceTree = "<group>"; };
+		2EFB1E6F2016CDB600826EAA /* LocalFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalFileManager.swift; sourceTree = "<group>"; };
 		67E5116A8EF8B9F6E5A8E5D1 /* Pods-Survey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Survey.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Survey/Pods-Survey.debug.xcconfig"; sourceTree = "<group>"; };
 		9D31E2412DD3EA82F3A02754 /* Pods_Survey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Survey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFAAA4946A37D3E96A92475E /* Pods-Survey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Survey.release.xcconfig"; path = "Pods/Target Support Files/Pods-Survey/Pods-Survey.release.xcconfig"; sourceTree = "<group>"; };
@@ -133,7 +133,7 @@
 				2EE5C9011F934D050097F328 /* Constants.swift */,
 				2EE5C9021F934D050097F328 /* Strings.swift */,
 				2E895E362001DC9E008C52C5 /* Upload.swift */,
-				2E1A0FB620040B7400F8158E /* LocalFileManager.swift */,
+				2EFB1E6F2016CDB600826EAA /* LocalFileManager.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -312,6 +312,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EE5C90F1F934D050097F328 /* NubisDelayedAnswer.swift in Sources */,
+				2EFB1E702016CDB700826EAA /* LocalFileManager.swift in Sources */,
 				2EE5C9151F934D050097F328 /* alarmTableViewCell.swift in Sources */,
 				2EE5C91A1F934D050097F328 /* UrlBuilder.swift in Sources */,
 				2EA558411F8B722200D2E9EE /* AppDelegate.swift in Sources */,
@@ -331,7 +332,6 @@
 				2E3645F81FA13D2100A8FC5B /* NotificationManager.swift in Sources */,
 				2EA558491F8B722200D2E9EE /* Survey.xcdatamodeld in Sources */,
 				2EE5C9121F934D050097F328 /* Constants.swift in Sources */,
-				2E1A0FB720040B7400F8158E /* LocalFileManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

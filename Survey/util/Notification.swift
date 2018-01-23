@@ -55,6 +55,7 @@ class Notification: NSObject {
                 let content2 = UNMutableNotificationContent()
                 let first = sur.getDate()
                 let second = Calendar.current.date(byAdding: .minute, value: Constants.TIME_TO_REMINDER, to: first)
+                print("setNotification", DateUtil.stringifyAll(calendar: first), DateUtil.stringifyAll(calendar: second!), "\(Constants.TIME_TO_REMINDER)")
                 
                 content.title = "Survey is Ready"
                 content.body = "Notification generated at " + DateUtil.stringifyTime(calendar: first)
@@ -163,7 +164,7 @@ class Notification: NSObject {
         let center = UNUserNotificationCenter.current()
         var ids = [String]()
         let first = SurveyDate
-        let second = Calendar.current.date(byAdding: .minute, value: 1, to: first!)
+        let second = Calendar.current.date(byAdding: .minute, value: Constants.TIME_TO_REMINDER, to: first!)
         ids.append(DateUtil.stringifyAll(calendar: first!))
         ids.append(DateUtil.stringifyAll(calendar: second!))
         center.removePendingNotificationRequests(withIdentifiers: ids)
