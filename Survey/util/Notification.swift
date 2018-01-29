@@ -55,10 +55,13 @@ class Notification: NSObject {
                 let content2 = UNMutableNotificationContent()
                 let first = sur.getDate()
                 let second = Calendar.current.date(byAdding: .minute, value: Constants.TIME_TO_REMINDER, to: first)
+                let third = Calendar.current.date(byAdding: .minute, value: Constants.TIME_TO_TAKE_SURVEY + 1, to: first)
                 print("setNotification", DateUtil.stringifyAll(calendar: first), DateUtil.stringifyAll(calendar: second!), "\(Constants.TIME_TO_REMINDER)")
                 
                 content.title = "Survey is Ready"
                 content.body = "Notification generated at " + DateUtil.stringifyTime(calendar: first)
+                    + ", current survey will be closed in \(1 + Constants.TIME_TO_TAKE_SURVEY) min "
+                    + "no need to click after " + DateUtil.stringifyAll(calendar: third!)
                 content.sound = UNNotificationSound.default()
                 content.categoryIdentifier = Constants.CategoryName
                 // Deliver the notification in five seconds.
@@ -76,6 +79,8 @@ class Notification: NSObject {
                 
                 content2.title = "Survey is Ready"
                 content2.body = "Notification generated at " + DateUtil.stringifyTime(calendar: second!)
+                    + ", current survey will be closed in \(Constants.TIME_TO_TAKE_SURVEY) min "
+                    + "no need to click after " + DateUtil.stringifyAll(calendar: third!)
                 content2.sound = UNNotificationSound.default()
                 content2.categoryIdentifier = Constants.CategoryName
                 // Deliver the notification in five seconds.

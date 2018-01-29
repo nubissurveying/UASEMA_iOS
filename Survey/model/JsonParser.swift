@@ -59,6 +59,13 @@ class JsonParser : NSObject {
         } else {
             print("parseJson","no pings")
         }
+        if let videorecording = json["videorecording"].int{
+            settings.setVid(vid: videorecording)
+//            settings.setVid(vid: 1)
+        }
+        if let accrecording = json["accelrecording"].int{
+            settings.setAcc(acc: accrecording)
+        }
         
         
     }

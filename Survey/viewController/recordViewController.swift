@@ -76,6 +76,9 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         } catch {
             // failed to record!
         }
+        if(settings.getVid() != 1){
+            videoImage.isEnabled = false
+        }
         
         // Do any additional setup after loading the view.
     }

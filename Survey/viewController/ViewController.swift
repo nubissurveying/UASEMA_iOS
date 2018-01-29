@@ -125,8 +125,27 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     }
     
     func setSpinner(message: String){
-        SwiftSpinner.show(message)
+        if let num = Int(settings.getRtid()!){
+            if(num < 1000){
+                SwiftSpinner.show(message)
+            } else {
+                SwiftSpinner.show("loading")
+            }
+        } else {
+            SwiftSpinner.show("loading")
+        }
+        
+        
         netTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(closeSpinner), userInfo: nil, repeats: false)
+    }
+    func showDeveToast(message: String){
+        if let num = Int(settings.getRtid()!){
+            if(num < 1000){
+                self.view.showToast(message, position: .bottom, popTime: 3, dismissOnTap: false)
+            }
+        }
+        
+        
     }
     @objc func closeSpinner(){
         SwiftSpinner.hide()
@@ -149,7 +168,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         print("should show survey ",settings.shouldShowSurvey(calendar: now))
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
-            if(!isInSurvey){
+//            if(!isInSurvey){
                 let survey = settings.getSurveyByTime(now: now);
                 survey?.setAlarmed()
                 if(isInternetAvailable()) {
@@ -163,32 +182,36 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 if(timeTag == nil) {timeTag = ""}
                 showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
                 isInSurvey = true;
-            } else {
+//            } else {
                 SwiftSpinner.hide()
-            }
+//            }
             print("route comes to User is logged in and during survey, is in survey", isInSurvey)
-            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in and during survey, is in survey \(isInSurvey)")
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in and during survey, is in survey \(isInSurvey) \n")
+            showDeveToast(message: "Survey start")
             
-            //            self.view.showToast("Survey start", position: .bottom, popTime: 3, dismissOnTap: false)
             //  User is logged in, is not during survey, and has not skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
 //            if(isInSurvey){
                 showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_START, settings: settings, now: now, includeParams: true));
-                //            self.view.showToast("not in survey, not skip", position: .bottom, popTime: 3, dismissOnTap: false)
+            
+            showDeveToast(message: "not in survey, not skip")
+//                self.view.showToast("not in survey, not skip", position: .bottom, popTime: 3, dismissOnTap: false)
                 isInSurvey = false
 //            }
             print("route comes to User is logged in, is not during survey, and has not skipped previous")
-            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in, is not during survey, and has not skipped previous")
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in, is not during survey, and has not skipped previous \n")
             
             //  User is logged in, but has skipped previous
         }else if (settings.isLoggedIn() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && settings.skippedPrevious(now: now)){
 //            if(isInSurvey){
-                showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_NOREACTION, settings: settings, now: now, includeParams: true));
-                //            self.view.showToast("skip", position: .bottom, popTime: 3, dismissOnTap: false)
-                isInSurvey = false
+            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_NOREACTION, settings: settings, now: now, includeParams: true));
+            
+            showDeveToast(message: "skip")
+//                self.view.showToast("skip", position: .bottom, popTime: 3, dismissOnTap: false)
+            isInSurvey = false
 //            }
             print("route comes to User is logged in, but has skipped previous")
-            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in, but has skipped previous")
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in, but has skipped previous \n")
             
             //  UserId set from APK; is logged in, but has no start and end times;
         } else if (settings.isLoggedIn() && !settings.allFieldsSet()){
@@ -198,7 +221,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 //            self.view.showToast("login no start and end", position: .bottom, popTime: 3, dismissOnTap: false)
                 isInSurvey = false
 //            }
-            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to UserId set from APK; is logged in, but has no start and end times;")
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to UserId set from APK; is logged in, but has no start and end times \n")
             //  No user; either opted out, or started with APK with no RTID
         } else if (settings.isLoggedIn() && settings.hasNoAlarms() && settings.allFieldsSet() && !settings.shouldShowSurvey(calendar: now) && !settings.skippedPrevious(now: now)){
             
@@ -207,7 +230,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         } else if (!settings.isLoggedIn()) {
             
             print("route comes to No user; either opted out, or started with APK with no RTID")
-            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to No user; either opted out, or started with APK with no RTID")
+            LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to No user; either opted out, or started with APK with no RTID \n")
             
 //            if(isInSurvey){
                 showWebView(url: UrlBuilder.build(page: "testandroid", settings: settings, now: now,  includeParams: false));
@@ -224,7 +247,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
     }
     func showWebView(url: String) {
-        LocalFileManager.appendfile(fileURL: LogUrl!, dataString: " " + url + "\n")
+        LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + " " + url + "\n")
         print("show webview ",url)
         let urlrequest = URL(string: url)
         if(isInternetAvailable()){
@@ -380,6 +403,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 center.synchronize()
                 print("check delete correctly", center.object(forKey: Constants.CookieValueKey) == nil)
                 print("Cookie is stored")
+                self.clearCache()
             })
             let issueAction = UIAlertAction(title: "Technical issue", style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
@@ -405,6 +429,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 (alert: UIAlertAction!) -> Void in
 
                 if(MFMailComposeViewController.canSendMail()){
+                    
+                    LocalFileManager.appendfile(fileURL: self.LogUrl!, dataString: "\n" + DateUtil.stringifyAll(calendar: Date()) + self.settings.toString())
                     print("send mail", "can send")
                     let mailComposer = MFMailComposeViewController()
                     mailComposer.mailComposeDelegate = self
@@ -673,7 +699,23 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         }
     }
 
-    
+    func clearCache() {
+        if #available(iOS 9.0, *) {
+            let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
+            let date = NSDate(timeIntervalSince1970: 0)
+            WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: date as Date, completionHandler:{ })
+        } else {
+            var libraryPath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.libraryDirectory, FileManager.SearchPathDomainMask.userDomainMask, false).first!
+            libraryPath += "/Cookies"
+            
+            do {
+                try FileManager.default.removeItem(atPath: libraryPath)
+            } catch {
+                print("error")
+            }
+            URLCache.shared.removeAllCachedResponses()
+        }
+    }
         
 }
 
