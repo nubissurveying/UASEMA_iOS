@@ -68,15 +68,16 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
     }
     func startAccService(){
-        print("viewController"," start accService")
-        setupCoreLocation()
-        setFile()
-        setAcce()
-//        if(settings.getAcc() == 1){
-//
-//        } else {
-//            print("viewController"," accService is not required to start")
-//        }
+        
+        if(settings.getAcc() == 1){
+            print("viewController"," start accService")
+            showDeveToast(message: "viewController start accService")
+            setupCoreLocation()
+            setFile()
+            setAcce()
+        } else {
+            print("viewController"," accService is not required to start")
+        }
     }
     func setWKWebview(){
         let userContentController = WKUserContentController()
@@ -165,6 +166,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         print("here comes route")
         //  User is logged in and during survey
+        
         
         print("should show survey ",settings.shouldShowSurvey(calendar: now))
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
