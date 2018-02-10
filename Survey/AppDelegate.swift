@@ -30,10 +30,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     }
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        registerForPushNotifications()
-//        setCategories()
-        
-        
+        UNUserNotificationCenter.current().getNotificationSettings(completionHandler: {
+            (notificationSetting) in
+            print("didFinishLaunchingWithOptions ask for notificaiton setting", notificationSetting)
+            if notificationSetting.authorizationStatus != .authorized{
+                self.registerForPushNotifications()
+                print("not allow find")
+                self.openNotificationSetting()
+            }
+        })
+
         return true
     }
 //    @available(iOS 10.0, *)
@@ -65,6 +71,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        UNUserNotificationCenter.current().getNotificationSettings(completionHandler: {
+            (notificationSetting) in
+            print("applicationWillEnterForeground ask for notificaiton setting", notificationSetting)
+            if notificationSetting.authorizationStatus != .authorized{
+                self.registerForPushNotifications()
+                print("not allow find")
+                self.openNotificationSetting()
+            }
+        })
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -72,8 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         UIApplication.shared.applicationIconBadgeNumber = 0;
 
         Notification.removeDeliveredNotification()
-//        let settings = Settings.getSettingFromDefault()
-//        route(settings: settings)
+        
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -126,7 +140,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
             }
         }
     }
-    
+    func openNotificationSetting(){
+        let alert = UIAlertController(title: "Warning", message: "Please allow notification in setting, or you will miss all the survey", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Setting", style: UIAlertActionStyle.default, handler: {(UIAlertAction) in
+            
+            guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
+                return
+            }
+            
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                    print("Settings opened: \(success)") // Prints true
+                })
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))
+        self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
    
 }
 

@@ -275,19 +275,29 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 //        LocalFileManager.appendfile(fileURL: self.LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "actual url loaded " + (webView.url?.absoluteString)! + "\n") 
         webView.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: {(result: Any?, error: Error?) in
             if error == nil {
-                print("html content", result)
+//                print("html content", result)
                 let regex = "\\{\"rtid.*\\}"
                 let resultString = String(describing: result)
 //                print("regex match",resultString)
                 if let range = resultString.range(of:regex, options: .regularExpression) {
-                    let nresult = resultString.substring(with: range)
+                    let nresult = resultString[range]
                     
-                    print("regex match",nresult)
-                    JsonParser.updateSetting(webpage: nresult, settings: self.settings)
+                    print("regex match for json",nresult)
+                    JsonParser.updateSetting(webpage: String(nresult), settings: self.settings)
                     self.saveInfo()
                     self.startAccService()
                 }
-                
+                let jsAlertRegex = "alert(.*)"
+                if let range = resultString.range(of:jsAlertRegex, options: .regularExpression) {
+                    let nresult = String(resultString[range])
+                    
+                    print("regex match for js alert",nresult)
+                    if(nresult == "alert(\(Constants.VIDEO))"){
+                        self.showWebView(url: Constants.VIDEO_URL)
+                    } else if (nresult == "alert(\(Constants.SOUNDRECORDING))"){
+                        self.performSegue(withIdentifier: "record", sender: nil)
+                    }
+                }
             }
         })
         webView.evaluateJavaScript("document.cookie", completionHandler: {(result: Any?, error: Error?) in
@@ -583,6 +593,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         default:
             break
         }
+        
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last!
@@ -698,6 +709,61 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             
                     
             }
+        }
+    }
+    // new accelerometer code (without gravity)
+    func setMotion(){
+        print("setMotion")
+        if motionManager.isDeviceMotionAvailable{
+            print("setMotion start")
+            motionManager.deviceMotionUpdateInterval = 1.0 / Hz
+            motionManager.startDeviceMotionUpdates(to: OperationQueue.current!){
+                (data, error) in
+                if let myData = data {
+                    //                print(myData)
+                    var svm = myData.userAcceleration.x * myData.userAcceleration.x +
+                        myData.userAcceleration.y * myData.userAcceleration.y +
+                        myData.userAcceleration.z * myData.userAcceleration.z
+
+                    svm = sqrt(svm)
+                    self.tempSum = self.tempSum + svm
+                    self.count = self.count + 1.0
+                    if(self.count > self.Hz){
+                        self.count = 0;
+                        let message =  DateUtil.stringifyAllAlt(calendar: Date()) + " \(svm)" + "\n"
+                        if(self.settings.isLoggedIn()){
+                            let fileUrl = self.DocumentDirUrl.appendingPathComponent(self.settings.getRtid()! + DateUtil.stringifyDateUntilMin(calendar: Date())).appendingPathExtension("txt")
+                            LocalFileManager.appendfile(fileURL: fileUrl, dataString: message)
+                        }
+                        
+                        svm = 0.0;
+                        
+                        
+                        //                    upload part
+                        let thresholdSec = self.calendar.component(.second, from: Date())
+                        let thresholdMin = self.calendar.component(.minute, from: Date())
+                        //thresholdHour == 0 &&
+                        //                print(threshold)
+                        if(thresholdSec == 59){
+                            if(self.settings.isLoggedIn()){
+                                let currentName = self.settings.getRtid()! + DateUtil.stringifyDateUntilMin(calendar: Date())
+                                let fileUrl = self.DocumentDirUrl.appendingPathComponent(currentName).appendingPathExtension("txt")
+                                if(!self.filesToBeUpload.contains(fileUrl)) {
+                                    self.filesToBeUpload.append(fileUrl)
+                                    print("acc", "add to array" + fileUrl.path)
+                                }
+                                if(thresholdMin == 59 && self.isInternetAvailable()){
+                                    print("acc", "upload all")
+                                    let desUrl = self.DocumentDirUrl.appendingPathComponent(DateUtil.stringifyAllAlt(calendar: Date())).appendingPathExtension("txt")
+                                    self.filesToBeUpload = LocalFileManager.combineAndUpload(filesToBeUpload: self.filesToBeUpload, desUrl: desUrl)
+                                    //                                self.filesToBeUpload = []
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
         }
     }
 
