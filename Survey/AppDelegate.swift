@@ -141,7 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         }
     }
     func openNotificationSetting(){
-        let alert = UIAlertController(title: "Warning", message: "Please allow notification in setting, or you will miss all the survey", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Warning", message: "You need to enable Notifications for this app to participate in this study", preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: "Setting", style: UIAlertActionStyle.default, handler: {(UIAlertAction) in
             
