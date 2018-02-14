@@ -49,6 +49,7 @@ class Constants: NSObject {
     public static var TIME_TO_TAKE_SURVEY = isDemo ? TIME_TO_TAKE_SURVEY_DEV : TIME_TO_TAKE_SURVEY_PRO;
     public static var TIME_TO_REMINDER = isDemo ? TIME_TO_REMINDER_DEV : TIME_TO_REMINDER_PRO;
     public static var baseURL = "https://uas.usc.edu/survey/uas/ema/daily/index.php";
+//    public static var baseURL = "http://127.0.0.1/ema/index.php";
     
     public static var videoMaximumDuration = 240
     public static let VIDEO = "video"

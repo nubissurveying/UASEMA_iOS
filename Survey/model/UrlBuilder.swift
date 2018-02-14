@@ -52,7 +52,7 @@ class UrlBuilder: NSObject {
             "&pinginfo=" + (page == PHONE_ALARM ? Uri.encode(content: settings.alarmTags()) : "");
     }
     
-    private static let baseURL = "https://uas.usc.edu/survey/uas/ema/daily/index.php";
+    private static let baseURL = Constants.baseURL
     
     public static func build(page : String,  settings : Settings, now : Date, includeParams : Bool) -> String{
 //        let set = Settings.getSettingFromDefault()
