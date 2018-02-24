@@ -39,13 +39,10 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
         UNUserNotificationCenter.current().delegate = self
-//        locationManager.delegate = self
-        //json test
-//        JsonParser.updateSettingSample()
         
         // init wkwebview
         setWKWebview()
-        //        myWebView.delegate = self
+
         
         // set notification
         NotificationCenter.default.addObserver(self, selector: #selector(self.applicationWillEnterForeground(notification:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
@@ -65,6 +62,9 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         LogUrl = DocumentDirUrl.appendingPathComponent("UrlLog").appendingPathExtension("txt")
         LocalFileManager.setFile(fileURL: LogUrl!, writeString: "Log\n")
+        
+        //timeStringfiyTest
+//        print("human readable date test ", DateUtil.stringifyHuman(calendar: Date()))
         
     }
     func startAccService(){
@@ -292,9 +292,9 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                     let nresult = String(resultString[range])
                     
                     print("regex match for js alert",nresult)
-                    if(nresult == "alert(\(Constants.VIDEO))"){
+                    if(nresult == "alert(\"\(Constants.VIDEO)\")"){
                         self.showWebView(url: Constants.VIDEO_URL)
-                    } else if (nresult == "alert(\(Constants.SOUNDRECORDING))"){
+                    } else if (nresult == "alert(\"\(Constants.SOUNDRECORDING)\")"){
                         self.performSegue(withIdentifier: "record", sender: nil)
                     }
                 }

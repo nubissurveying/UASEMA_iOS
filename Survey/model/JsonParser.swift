@@ -40,6 +40,7 @@ class JsonParser : NSObject {
         if let windowopen = json["windowopen"].int {
             // Do something you want
             Constants.TIME_TO_TAKE_SURVEY = windowopen / 60
+            print("parseJson","set reminder", Constants.TIME_TO_TAKE_SURVEY)
         } else {
             print("parseJson","no windowopen")
         }

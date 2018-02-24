@@ -14,6 +14,15 @@ class DateUtil: NSObject {
         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
         return dateFormatter.string(from: calendar)
     }
+    
+    public static func stringifyHuman(calendar : Date) -> String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.amSymbol = "am"
+        dateFormatter.pmSymbol = "pm"
+        dateFormatter.dateFormat = "MMMM dd, H:mma"
+        return dateFormatter.string(from: calendar)
+    }
+    
     public static func stringifyAllAlt(calendar : Date) -> String{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

@@ -20,6 +20,8 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     @IBOutlet weak var SaveButton: UIButton!
     @IBOutlet weak var videoImage: UIButton!
     @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var videoInstruction: UILabel!
+    @IBOutlet weak var timerLabel: UILabel!
     
     
     var recordingSession: AVAudioSession!
@@ -31,7 +33,9 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     let settings = Settings.getSettingFromDefault()
     let imagePicker: UIImagePickerController! = UIImagePickerController()
     let saveFileName = "/test.mp4"
-    
+    var timer : Timer!
+    var audioTimer = 0
+    var audioUploaded = true
     override func viewDidLoad() {
         super.viewDidLoad()
         mcImage.backgroundColor = .clear
@@ -54,12 +58,31 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         playButton.layer.borderWidth = 1
         playButton.layer.borderColor = UIColor.black.cgColor
         
+        timerLabel.text = "00:00"
+        audioTimer = 0;
+        
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
         imageView.contentMode = .scaleAspectFit
         let image = UIImage(named: "uas_logo.png")
         imageView.image = image
         self.navigationItem.titleView = imageView
         
+        setRecordingSession()
+        SaveButton.isEnabled = false
+//        setVideo()
+        
+        
+    }
+    //hide the video part if video is set to not show
+    func setVideo(){
+        if(settings.getVid() != 1){
+            videoImage.isEnabled = false
+            videoImage.isHidden = true
+            playButton.isHidden = true
+            videoInstruction.isHidden = true
+        }
+    }
+    func setRecordingSession(){
         recordingSession = AVAudioSession.sharedInstance()
         do {
             try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
@@ -76,11 +99,6 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         } catch {
             // failed to record!
         }
-        if(settings.getVid() != 1){
-            videoImage.isEnabled = false
-        }
-        
-        // Do any additional setup after loading the view.
     }
     
     override func didReceiveMemoryWarning() {
@@ -212,12 +230,19 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             mcImage.setImage(UIImage(named: "microphone_check"), for: UIControlState.normal)
             isRecording = false;
             self.finishRecording(success: true)
+            timer.invalidate()
+            SaveButton.isEnabled = true
+            audioUploaded = false
         } else {
             mcImage.setImage(UIImage(named: "microphone_recording"),for: UIControlState.normal)
             isRecording = true;
             self.startRecording()
+            audioTimer = 0;
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(runTimer), userInfo: nil, repeats: true)
         }
     }
+    
+    
     func startRecording() {
         print("start recording")
         self.view.showToast("start recording", position: .bottom, popTime: 2, dismissOnTap: false)
@@ -285,11 +310,18 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     }
     
     @IBAction func SaveUpload(_ sender: Any) {
-        mcImage.setImage(UIImage(named: "microphone"),for: UIControlState.normal)
-        isRecording = false;
-        playAudio()
-        uploadAudio(url: getDocumentsDirectory().appendingPathComponent(recordName))
-//        uploadFile(filePath: getDocumentsDirectory().appendingPathComponent(recordName), uploadURL: "http://10.120.65.133:8888/TEST.php", mimeType: "audio/x-aac", fileName: "test.acc")
+        if(!audioUploaded){
+            mcImage.setImage(UIImage(named: "microphone"),for: UIControlState.normal)
+            isRecording = false;
+            playAudio()
+            uploadAudio(url: getDocumentsDirectory().appendingPathComponent(recordName))
+            audioUploaded = true
+            resetTimer()
+        } else {
+            self.view.showToast("nothing to upload", position: .bottom, popTime: 3, dismissOnTap: false)
+        }
+        
+
     }
     func uploadAudio(url : URL){
         self.mcImage.isEnabled  = false
@@ -374,16 +406,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             self.view.showToast("audioPlayer error \(error.localizedDescription)", position: .bottom, popTime: 3, dismissOnTap: true)
         }
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+    // encryption the info
     public func Encrypt(inputStr:String)->String{
         do {
             let mcrypt = MCrypt();
@@ -399,20 +422,20 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     func uploadFile(filePath : URL, uploadURL: String, mimeType: String, fileName: String){
         print("record upload", uploadURL)
         Alamofire.upload(
-            //同样采用post表单上传
+            
             multipartFormData: { multipartFormData in
                 multipartFormData.append(filePath, withName: "uploadedfile", fileName: fileName, mimeType: mimeType)
-                //服务器地址
+
         },to: uploadURL,encodingCompletion: { encodingResult in
             switch encodingResult {
             case .success(let upload, _, _):
-                //json处理
+
                 upload.responseJSON { response in
-                    //解包
+
                     guard let result = response.result.value else { return }
                     print("json:\(result)")
                 }
-                //上传进度
+
                 upload.uploadProgress(queue: DispatchQueue.global(qos: .utility)) { progress in
                     print("audio upload progress: \(progress.fractionCompleted)")
                 }
@@ -421,6 +444,16 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             }
         })
     }
-
+    // timer
+    @objc func runTimer() {
+        audioTimer += 1
+        timerLabel.text = String(format: "%02d:%02d", audioTimer/60, audioTimer % 60)
+        
+    }
+    
+    func resetTimer() {
+        audioTimer = 0
+        timerLabel.text = "00:00"
+    }
 
 }
