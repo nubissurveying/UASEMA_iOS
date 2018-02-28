@@ -19,6 +19,8 @@ class Settings: NSObject {
     private var endTime : Date!;
     private var surveys : [Survey] = [];
     private var setAtTime: Date!;
+    private var timeToTakeSurvey = 8
+    private var timeToReminder = 1
     private var accelrecording = 0
     private var videorecording = 0
     
@@ -65,7 +67,7 @@ class Settings: NSObject {
         self.rtid = rtid;
      
     }
-    
+    // setter and getter
     public func getSurveys() -> [Survey] {
         return surveys;
     }
@@ -94,6 +96,18 @@ class Settings: NSObject {
     }
     public func getVid() -> Int{
         return self.videorecording
+    }
+    public func settimeToTakeSurvey(time: Int){
+        self.timeToTakeSurvey = time
+    }
+    public func gettimeToTakeSurvey() -> Int{
+        return self.timeToTakeSurvey
+    }
+    public func settimeToReminder(time: Int){
+        self.timeToReminder = time
+    }
+    public func gettimeToReminder() -> Int{
+        return self.timeToReminder
     }
     
     /** Should take survey; Set survey as taken */
@@ -321,6 +335,8 @@ class Settings: NSObject {
         res +=   "\n end: " + DateUtil.stringifyAll(calendar: endTime)
         res += "\n accelrecording: \(self.accelrecording)"
         res += "\n videorecording: \(self.videorecording)"
+        res += "\n timeToTakeSurvey: \(self.timeToTakeSurvey)"
+        res += "\n timeToReminder: \(self.timeToReminder)"
         res +=   "\n surveys: " + ((surveys.count > 0) ? String(surveys.count) : "null")
         res +=   "\n" + stringifyAlarms(surveys: surveys);
         return res
@@ -384,6 +400,8 @@ class Settings: NSObject {
         defaults.set(DateUtil.stringifyAll(calendar: setAtTime), forKey: Constants.setAtTimeKey)
         defaults.set(self.accelrecording, forKey: Constants.AccelrecordingKey)
         defaults.set(self.videorecording, forKey: Constants.VideorecordingKey)
+        defaults.set(self.timeToReminder, forKey: Constants.TimeToReminderKey)
+        defaults.set(self.timeToTakeSurvey, forKey: Constants.TimeToTakeSurveyKey)
 
     }
     static  func clearSettingToDefault(){
@@ -396,6 +414,8 @@ class Settings: NSObject {
         defaults.removeObject(forKey: Constants.setAtTimeKey)
         defaults.removeObject(forKey: Constants.AccelrecordingKey)
         defaults.removeObject(forKey: Constants.VideorecordingKey)
+        defaults.removeObject(forKey: Constants.TimeToTakeSurveyKey)
+        defaults.removeObject(forKey: Constants.TimeToReminderKey)
     }
     public static func getSettingFromDefault() -> Settings{
         let defaults = UserDefaults.standard
@@ -422,6 +442,8 @@ class Settings: NSObject {
             
             res.setAcc(acc: defaults.integer(forKey: Constants.AccelrecordingKey))
             res.setVid(vid: defaults.integer(forKey: Constants.VideorecordingKey))
+            res.settimeToReminder(time: defaults.integer(forKey: Constants.TimeToReminderKey))
+            res.settimeToTakeSurvey(time: defaults.integer(forKey: Constants.TimeToTakeSurveyKey))
             return res
             
         }

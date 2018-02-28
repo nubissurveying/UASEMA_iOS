@@ -21,6 +21,8 @@ class Constants: NSObject {
     public static let NotificationsTimeKey = "NotificationsTimeKey"
     public static let AccelrecordingKey = "AccelrecordingKey"
     public static let VideorecordingKey = "VideorecordingKey"
+    public static let TimeToReminderKey = "TimeToReminderKey"
+    public static let TimeToTakeSurveyKey = "TimeToTakeSurveyKey"
     
     public static let CookieNameKey = "CookieNameKey"
     public static let CookieValueKey = "CookieValueKey"
@@ -55,5 +57,13 @@ class Constants: NSObject {
     public static let VIDEO = "video"
     public static let SOUNDRECORDING = "soundrecording"
     public static let VIDEO_URL = "https://survey.usc.edu/ptus/index.php?p=showvideo"
+    
+    public static func setTimeToTakeSurvey(time: Int){
+        self.TIME_TO_TAKE_SURVEY = time
+    }
+    
+    public static func setTimeToReminder(time: Int){
+        self.TIME_TO_REMINDER = time
+    }
    
 }

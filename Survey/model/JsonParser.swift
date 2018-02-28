@@ -32,6 +32,7 @@ class JsonParser : NSObject {
         
         if let reminder = json["reminder"].int {
             Constants.TIME_TO_REMINDER = reminder / 60
+            settings.settimeToReminder(time: reminder / 60)
             print("parseJson","set reminder", Constants.TIME_TO_REMINDER)
         } else {
             print("parseJson","no reminder")
@@ -40,6 +41,7 @@ class JsonParser : NSObject {
         if let windowopen = json["windowopen"].int {
             // Do something you want
             Constants.TIME_TO_TAKE_SURVEY = windowopen / 60
+            settings.settimeToTakeSurvey(time: windowopen / 60)
             print("parseJson","set reminder", Constants.TIME_TO_TAKE_SURVEY)
         } else {
             print("parseJson","no windowopen")
@@ -67,11 +69,11 @@ class JsonParser : NSObject {
         if let accrecording = json["accelrecording"].int{
             settings.setAcc(acc: accrecording)
         }
-        
+//        settings.saveSettingToDefault()
         
     }
     static func updateSettingSample()  {
-        var setting = Settings()
+        let setting = Settings()
 //        print(sample["rtid"])
         
         setting.updateAndSave(rtid: String(describing: sample["rtid"]), beginTime: Date(), endTime: Calendar.current.date(byAdding: .day, value: 7, to: Date())!, setAtTime: Date(), surs: Settings.buildSurveyFromJSON(json: sample))

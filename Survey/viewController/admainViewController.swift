@@ -32,10 +32,11 @@ class admainViewController: UIViewController, UITableViewDelegate, UITableViewDa
             dateContent.text = ": " + defaults.string(forKey: Constants.setAtTimeKey)!
             beginContent.text = ": " + defaults.string(forKey: Constants.beginTimeKey)!
             endContent.text = ": " + defaults.string(forKey: Constants.endTimeKey)!
-            surveys = (defaults.string(forKey: Constants.surveysKey)?.components(separatedBy: "\n"))!
+            
             settings = Settings.getSettingFromDefault()
         }
-        // Do any additional setup after loading the view.
+        Notification.showNotificaiton()
+        print("in admain", settings.toString())
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return settings.getSurveys().count

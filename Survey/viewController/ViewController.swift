@@ -55,11 +55,13 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         imageView.image = image
         self.navigationItem.titleView = imageView
         
+        //set menu
         let options = UIBarButtonItem.init(image: UIImage.init(named: "options"), style: .plain, target: self, action: #selector(self.showOptions))
         self.navigationItem.setRightBarButton(options, animated: true)
         
-        startAccService()
         
+        //set service and documents
+        startAccService()
         LogUrl = DocumentDirUrl.appendingPathComponent("UrlLog").appendingPathExtension("txt")
         LocalFileManager.setFile(fileURL: LogUrl!, writeString: "Log\n")
         
@@ -67,6 +69,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 //        print("human readable date test ", DateUtil.stringifyHuman(calendar: Date()))
         
     }
+    
+    // function to start acclerometer
     func startAccService(){
         
         if(settings.getAcc() == 1){

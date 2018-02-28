@@ -26,16 +26,21 @@ class Notification: NSObject {
         if(defaults.object(forKey: Constants.surveysKey) == nil){
             return 0
         }
-        
+        let settings = Settings.getSettingFromDefault()
+        print("set notification time to reminder", settings.gettimeToReminder())
+        print("set notification time to take survey", settings.gettimeToTakeSurvey())
         if defaults.string(forKey: Constants.surveysKey) != "null"{
-            let surveysString = defaults.string(forKey: Constants.surveysKey)
-            let surveyArray = surveysString?.split(separator: "\n")
+//            let surveysString = defaults.string(forKey: Constants.surveysKey)
+//            let surveyArray = surveysString?.split(separator: "\n")
+//
+//            var surveys = [Survey]()
+//            for str in surveyArray! {
+//                surveys.append(Survey.getSuveryFromString(input:String(str)))
+//            }
             
-            var surveys = [Survey]()
-            for str in surveyArray! {
-                surveys.append(Survey.getSuveryFromString(input:String(str)))
-            }
-            for sur in surveys{
+            // pick serveal surveys to add notification
+            let settings = Settings.getSettingFromDefault()
+            for sur in settings.getSurveys(){
                 if(sur.getDate() < current) {
                     continue
                 }
@@ -50,18 +55,16 @@ class Notification: NSObject {
             }
             
             for sur in toBeAdd.reversed(){
-                //            print("wait to be add",DateUtil.stringifyAll(calendar: sur.getDate()))
+
                 let content = UNMutableNotificationContent()
                 let content2 = UNMutableNotificationContent()
                 let first = sur.getDate()
-                let second = Calendar.current.date(byAdding: .minute, value: Constants.TIME_TO_REMINDER, to: first)
-                let third = Calendar.current.date(byAdding: .minute, value: Constants.TIME_TO_TAKE_SURVEY , to: first)
-                print("setNotification", DateUtil.stringifyAll(calendar: first), DateUtil.stringifyAll(calendar: second!), "\(Constants.TIME_TO_REMINDER)")
+                let second = Calendar.current.date(byAdding: .minute, value: settings.gettimeToReminder(), to: first)
+                let third = Calendar.current.date(byAdding: .minute, value: settings.gettimeToTakeSurvey() , to: first)
+                print("setNotification", DateUtil.stringifyAll(calendar: first), DateUtil.stringifyAll(calendar: second!), "\(settings.gettimeToReminder())")
                 
-                content.title = "Survey is Ready"
-                content.body = "Notification generated at " + DateUtil.stringifyTime(calendar: first)
-                    + ", current survey will be closed in \(Constants.TIME_TO_TAKE_SURVEY) min. "
-                    + "No need to click after " + DateUtil.stringifyHuman(calendar: third!)
+                content.title = "Survey is ready at " + DateUtil.stringifyTime(calendar: first)
+                content.body = "No need to click after " + DateUtil.stringifyHuman(calendar: third!)
                 content.sound = UNNotificationSound.default()
                 content.categoryIdentifier = Constants.CategoryName
                 // Deliver the notification in five seconds.
@@ -77,10 +80,8 @@ class Notification: NSObject {
                 //            let trigger = UNCalendarNotificationTrigger(dateMatching: firstComp, repeats: false)
                 let request = UNNotificationRequest.init(identifier: DateUtil.stringifyAll(calendar: first), content: content, trigger: trigger)
                 
-                content2.title = "Survey is Ready"
-                content2.body = "Notification generated at " + DateUtil.stringifyTime(calendar: second!)
-                    + ", current survey will be closed in \(Constants.TIME_TO_TAKE_SURVEY - Constants.TIME_TO_REMINDER) min. "
-                    + "No need to click after " + DateUtil.stringifyHuman(calendar: third!)
+                content2.title = "Survey is ready at " + DateUtil.stringifyTime(calendar: second!)
+                content2.body = "No need to click after " + DateUtil.stringifyHuman(calendar: third!)
                 content2.sound = UNNotificationSound.default()
                 content2.categoryIdentifier = Constants.CategoryName
                 // Deliver the notification in five seconds.
@@ -169,7 +170,8 @@ class Notification: NSObject {
         let center = UNUserNotificationCenter.current()
         var ids = [String]()
         let first = SurveyDate
-        let second = Calendar.current.date(byAdding: .minute, value: Constants.TIME_TO_REMINDER, to: first!)
+        let settings = Settings.getSettingFromDefault()
+        let second = Calendar.current.date(byAdding: .minute, value: settings.gettimeToReminder(), to: first!)
         ids.append(DateUtil.stringifyAll(calendar: first!))
         ids.append(DateUtil.stringifyAll(calendar: second!))
         center.removePendingNotificationRequests(withIdentifiers: ids)

@@ -84,7 +84,7 @@ class LocalFileManager: NSObject {
                         
                     }
                     
-                    let localBase = "http://10.120.65.133:8888/ema/index.php"
+//                    let localBase = "http://10.120.65.133:8888/ema/index.php"
                     Upload.upload(fileUrl: desUrl, desUrl: Constants.baseURL)
                     
 //                    try fileManager.removeItem(at: desUrl)

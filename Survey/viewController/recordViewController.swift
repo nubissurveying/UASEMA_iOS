@@ -17,16 +17,18 @@ import AVKit
 class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPlayerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var mcImage: UIButton!
-    @IBOutlet weak var SaveButton: UIButton!
+    @IBOutlet weak var audioPlayButton: UIButton!
     @IBOutlet weak var videoImage: UIButton!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var videoInstruction: UILabel!
     @IBOutlet weak var timerLabel: UILabel!
+    @IBOutlet weak var audioUpload: UIButton!
     
     
     var recordingSession: AVAudioSession!
     var audioRecorder: AVAudioRecorder!
     var audioPlayer: AVAudioPlayer!
+    var isAudioPlaying = false
     var isRecording = false
     let recordName = "recording.acc"
     let streamName = "localStream"
@@ -43,20 +45,29 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         mcImage.layer.borderWidth = 1
         mcImage.layer.borderColor = UIColor.black.cgColor
         
-        SaveButton.backgroundColor = .clear
-        SaveButton.layer.cornerRadius = 5
-        SaveButton.layer.borderWidth = 1
-        SaveButton.layer.borderColor = UIColor.black.cgColor
+        audioPlayButton.backgroundColor = .clear
+        audioPlayButton.layer.cornerRadius = 5
+        audioPlayButton.layer.borderWidth = 1
+        audioPlayButton.layer.borderColor = UIColor.black.cgColor
+        audioPlayButton.isEnabled = false
+        
+        audioUpload.backgroundColor = .clear
+        audioUpload.layer.cornerRadius = 5
+        audioUpload.layer.borderWidth = 1
+        audioUpload.layer.borderColor = UIColor.black.cgColor
+        audioUpload.isEnabled = false
         
         videoImage.backgroundColor = .clear
         videoImage.layer.cornerRadius = 5
         videoImage.layer.borderWidth = 1
         videoImage.layer.borderColor = UIColor.black.cgColor
         
-        playButton.backgroundColor = .clear
-        playButton.layer.cornerRadius = 5
-        playButton.layer.borderWidth = 1
-        playButton.layer.borderColor = UIColor.black.cgColor
+//        playButton.backgroundColor = .clear
+//        playButton.layer.cornerRadius = 5
+//        playButton.layer.borderWidth = 1
+//        playButton.layer.borderColor = UIColor.black.cgColor
+        
+        
         
         timerLabel.text = "00:00"
         audioTimer = 0;
@@ -68,8 +79,8 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         self.navigationItem.titleView = imageView
         
         setRecordingSession()
-        SaveButton.isEnabled = false
-//        setVideo()
+        audioPlayButton.isEnabled = false
+        setVideo()
         
         
     }
@@ -78,7 +89,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         if(settings.getVid() != 1){
             videoImage.isEnabled = false
             videoImage.isHidden = true
-            playButton.isHidden = true
+//            playButton.isHidden = true
             videoInstruction.isHidden = true
         }
     }
@@ -116,7 +127,9 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
                 imagePicker.sourceType = .camera
                 imagePicker.mediaTypes = [kUTTypeMovie as String]
                 imagePicker.allowsEditing = false
+                imagePicker.cameraDevice = UIImagePickerControllerCameraDevice.front
                 imagePicker.delegate = self
+                
                 
                 present(imagePicker, animated: true, completion: {})
             } else {
@@ -231,9 +244,13 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             isRecording = false;
             self.finishRecording(success: true)
             timer.invalidate()
-            SaveButton.isEnabled = true
+            audioPlayButton.isEnabled = true
+            audioUpload.isEnabled = true
+            audioUpload.setTitleColor(UIColor.black, for: .normal)
+            audioPlayButton.setTitleColor(UIColor.black, for: .normal)
             audioUploaded = false
         } else {
+            
             mcImage.setImage(UIImage(named: "microphone_recording"),for: UIControlState.normal)
             isRecording = true;
             self.startRecording()
@@ -245,7 +262,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     
     func startRecording() {
         print("start recording")
-        self.view.showToast("start recording", position: .bottom, popTime: 2, dismissOnTap: false)
+        self.view.showToast("start recording, press again to stop", position: .bottom, popTime: 2, dismissOnTap: false)
         let audioFilename = getDocumentsDirectory().appendingPathComponent(recordName)
         
         let settings = [
@@ -309,11 +326,26 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         }
     }
     
-    @IBAction func SaveUpload(_ sender: Any) {
+    @IBAction func playAudio(_ sender: Any) {
+        if(isAudioPlaying){
+            audioPlayer.stop()
+            isAudioPlaying = false
+            print("stop playing audio")
+            audioPlayButton.setTitle("Play", for: .normal)
+        } else {
+            playAudio()
+            audioPlayButton.setTitle("Stop", for: .normal)
+            
+        }
+        
+        
+
+    }
+    @IBAction func Upload(_ sender: Any) {
         if(!audioUploaded){
             mcImage.setImage(UIImage(named: "microphone"),for: UIControlState.normal)
             isRecording = false;
-            playAudio()
+            
             uploadAudio(url: getDocumentsDirectory().appendingPathComponent(recordName))
             audioUploaded = true
             resetTimer()
@@ -321,11 +353,10 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             self.view.showToast("nothing to upload", position: .bottom, popTime: 3, dismissOnTap: false)
         }
         
-
     }
     func uploadAudio(url : URL){
         self.mcImage.isEnabled  = false
-        self.SaveButton.isEnabled = false
+        self.audioPlayButton.isEnabled = false
         
 //        var now = Date()
         let soundrecorded = FileManager.default.fileExists(atPath: url.path)
@@ -339,7 +370,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         uploadWithDelayedAnswer(url: url,minType: "audio/x-aac",fileName: "test.acc")
         
         self.mcImage.isEnabled  = true
-        self.SaveButton.isEnabled = true
+        self.audioPlayButton.isEnabled = true
     }
     func uploadWithDelayedAnswer(url : URL, minType: String, fileName: String){
         print("try to upload using alamofire")
@@ -401,6 +432,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
             audioPlayer?.play()
+            isAudioPlaying = true
         } catch let error as NSError {
             print("audioPlayer error \(error.localizedDescription)")
             self.view.showToast("audioPlayer error \(error.localizedDescription)", position: .bottom, popTime: 3, dismissOnTap: true)
