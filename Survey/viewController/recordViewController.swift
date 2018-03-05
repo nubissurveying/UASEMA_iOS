@@ -80,7 +80,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         
         setRecordingSession()
         audioPlayButton.isEnabled = false
-        setVideo()
+//        setVideo()
         
         
     }
@@ -326,6 +326,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         }
     }
     
+    //audio playing function
     @IBAction func playAudio(_ sender: Any) {
         if(isAudioPlaying){
             audioPlayer.stop()
@@ -337,9 +338,11 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             audioPlayButton.setTitle("Stop", for: .normal)
             
         }
-        
-        
 
+    }
+    //change button back to play
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        audioPlayButton.setTitle("Play", for: .normal)
     }
     @IBAction func Upload(_ sender: Any) {
         if(!audioUploaded){
