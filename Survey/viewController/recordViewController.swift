@@ -38,6 +38,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     var timer : Timer!
     var audioTimer = 0
     var audioUploaded = true
+    var audioRecorded = false
     override func viewDidLoad() {
         super.viewDidLoad()
         mcImage.backgroundColor = .clear
@@ -80,6 +81,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         
         setRecordingSession()
         audioPlayButton.isEnabled = false
+        audioRecorded = false
 //        setVideo()
         
         
@@ -233,12 +235,30 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-
+    
+    func postAlertWithChoose(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message,
+                                      preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:{(UIAlertAction) in
+            self.recordingAction()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
     
 
     
     //audio part
     @IBAction func MicActon(_ sender: Any) {
+        if(self.audioRecorded && !isRecording){
+            postAlertWithChoose("File exist", message: "This will overwrite your previously recorded message. Are you sure you want to continue?")
+        } else {
+            self.recordingAction()
+        }
+        
+    }
+    
+    func recordingAction(){
         if(isRecording){
             mcImage.setImage(UIImage(named: "microphone_check"), for: UIControlState.normal)
             isRecording = false;
@@ -258,8 +278,6 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(runTimer), userInfo: nil, repeats: true)
         }
     }
-    
-    
     func startRecording() {
         print("start recording")
         self.view.showToast("start recording, press again to stop", position: .bottom, popTime: 2, dismissOnTap: false)
@@ -293,6 +311,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
             mcImage.setImage(UIImage(named: "microphone_check"), for: UIControlState.normal)
             print("record succeed")
             self.view.showToast("record succeed", position: .bottom, popTime: 2, dismissOnTap: false)
+            audioRecorded = true
         } else {
             mcImage.setImage(UIImage(named: "microphone"),for: UIControlState.normal)
             self.view.showToast("record fail", position: .bottom, popTime: 2, dismissOnTap: false)
