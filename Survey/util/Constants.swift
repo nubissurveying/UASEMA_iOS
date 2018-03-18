@@ -54,6 +54,8 @@ class Constants: NSObject {
 //    public static var baseURL = "http://127.0.0.1/ema/index.php";
     
     public static var videoMaximumDuration = 240
+    public static var audioMaximumDuration = 240
+    public static var audioMinimumDuration = 10
     public static let VIDEO = "video"
     public static let SOUNDRECORDING = "soundrecording"
     public static let VIDEO_URL = "https://survey.usc.edu/ptus/index.php?p=showvideo"

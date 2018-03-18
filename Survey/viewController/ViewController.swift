@@ -359,19 +359,23 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             let adminAction = UIAlertAction(title: "Admin", style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 print("admin")
+                if(self.settings.isLoggedIn()){
+                    let alert = UIAlertController(title: "admin", message: "Please Enter the admin password", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addTextField(configurationHandler: self.configurationTextField)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(UIAlertAction) in
+                        
+                        if(self.tField.text == "bas"){
+                            self.performSegue(withIdentifier: "admin", sender: nil)
+                        } else {
+                            self.view.showToast("Wrong password", position: .bottom, popTime: 3, dismissOnTap: true)
+                        }
+                    }))
+                    alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    self.view.showToast("Please loggin first", position: .bottom, popTime: 3, dismissOnTap: false)
+                }
                 
-                let alert = UIAlertController(title: "admin", message: "Please Enter the admin password", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addTextField(configurationHandler: self.configurationTextField)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(UIAlertAction) in
-                    
-                    if(self.tField.text == "bas"){
-                        self.performSegue(withIdentifier: "admin", sender: nil)
-                    } else {
-                        self.view.showToast("Wrong password", position: .bottom, popTime: 3, dismissOnTap: true)
-                    }
-                }))
-                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
 
             })
             

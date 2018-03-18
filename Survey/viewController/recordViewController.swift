@@ -82,7 +82,7 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
         setRecordingSession()
         audioPlayButton.isEnabled = false
         audioRecorded = false
-//        setVideo()
+        setVideo()
         
         
     }
@@ -260,15 +260,24 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     
     func recordingAction(){
         if(isRecording){
-            mcImage.setImage(UIImage(named: "microphone_check"), for: UIControlState.normal)
-            isRecording = false;
-            self.finishRecording(success: true)
-            timer.invalidate()
-            audioPlayButton.isEnabled = true
-            audioUpload.isEnabled = true
-            audioUpload.setTitleColor(UIColor.black, for: .normal)
-            audioPlayButton.setTitleColor(UIColor.black, for: .normal)
-            audioUploaded = false
+            if(audioTimer >= Constants.audioMinimumDuration && audioTimer <= Constants.audioMaximumDuration){
+                mcImage.setImage(UIImage(named: "microphone_check"), for: UIControlState.normal)
+                isRecording = false;
+                self.finishRecording(success: true)
+                timer.invalidate()
+                audioPlayButton.isEnabled = true
+                audioUpload.isEnabled = true
+                audioUpload.setTitleColor(UIColor.black, for: .normal)
+                audioPlayButton.setTitleColor(UIColor.black, for: .normal)
+                audioUploaded = false
+            } else {
+                self.view.showToast("Duration should be longer than 10s and shorter than 4 mins", position: .bottom, popTime: 2, dismissOnTap: false)
+                isRecording = false;
+                self.finishRecording(success: false)
+                timer.invalidate()
+                
+            }
+            
         } else {
             
             mcImage.setImage(UIImage(named: "microphone_recording"),for: UIControlState.normal)
