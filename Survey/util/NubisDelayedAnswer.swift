@@ -105,37 +105,14 @@ class NubisDelayedAnswer: NSObject {
     }
     
     public func getGetString() -> String? {
-        do {
-//            let jsonDate = try JSONSerialization.data(withJSONObject: map, options: .prettyPrinted)
-//            let currString = String(data : jsonDate, encoding: String.Encoding.utf8)
-//            let temp = currString?.replacingOccurrences(of: " ", with: "")
-//
-//            return temp?.replacingOccurrences(of: "\n", with: "")
-    /*
-     String outputStr = "";
-     if (map.size() > 0){
-     for (String key : map.keySet()) {
-     outputStr += "&" + key + "=" + URLEncoder.encode((String) map.get(key), "utf-8");
-     }
-     //return "?" + outputStr.substring(1);
-     return outputStr.substring(1);*/
-            var res = "{"
-            for (key, value) in map {
-                res += "\"\(key)\":\"\(value)\","
-            }
-            res.removeLast()
-            res += "}"
-//            print("delayanswer string:",res.count, res)
-//            for ch in res.unicodeScalars {
-//                print(ch, ch.value)
-//            }
-            return res
-    
+        var res = "{"
+        for (key, value) in map {
+            res += "\"\(key)\":\"\(value)\","
         }
-        catch let error as NSError {
-        print("\(error.localizedDescription)")
-    }
-    return "";
+        res.removeLast()
+        res += "}"
+        
+        return res
     }
     
 

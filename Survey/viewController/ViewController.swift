@@ -373,7 +373,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                     alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 } else {
-                    self.view.showToast("Please loggin first", position: .bottom, popTime: 3, dismissOnTap: false)
+                    self.view.showToast("Please login first", position: .bottom, popTime: 3, dismissOnTap: false)
                 }
                 
 
@@ -445,7 +445,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 self.route(settings: self.settings, now: Date())
                 
             })
-            let bufferAction = UIAlertAction(title: "send log", style: .default, handler: {
+            let mailAction = UIAlertAction(title: "send log", style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
 
                 if(MFMailComposeViewController.canSendMail()){
@@ -490,8 +490,12 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             }
         
             optionMenu.addAction(issueAction)
-            optionMenu.addAction(logoutAction)
-            optionMenu.addAction(bufferAction)
+            if(settings.isLoggedIn()){
+                optionMenu.addAction(logoutAction)
+                optionMenu.addAction(mailAction)
+            }
+        
+        
             optionMenu.addAction(cancelAction)
             // 5
             optionMenu.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
