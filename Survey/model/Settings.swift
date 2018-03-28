@@ -198,7 +198,7 @@ class Settings: NSObject {
     /**Build alarm times as url param*/
     public func alarmTags()->String{
         
-        var dic = [Int : String]()
+        var res = "{"
         if(surveys.count > 0){
             for i in 0 ..< surveys.count{
                 let sur = surveys[i]
@@ -216,10 +216,13 @@ class Settings: NSObject {
                     closed = "T"
                 }
                 
-                dic[i + 1] = String(sur.getRequestCode()) + alarmed + taken + closed
+                res += "\"\(i + 1)\":\"" + DateUtil.stringifyAllAlt(calendar: sur.getDate()) + " " + String(sur.getRequestCode()) + " " + alarmed + taken + closed + "\",";
             }
         }
-        return dic.description
+        res = String(res.dropLast())
+        res += "}"
+        print("pinginfo", res)
+        return res
     }
     
     /** Load, Save, Clear */

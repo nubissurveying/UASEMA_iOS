@@ -43,10 +43,10 @@ class UrlBuilder: NSObject {
     private static func buildParams(page : String, settings : Settings, now : Date) -> String{
         return "&rtid=" + (settings.getRtid() == nil ? "" : Uri.encode(content: settings.getRtid()!)) +
     "&language=" + "en" +
-    "&device=" + "andr" +
+    "&device=" + "iOS" +
     "&email=" +
             "&selecteddate=" + DateUtil.stringifyDate(calendar: settings.getbeginTime()) +    //  Not encoded?
-            "&date=" + Uri.encode(content: DateUtil.stringifyAll(calendar: now)) +
+            "&date=" + Uri.encode(content: DateUtil.stringifyAllAlt(calendar: now)) +
             "&starttime=" + Uri.encode(content: DateUtil.stringifyTime(calendar: settings.getbeginTime())) +
             "&endtime=" + Uri.encode(content: DateUtil.stringifyTime(calendar: settings.getEndTime())) +
             "&pinginfo=" + (page == PHONE_ALARM ? Uri.encode(content: settings.alarmTags()) : "");

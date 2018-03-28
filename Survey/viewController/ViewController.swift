@@ -174,23 +174,24 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         print("should show survey ",settings.shouldShowSurvey(calendar: now))
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
-//            if(!isInSurvey){
-                let survey = settings.getSurveyByTime(now: now);
-                survey?.setAlarmed()
-                if(isInternetAvailable()) {
-                    survey?.setAsTaken()
-                }
-                if(survey != nil) {
-                    Notification.removeNotificationForASurvey(SurveyDate: (survey?.getDate())!)
-                }
-                let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
-                var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
-                if(timeTag == nil) {timeTag = ""}
-                showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
-                isInSurvey = true;
-//            } else {
-                SwiftSpinner.hide()
-//            }
+//        if(true) {
+            let survey = settings.getSurveyByTime(now: now);
+            survey?.setAlarmed()
+            if(isInternetAvailable()) {
+                survey?.setAsTaken()
+            }
+            if(survey != nil) {
+                Notification.removeNotificationForASurvey(SurveyDate: (survey?.getDate())!)
+            }
+            let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
+            var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
+            if(timeTag == nil) {timeTag = ""}
+            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
+
+            isInSurvey = true;
+            
+            SwiftSpinner.hide()
+
             print("route comes to User is logged in and during survey, is in survey", isInSurvey)
             LocalFileManager.appendfile(fileURL: LogUrl!, dataString: DateUtil.stringifyAll(calendar: Date()) + "route comes to User is logged in and during survey, is in survey \(isInSurvey) \n")
             showDeveToast(message: "Survey start")
