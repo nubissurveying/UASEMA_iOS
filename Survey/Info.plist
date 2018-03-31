@@ -30,15 +30,15 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Uses camera to demonstrate recording video.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Your location will be used during the whole survey </string>
+	<string>GPS data will be used in user behavior research.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Your location will be used when you are using the app</string>
+	<string>GPS date will be used in user behavior research</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>need microphone to record sound</string>
+	<string>microphone is needed for audio survey </string>
 	<key>NSMotionUsageDescription</key>
-	<string>Need accelerometer data for backend</string>
+	<string>motion data will be used in user behavior research</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Uses photo library to upload video</string>
 	<key>NSPhotoLibraryUsageDescription</key>
