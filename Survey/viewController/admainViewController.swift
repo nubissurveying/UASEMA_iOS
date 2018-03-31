@@ -45,11 +45,8 @@ class admainViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "alarm", for: indexPath) as! alarmTableViewCell
         let sur = settings.getSurveys()[indexPath.row]
-        cell.alarmDetail.text = String(sur.getRequestCode())
-        cell.alarmDate.text = DateUtil.stringifyAll(calendar: sur.getDate())
-        cell.alarmed.text = String(sur.getAlarmed())
-        cell.taken.text = String(sur.isTaken())
-        cell.closed.text = String(sur.isClosed())
+        cell.alarmDetail.text = String(sur.toStringShort())
+        
         
         return cell
     }

@@ -40,7 +40,7 @@ class UrlBuilder: NSObject {
     TIME_MIDDLE = "&middle=1",
     TIME_LAST = "&last=1";
     
-    private static func buildParams(page : String, settings : Settings, now : Date) -> String{
+    private static func buildParams(page : String, settings : Settings, now : Date, reportTo : String) -> String{
         return "&rtid=" + (settings.getRtid() == nil ? "" : Uri.encode(content: settings.getRtid()!)) +
     "&language=" + "en" +
     "&device=" + "iOS" +
@@ -49,16 +49,23 @@ class UrlBuilder: NSObject {
             "&date=" + Uri.encode(content: DateUtil.stringifyAllAlt(calendar: now)) +
             "&starttime=" + Uri.encode(content: DateUtil.stringifyTime(calendar: settings.getbeginTime())) +
             "&endtime=" + Uri.encode(content: DateUtil.stringifyTime(calendar: settings.getEndTime())) +
-            "&pinginfo=" + (page == PHONE_ALARM ? Uri.encode(content: settings.alarmTags()) : "");
+            "&respondingto=" + reportTo + 
+            "&pinginfo=" + (page == PHONE_ALARM ? Uri.encode(content: settings.alarmTags()) : "")
     }
     
     private static let baseURL = Constants.baseURL
     
     public static func build(page : String,  settings : Settings, now : Date, includeParams : Bool) -> String{
-//        let set = Settings.getSettingFromDefault()
-        let response = baseURL + "?ema=1&p=" + page + (includeParams ? buildParams(page: page, settings: settings, now: now) : "");
+        let response = baseURL + "?ema=1&p=" + page + (includeParams ? buildParams(page: page, settings: settings, now: now, reportTo: "") : "");
 //    LogUtil.e("TT", "UrlBuilder => build() == " + response);
         print(response)
     return response;
+    }
+    
+    public static func build(page : String,  settings : Settings, now : Date, includeParams : Bool, reportTo : String) -> String{
+        let response = baseURL + "?ema=1&p=" + page + (includeParams ? buildParams(page: page, settings: settings, now: now, reportTo: reportTo) : "");
+        //    LogUtil.e("TT", "UrlBuilder => build() == " + response);
+        print(response)
+        return response;
     }
 }

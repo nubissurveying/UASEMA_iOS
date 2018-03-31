@@ -135,14 +135,15 @@ class Settings: NSObject {
         return nil
     }
     public func getSurveyByTime(now : Date) -> Survey?{
-//        print("the date to find is ", now)
+        print("the date to find is ", now)
         
         for sur in surveys {
            
             if(sur.getDate() <= Date() ) {
                 
                 let timeDiffInMin = Int(Date().timeIntervalSince(sur.getDate())) / (60);
-                if(timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY + 1){
+                if(timeDiffInMin < self.timeToTakeSurvey + 1){
+//                if(timeDiffInMin > 0){
                     print("founded in get survey by time", sur.getDate(), "time diff ", timeDiffInMin, sur.isTaken(), sur.isClosed())
                     return sur
                 }
@@ -160,7 +161,7 @@ class Settings: NSObject {
             if(sur.getDate() <= Date() ) {
                 
                 let timeDiffInMin = Int(Date().timeIntervalSince(sur.getDate())) / (60);
-                if(timeDiffInMin < Constants.TIME_TO_TAKE_SURVEY + 1){
+                if(timeDiffInMin < self.timeToTakeSurvey + 1){
                     print("founded in should show survey", sur.getDate(), "time diff ", timeDiffInMin, sur.isTaken(), sur.isClosed())
 //                    return !sur.isTaken() && !sur.isClosed()
                     return !sur.isClosed()
@@ -215,8 +216,12 @@ class Settings: NSObject {
                 if(sur.isClosed()){
                     closed = "T"
                 }
+                var internet = "F"
+                if(sur.getInternet()){
+                    internet = "T"
+                }
                 
-                res += "\"\(i + 1)\":\"" + DateUtil.stringifyAllAlt(calendar: sur.getDate()) + " " + String(sur.getRequestCode()) + " " + alarmed + taken + closed + "\",";
+                res += "\"\(i + 1)\":\"" + DateUtil.stringifyAllAlt(calendar: sur.getDate()) + " " + String(sur.getRequestCode()) + " " + alarmed + internet + taken + closed + "\",";
             }
         }
         res = String(res.dropLast())

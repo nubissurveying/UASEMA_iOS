@@ -83,6 +83,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             print("viewController"," accService is not required to start")
         }
     }
+    
+    
     func setWKWebview(){
         let userContentController = WKUserContentController()
         let center = UserDefaults.standard
@@ -175,18 +177,24 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         print("should show survey ",settings.shouldShowSurvey(calendar: now))
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
 //        if(true) {
+            // get current survey and set flag
             let survey = settings.getSurveyByTime(now: now);
             survey?.setAlarmed()
-            if(isInternetAvailable()) {
+            let internet = isInternetAvailable()
+            survey?.setInternet(internet: internet)
+            if(internet) {
                 survey?.setAsTaken()
             }
+            // remove second notification is there there is one
             if(survey != nil) {
                 Notification.removeNotificationForASurvey(SurveyDate: (survey?.getDate())!)
             }
-            let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
-            var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
-            if(timeTag == nil) {timeTag = ""}
-            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true) + timeTag!)
+            // add Notification index
+//            let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
+//            var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
+//            if(timeTag == nil) {timeTag = ""}
+            let indexTag = survey?.getNotificationTag(now: now, timeToReminder: settings.gettimeToReminder())
+            showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true, reportTo: indexTag!))
 
             isInSurvey = true;
             
