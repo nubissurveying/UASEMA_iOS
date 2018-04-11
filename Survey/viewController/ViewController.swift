@@ -600,7 +600,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         }
     }
     func enableLocationServices()  {
-        if CLLocationManager.locationServicesEnabled(){
+        if CLLocationManager.locationServicesEnabled() && settings.getAcc() == 1{
             
             locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
             //            locationManager.requestWhenInUseAuthorization()
@@ -612,6 +612,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             locationManager.startUpdatingLocation()
             locationFileURL = DocumentDirUrl.appendingPathComponent(locationFileName).appendingPathExtension("txt")
             LocalFileManager.setFile(fileURL: locationFileURL, writeString: "location Service test\n")
+        } else {
+            print("location enabled but not start")
         }
     }
     func disableLocationServices(){
