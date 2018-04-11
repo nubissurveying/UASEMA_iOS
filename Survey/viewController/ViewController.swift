@@ -131,6 +131,11 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
     }
     
+    
+    /**
+     set spinner with message and timer
+     
+     */
     func setSpinner(message: String){
         if let num = Int(settings.getRtid()!){
             if(num < 1000){
@@ -145,6 +150,11 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         netTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(closeSpinner), userInfo: nil, repeats: false)
     }
+    
+    /**
+     show toast when the rtid is less then 1000
+     - parameter message: message content
+     */
     func showDeveToast(message: String){
         if let num = Int(settings.getRtid()!){
             if(num < 1000){
@@ -154,6 +164,10 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         
     }
+    
+    /**
+    close the spinner and timer
+     */
     @objc func closeSpinner(){
         SwiftSpinner.hide()
         
@@ -167,13 +181,15 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     }
     
     
-    //    @IBOutlet weak var routeCondition: UILabel!
+    /**
+     show pages according to current time and settings
+     - parameter settings : settings class recording current account info
+     - parameter now: current time
+     */
     func route(settings: Settings, now : Date){
         
         print("here comes route")
-        //  User is logged in and during survey
-        
-        
+
         print("should show survey ",settings.shouldShowSurvey(calendar: now))
         if(settings.isLoggedIn() && settings.allFieldsSet() && settings.shouldShowSurvey(calendar: now)) {
 //        if(true) {
@@ -189,10 +205,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             if(survey != nil) {
                 Notification.removeNotificationForASurvey(SurveyDate: (survey?.getDate())!)
             }
-            // add Notification index
-//            let requestCode = (survey == nil) ? -1: survey?.getRequestCode()
-//            var timeTag = (requestCode == -1) ? "":settings.getTimeTag(requestCode: requestCode!)
-//            if(timeTag == nil) {timeTag = ""}
+
             let indexTag = survey?.getNotificationTag(now: now, timeToReminder: settings.gettimeToReminder())
             showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_ALARM, settings: settings, now: now, includeParams: true, reportTo: indexTag!))
 
@@ -299,6 +312,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                     JsonParser.updateSetting(webpage: String(nresult), settings: self.settings)
                     self.saveInfo()
                     self.startAccService()
+                    
                 }
                 let jsAlertRegex = "alert(.*)"
                 if let range = resultString.range(of:jsAlertRegex, options: .regularExpression) {

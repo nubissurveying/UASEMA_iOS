@@ -98,10 +98,10 @@ class Survey: NSObject {
         return res;
     }
     public static func updateClosed(settings : Settings){
-        let limit = (Double)(settings.gettimeToReminder() + 1) * 60;
+        let limit = (Double)(settings.gettimeToTakeSurvey()) * 60;
         for sur in settings.getSurveys(){
             let cur = sur.getDate().timeIntervalSinceNow
-            print(sur.getRequestCode(), " ", cur)
+            print("updateclose",sur.getRequestCode(), " ", cur)
             if (cur + limit < 0) {
                 print(sur.getRequestCode() ,"is closed")
                 sur.setClosed()
