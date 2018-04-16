@@ -22,7 +22,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 
     var netTimer: Timer!
     var myWebView : WKWebView!
-    private var settings : Settings = Settings();
+    private var settings : Settings = Settings()
+    private var texts : Texts = Texts()
     
     private var hasInternet = true;
     private var defaults = UserDefaults.standard
@@ -312,6 +313,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                     JsonParser.updateSetting(webpage: String(nresult), settings: self.settings)
                     self.saveInfo()
                     self.startAccService()
+                    self.texts = Texts()
                     
                 }
                 let jsAlertRegex = "alert(.*)"
@@ -376,14 +378,16 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     
     }
     @objc func showOptions() {
+        
+        
             let optionMenu = UIAlertController(title: nil, message: "Menu", preferredStyle: .actionSheet)
             
-            
-            let adminAction = UIAlertAction(title: "Admin", style: .default, handler: {
+            print("MenuContent", texts.getMenuText(menuType: .Admin))
+            let adminAction = UIAlertAction(title: texts.getMenuText(menuType: .Admin), style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 print("admin")
                 if(self.settings.isLoggedIn()){
-                    let alert = UIAlertController(title: "admin", message: "Please Enter the admin password", preferredStyle: UIAlertControllerStyle.alert)
+                    let alert = UIAlertController(title: self.texts.getMenuText(menuType: .Admin), message: "Please Enter the admin password", preferredStyle: UIAlertControllerStyle.alert)
                     alert.addTextField(configurationHandler: self.configurationTextField)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(UIAlertAction) in
                         
@@ -415,7 +419,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
 //
 //            })
         
-            let recordAction = UIAlertAction(title: "Sound recording", style: .default, handler: {
+            let recordAction = UIAlertAction(title: texts.getMenuText(menuType: .SoundRecording), style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 if(self.settings.isLoggedIn()){
                     self.performSegue(withIdentifier: "record", sender: nil)
@@ -425,14 +429,14 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             })
             
             
-            let logoutAction = UIAlertAction(title: "Logout", style: .default, handler: {
+            let logoutAction = UIAlertAction(title: texts.getMenuText(menuType: .Logout), style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 print("logout")
                 
                 
                 
+                self.showDeveToast(message: "Logout")
                 
-                self.view.showToast("Logout", position: .bottom, popTime: 3, dismissOnTap: true)
                 
                 self.showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_LOGOUT, settings: self.settings, now: Date(),  includeParams: true));
                 Settings.clearSettingToDefault()
@@ -448,7 +452,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 print("Cookie is stored")
                 self.clearCache()
             })
-            let issueAction = UIAlertAction(title: "Technical issue", style: .default, handler: {
+            let issueAction = UIAlertAction(title: texts.getMenuText(menuType: .TechIssue), style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 
                 let dic = Bundle.main.infoDictionary!
@@ -463,7 +467,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 self.present(alert, animated: true, completion: nil)
                 
             })
-            let refreshWebAction = UIAlertAction(title: "Refresh", style: .default, handler: {
+            let refreshWebAction = UIAlertAction(title: texts.getMenuText(menuType: .Refresh), style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 self.route(settings: self.settings, now: Date())
                 
@@ -639,8 +643,9 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         let threshold = self.calendar.component(.second, from: Date())
         if(threshold > 30 && !locationUploadFlag){
             locationUploadFlag = true
-            let localBase = "http://10.120.65.133:8888/ema/index.php"
-            Upload.upload(fileUrl: locationFileURL, desUrl: localBase)
+//            let localBase = "http://10.120.65.133:8888/ema/index.php"
+//            Upload.upload(fileUrl: locationFileURL, desUrl: localBase)
+            LocalFileManager.resetFile(fileURL: locationFileURL, settings: self.settings)
             print("LocationManager ","location is uploaded")
             
         } else if(threshold != 0) {

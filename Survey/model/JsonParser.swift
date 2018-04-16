@@ -21,7 +21,7 @@ class JsonParser : NSObject {
     static func updateSetting(webpage : String, settings : Settings)  {
         let dataFromString = String(describing: webpage).data(using: String.Encoding.utf8, allowLossyConversion: false)
         let json = JSON(dataFromString!)
-        
+        Texts.updateTextsSettings(json: json["text"])
 
         if let rtid = json["rtid"].string{
             settings.updateAndSave(rtid: rtid, beginTime: Date(), endTime: Calendar.current.date(byAdding: .day, value: 7, to: Date())!, setAtTime: Date())
