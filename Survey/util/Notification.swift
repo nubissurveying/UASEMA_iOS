@@ -53,7 +53,7 @@ class Notification: NSObject {
                 
                 
             }
-            
+            let texts = Texts()
             for sur in toBeAdd.reversed(){
 
                 let content = UNMutableNotificationContent()
@@ -63,8 +63,8 @@ class Notification: NSObject {
                 let third = Calendar.current.date(byAdding: .minute, value: settings.gettimeToTakeSurvey() , to: first)
                 print("setNotification", DateUtil.stringifyAll(calendar: first), DateUtil.stringifyAll(calendar: second!), "\(settings.gettimeToReminder())")
                 
-                content.title = "Survey is ready at " + DateUtil.stringifyTime(calendar: first)
-                content.body = "No need to click after " + DateUtil.stringifyHuman(calendar: third!)
+                content.title = texts.getNotification(notificationType: .title) + " " + DateUtil.stringifyTime(calendar: first)
+                content.body = texts.getNotification(notificationType: .body) + DateUtil.stringifyHuman(calendar: third!)
                 content.sound = UNNotificationSound.default()
                 content.categoryIdentifier = Constants.CategoryName
                 // Deliver the notification in five seconds.
@@ -80,8 +80,8 @@ class Notification: NSObject {
                 //            let trigger = UNCalendarNotificationTrigger(dateMatching: firstComp, repeats: false)
                 let request = UNNotificationRequest.init(identifier: DateUtil.stringifyAll(calendar: first), content: content, trigger: trigger)
                 
-                content2.title = "Survey is ready at " + DateUtil.stringifyTime(calendar: second!)
-                content2.body = "No need to click after " + DateUtil.stringifyHuman(calendar: third!)
+                content2.title = texts.getNotification(notificationType: .title) + " " + DateUtil.stringifyTime(calendar: second!)
+                content2.body = texts.getNotification(notificationType: .body) + DateUtil.stringifyHuman(calendar: third!)
                 content2.sound = UNNotificationSound.default()
                 content2.categoryIdentifier = Constants.CategoryName
                 // Deliver the notification in five seconds.

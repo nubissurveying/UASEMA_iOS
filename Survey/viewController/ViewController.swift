@@ -380,27 +380,27 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
     @objc func showOptions() {
         
         
-            let optionMenu = UIAlertController(title: nil, message: "Menu", preferredStyle: .actionSheet)
+            let optionMenu = UIAlertController(title: nil, message: texts.getMenuText(menuType: .Menu), preferredStyle: .actionSheet)
             
             print("MenuContent", texts.getMenuText(menuType: .Admin))
             let adminAction = UIAlertAction(title: texts.getMenuText(menuType: .Admin), style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 print("admin")
                 if(self.settings.isLoggedIn()){
-                    let alert = UIAlertController(title: self.texts.getMenuText(menuType: .Admin), message: "Please Enter the admin password", preferredStyle: UIAlertControllerStyle.alert)
+                    let alert = UIAlertController(title: self.texts.getMenuText(menuType: .Admin), message: self.texts.getMenuText(menuType: .AdminPassword), preferredStyle: UIAlertControllerStyle.alert)
                     alert.addTextField(configurationHandler: self.configurationTextField)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(UIAlertAction) in
                         
                         if(self.tField.text == "bas"){
                             self.performSegue(withIdentifier: "admin", sender: nil)
                         } else {
-                            self.view.showToast("Wrong password", position: .bottom, popTime: 3, dismissOnTap: true)
+                            self.view.showToast(self.texts.getToast(toastType: .WrongPassword), position: .bottom, popTime: 3, dismissOnTap: true)
                         }
                     }))
                     alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 } else {
-                    self.view.showToast("Please login first", position: .bottom, popTime: 3, dismissOnTap: false)
+                    self.view.showToast(self.texts.getToast(toastType: .LoginAlert), position: .bottom, popTime: 3, dismissOnTap: false)
                 }
                 
 
@@ -424,7 +424,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 if(self.settings.isLoggedIn()){
                     self.performSegue(withIdentifier: "record", sender: nil)
                 } else {
-                    self.view.showToast("Please loggin first", position: .bottom, popTime: 3, dismissOnTap: false)
+                    self.view.showToast(self.texts.getToast(toastType: .LoginAlert), position: .bottom, popTime: 3, dismissOnTap: false)
                 }
             })
             
@@ -435,7 +435,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 
                 
                 
-                self.showDeveToast(message: "Logout")
+                self.showDeveToast(message: self.texts.getToast(toastType: .Logout))
                 
                 
                 self.showWebView(url: UrlBuilder.build(page: UrlBuilder.PHONE_LOGOUT, settings: self.settings, now: Date(),  includeParams: true));
@@ -503,7 +503,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
             })
         
             //
-            let cancelAction = UIAlertAction(title: "Cancel",style: .destructive, handler: {
+            let cancelAction = UIAlertAction(title: texts.getMenuText(menuType: .Cancel),style: .destructive, handler: {
                 (alert: UIAlertAction!) -> Void in
                 print("Cancelled")
             })
