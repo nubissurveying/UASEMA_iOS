@@ -183,12 +183,14 @@
                         <viewLayoutGuide key="safeArea" id="wPL-v4-zif"/>
                     </view>
                     <connections>
+                        <outlet property="audioInstruction" destination="4zI-N4-oFz" id="iUA-P1-FoW"/>
                         <outlet property="audioPlayButton" destination="EA2-Y1-X4R" id="Td5-Gg-D6a"/>
                         <outlet property="audioUpload" destination="nF1-uT-Ta2" id="8WR-BX-Ful"/>
+                        <outlet property="audioUploadInstruction" destination="5Vd-Fg-AQx" id="0rg-ih-uSc"/>
                         <outlet property="mcImage" destination="j72-Er-PnY" id="UAu-es-qb7"/>
                         <outlet property="timerLabel" destination="DVq-FJ-SWI" id="4TI-8d-FY1"/>
                         <outlet property="videoImage" destination="ye0-uy-K2q" id="D5a-RE-NS8"/>
-                        <outlet property="videoInstruction" destination="gUO-VZ-MrV" id="AQo-uF-RTG"/>
+                        <outlet property="videoInstruction" destination="gUO-VZ-MrV" id="Qv1-W7-9Ub"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UeE-ph-8Zw" userLabel="First Responder" sceneMemberID="firstResponder"/>

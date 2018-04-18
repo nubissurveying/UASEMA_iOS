@@ -451,6 +451,8 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 print("check delete correctly", center.object(forKey: Constants.CookieValueKey) == nil)
                 print("Cookie is stored")
                 self.clearCache()
+                Texts.clearTexts()
+                self.texts = Texts()
             })
             let issueAction = UIAlertAction(title: texts.getMenuText(menuType: .TechIssue), style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in

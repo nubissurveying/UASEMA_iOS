@@ -19,11 +19,16 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
     @IBOutlet weak var mcImage: UIButton!
     @IBOutlet weak var audioPlayButton: UIButton!
     @IBOutlet weak var videoImage: UIButton!
-    @IBOutlet weak var playButton: UIButton!
-    @IBOutlet weak var videoInstruction: UILabel!
+//    @IBOutlet weak var playButton: UIButton!
+//    @IBOutlet weak var videoInstruction: UILabel!
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var audioUpload: UIButton!
     
+    @IBOutlet weak var audioInstruction: UILabel!
+    
+    @IBOutlet weak var audioUploadInstruction: UILabel!
+    
+    @IBOutlet weak var videoInstruction: UILabel!
     
     var recordingSession: AVAudioSession!
     var audioRecorder: AVAudioRecorder!
@@ -69,7 +74,11 @@ class recordViewController: UIViewController,AVAudioRecorderDelegate, AVAudioPla
 //        playButton.layer.borderColor = UIColor.black.cgColor
         
         
-        
+        let texts = Texts()
+        audioInstruction.text = texts.getRecording(recordingType: .audioRecordInstruction)
+        audioUploadInstruction.text = texts.getRecording(recordingType: .audioSaveUpload)
+        videoInstruction.text = texts.getRecording(recordingType: .videoInstruction)
+//        audioINst
         timerLabel.text = "00:00"
         audioTimer = 0;
         

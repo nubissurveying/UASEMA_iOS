@@ -58,7 +58,7 @@ class Texts: NSObject {
         if let checknotification  = defaults.object(forKey: "toast"){
             toast = checknotification as! [String]
         }
-        if let checknotification  = defaults.object(forKey: "notification"){
+        if let checknotification  = defaults.object(forKey: "recording"){
             recording = checknotification as! [String]
         }
     }
@@ -118,9 +118,14 @@ class Texts: NSObject {
             recordingTemp.append(jsonString.stringValue)
             defaults.set(recordingTemp, forKey: RECORDING_KEY)
         }
-        
-        
 
+    }
+    static func clearTexts(){
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: NOTIFICATION_KEY)
+        defaults.removeObject(forKey: MENU_KEY)
+        defaults.removeObject(forKey: TOAST_KEY)
+        defaults.removeObject(forKey: RECORDING_KEY)
     }
     
 }
