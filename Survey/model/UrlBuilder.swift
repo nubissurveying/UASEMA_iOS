@@ -41,6 +41,8 @@ class UrlBuilder: NSObject {
     TIME_LAST = "&last=1";
     
     private static func buildParams(page : String, settings : Settings, now : Date, reportTo : String) -> String{
+        let dic = Bundle.main.infoDictionary!
+        let buildNumber = dic["CFBundleVersion"]! as! String
         return "&rtid=" + (settings.getRtid() == nil ? "" : Uri.encode(content: settings.getRtid()!)) +
     "&language=" + "en" +
     "&device=" + "iOS" +
@@ -49,7 +51,7 @@ class UrlBuilder: NSObject {
             "&date=" + Uri.encode(content: DateUtil.stringifyAllAlt(calendar: now)) +
             "&starttime=" + Uri.encode(content: DateUtil.stringifyTime(calendar: settings.getbeginTime())) +
             "&endtime=" + Uri.encode(content: DateUtil.stringifyTime(calendar: settings.getEndTime())) +
-            "&respondingto=" + reportTo + 
+            "&respondingto=" + reportTo + "&version=" + buildNumber + 
             "&pinginfo=" + (page == PHONE_ALARM ? Uri.encode(content: settings.alarmTags()) : "")
     }
     
