@@ -63,11 +63,12 @@ class Notification: NSObject {
                 let third = Calendar.current.date(byAdding: .minute, value: settings.gettimeToTakeSurvey() , to: first)
                 print("setNotification", DateUtil.stringifyAll(calendar: first), DateUtil.stringifyAll(calendar: second!), "\(settings.gettimeToReminder())")
                 
-                content.title = texts.getNotification(notificationType: .title) + " " + DateUtil.stringifyTime(calendar: first)
+                content.title = texts.getNotification(notificationType: .title) + " " + DateUtil.stringifyHumanTime(calendar: first)
                 content.body = texts.getNotification(notificationType: .body) + DateUtil.stringifyHuman(calendar: third!)
                 content.sound = UNNotificationSound.default()
                 content.categoryIdentifier = Constants.CategoryName
                 // Deliver the notification in five seconds.
+                
                 
                 var date = DateComponents()
                 date.second = Calendar.current.component(.second, from: first)
@@ -80,7 +81,7 @@ class Notification: NSObject {
                 //            let trigger = UNCalendarNotificationTrigger(dateMatching: firstComp, repeats: false)
                 let request = UNNotificationRequest.init(identifier: DateUtil.stringifyAll(calendar: first), content: content, trigger: trigger)
                 
-                content2.title = texts.getNotification(notificationType: .title) + " " + DateUtil.stringifyTime(calendar: second!)
+                content2.title = texts.getNotification(notificationType: .title) + " " + DateUtil.stringifyHumanTime(calendar: second!)
                 content2.body = texts.getNotification(notificationType: .body) + DateUtil.stringifyHuman(calendar: third!)
                 content2.sound = UNNotificationSound.default()
                 content2.categoryIdentifier = Constants.CategoryName
@@ -97,7 +98,8 @@ class Notification: NSObject {
                 // Schedule the notification.
                 
                 
-                
+//                print("Notification",content.title, content.body)
+//                print("Notification",content2.title, content2.body)
                 center.add(request2, withCompletionHandler:nil)
                 center.add(request,withCompletionHandler: nil)
             }

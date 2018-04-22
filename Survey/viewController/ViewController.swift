@@ -68,6 +68,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
         
         //timeStringfiyTest
 //        print("human readable date test ", DateUtil.stringifyHuman(calendar: Date()))
+//        Notification.showNotificaiton()
         
     }
     
@@ -458,7 +459,7 @@ class ViewController: UIViewController , WKNavigationDelegate, UNUserNotificatio
                 (alert: UIAlertAction!) -> Void in
                 
                 let dic = Bundle.main.infoDictionary!
-                let buildNumber = dic["CFBundleVersion"]! as! String
+                let buildNumber = dic["CFBundleShortVersionString"]! as! String
                 //            print("buildNumber is ", buildNumber)
                 
                 var message = Strings.main_technicalissues_body  + buildNumber  + Strings.main_technicalissues_body2

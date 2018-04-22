@@ -42,7 +42,7 @@ class UrlBuilder: NSObject {
     
     private static func buildParams(page : String, settings : Settings, now : Date, reportTo : String) -> String{
         let dic = Bundle.main.infoDictionary!
-        let buildNumber = dic["CFBundleVersion"]! as! String
+        let buildNumber = dic["CFBundleShortVersionString"]! as! String
         return "&rtid=" + (settings.getRtid() == nil ? "" : Uri.encode(content: settings.getRtid()!)) +
     "&language=" + "en" +
     "&device=" + "iOS" +

@@ -19,7 +19,17 @@ class DateUtil: NSObject {
         let dateFormatter = DateFormatter()
         dateFormatter.amSymbol = "am"
         dateFormatter.pmSymbol = "pm"
-        dateFormatter.dateFormat = "MMMM dd, H:mma"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "h:mm a, MMMM dd"
+        return dateFormatter.string(from: calendar)
+    }
+    
+    public static func stringifyHumanTime(calendar : Date) -> String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.amSymbol = "am"
+        dateFormatter.pmSymbol = "pm"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "h:mm a"
         return dateFormatter.string(from: calendar)
     }
     
